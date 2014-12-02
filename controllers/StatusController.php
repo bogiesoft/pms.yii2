@@ -3,16 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\ProductType;
-use app\models\ProductTypeSearch;
+use app\models\Status;
+use app\models\StatusSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ProductTypeController implements the CRUD actions for ProductType model.
+ * StatusController implements the CRUD actions for Status model.
  */
-class ProductTypeController extends Controller
+class StatusController extends Controller
 {
     public function behaviors()
     {
@@ -27,12 +27,12 @@ class ProductTypeController extends Controller
     }
 
     /**
-     * Lists all ProductType models.
+     * Lists all Status models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ProductTypeSearch();
+        $searchModel = new StatusSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -42,7 +42,7 @@ class ProductTypeController extends Controller
     }
 
     /**
-     * Displays a single ProductType model.
+     * Displays a single Status model.
      * @param integer $id
      * @return mixed
      */
@@ -54,20 +54,20 @@ class ProductTypeController extends Controller
     }
 
     /**
-     * Creates a new ProductType model.
+     * Creates a new Status model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new ProductType();
+        $model = new Status();
 
         //initial user change & date
         $model->userin = 'sun';
         $model->datein = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->producttypeid]);
+            return $this->redirect(['view', 'id' => $model->statusid]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -76,7 +76,7 @@ class ProductTypeController extends Controller
     }
 
     /**
-     * Updates an existing ProductType model.
+     * Updates an existing Status model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -88,9 +88,9 @@ class ProductTypeController extends Controller
         //initial user change & date
         $model->userup = 'sun';
         $model->dateup = new \yii\db\Expression('NOW()');
-        
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->producttypeid]);
+            return $this->redirect(['view', 'id' => $model->statusid]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -99,7 +99,7 @@ class ProductTypeController extends Controller
     }
 
     /**
-     * Deletes an existing ProductType model.
+     * Deletes an existing Status model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -112,15 +112,15 @@ class ProductTypeController extends Controller
     }
 
     /**
-     * Finds the ProductType model based on its primary key value.
+     * Finds the Status model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return ProductType the loaded model
+     * @return Status the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = ProductType::findOne($id)) !== null) {
+        if (($model = Status::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

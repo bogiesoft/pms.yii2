@@ -5,9 +5,9 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "ps_producttype".
+ * This is the model class for table "ps_status".
  *
- * @property integer $producttypeid
+ * @property integer $statusid
  * @property string $code
  * @property string $name
  * @property string $description
@@ -15,15 +15,17 @@ use Yii;
  * @property string $userin
  * @property string $dateup
  * @property string $userup
+ *
+ * @property PsProject[] $psProjects
  */
-class ProductType extends \yii\db\ActiveRecord
+class Status extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'ps_producttype';
+        return 'ps_status';
     }
 
     /**
@@ -35,7 +37,8 @@ class ProductType extends \yii\db\ActiveRecord
             [['code', 'name'], 'required'],
             [['code'], 'string', 'max' => 5],
             [['name'], 'string', 'max' => 50],
-            [['description'], 'string', 'max' => 250]
+            [['description'], 'string', 'max' => 250],
+            [['code'], 'unique']
         ];
     }
 
@@ -45,18 +48,18 @@ class ProductType extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'producttypeid' => 'Producttypeid',
+            'statusid' => 'Statusid',
             'code' => 'Code',
             'name' => 'Name',
             'description' => 'Description',
         ];
     }
 
-    /** 
-     * @return \yii\db\ActiveQuery 
-     */ 
-    public function getPsProjects() 
-    { 
-        return $this->hasMany(PsProject::className(), ['producttypeid' => 'producttypeid']);
-    } 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPsProjects()
+    {
+        return $this->hasMany(PsProject::className(), ['statusid' => 'statusid']);
+    }
 }
