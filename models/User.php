@@ -2,102 +2,112 @@
 
 namespace app\models;
 
-class User extends \yii\base\Object implements \yii\web\IdentityInterface
+use Yii;
+
+/**
+ * This is the model class for table "ps_user".
+ *
+ * @property integer $userid
+ * @property string $username
+ * @property string $name
+ * @property string $email
+ * @property string $phone
+ * @property string $password
+ * @property string $active
+ * @property string $datein
+ * @property string $userin
+ * @property string $dateup
+ * @property string $userup
+ *
+ * @property PsGroupuser[] $psGroupusers
+ * @property PsProjectpic[] $psProjectpics
+ * @property PsUseraccess[] $psUseraccesses
+ */
+class User extends \yii\db\ActiveRecord
 {
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
-
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
-
     /**
      * @inheritdoc
      */
-    public static function findIdentity($id)
+
+    public $varPassword;
+    public $varActive;
+
+    public static function tableName()
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        return 'ps_user';
     }
 
-    /**
-     * @inheritdoc
-     */
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
+    public function getactiveText(){
+        if ($this->active == "1"){
+            return "Yes";
         }
-
-        return null;
-    }
-
-    /**
-     * Finds user by username
-     *
-     * @param  string      $username
-     * @return static|null
-     */
-    public static function findByUsername($username)
-    {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
-
-        return null;
+        return "No";
     }
 
     /**
      * @inheritdoc
      */
-    public function getId()
+    public function rules()
     {
-        return $this->id;
+        return [
+            [['username', 'name', 'email', 'phone', 'password', 'varPassword', 'active'], 'required'],
+            [['datein', 'dateup'], 'safe'],
+            [['username'], 'string', 'max' => 25],
+            [['name', 'email', 'password'], 'string', 'max' => 150],
+            [['phone'], 'string', 'max' => 15],
+            [['active'], 'string', 'max' => 1],
+            [['userin', 'userup'], 'string', 'max' => 50],
+            [['username'], 'unique'],
+            [['email'], 'unique'],
+            [['phone'],'integer','message'=>'{attribute} numbers must be numeric only.'],
+            [['email'],'email'],
+        ];
     }
 
     /**
      * @inheritdoc
      */
-    public function getAuthKey()
+    public function attributeLabels()
     {
-        return $this->authKey;
+        return [
+            'userid' => 'ID',
+            'username' => 'Username',
+            'name' => 'Name',
+            'email' => 'Email',
+            'phone' => 'Phone',
+            'password' => 'Password',
+            'varPassword' => 'Confirm Password',
+            'active' => 'Active',
+            'datein' => 'Datein',
+            'userin' => 'Userin',
+            'dateup' => 'Dateup',
+            'userup' => 'Userup',
+            'activeText' => 'Active',
+            'varActive' => 'Active',
+        ];
     }
 
     /**
-     * @inheritdoc
+     * @return \yii\db\ActiveQuery
      */
-    public function validateAuthKey($authKey)
+    public function getPsGroupusers()
     {
-        return $this->authKey === $authKey;
+        return $this->hasMany(GroupUser::className(), ['userid' => 'userid']);
     }
 
     /**
-     * Validates password
-     *
-     * @param  string  $password password to validate
-     * @return boolean if password provided is valid for current user
+     * @return \yii\db\ActiveQuery
      */
-    public function validatePassword($password)
+    public function getPsProjectpics()
     {
-        return $this->password === $password;
+        return $this->hasMany(ProjectPIC::className(), ['userid' => 'userid']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPsUseraccesses()
+    {
+        return $this->hasMany(UserAccess::className(), ['userid' => 'userid']);
     }
 }
