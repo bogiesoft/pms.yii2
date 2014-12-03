@@ -5,10 +5,9 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "ps_status".
+ * This is the model class for table "ps_mindunit".
  *
- * @property integer $statusid
- * @property string $code
+ * @property integer $mindunitid
  * @property string $name
  * @property string $description
  * @property string $datein
@@ -16,16 +15,16 @@ use Yii;
  * @property string $dateup
  * @property string $userup
  *
- * @property PsProject[] $psProjects
+ * @property PsProjectrate[] $psProjectrates
  */
-class Status extends \yii\db\ActiveRecord
+class MindUnit extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'ps_status';
+        return 'ps_mindunit';
     }
 
     /**
@@ -34,11 +33,11 @@ class Status extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['code', 'name'], 'required'],
-            [['code'], 'string', 'max' => 5],
-            [['name'], 'string', 'max' => 50],
+            [['name'], 'required'],
+            [['datein', 'dateup'], 'safe'],
+            [['name', 'userin', 'userup'], 'string', 'max' => 50],
             [['description'], 'string', 'max' => 250],
-            [['code'], 'unique']
+            [['name'], 'unique']
         ];
     }
 
@@ -48,18 +47,21 @@ class Status extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'statusid' => 'Statusid',
-            'code' => 'Code',
+            'mindunitid' => 'Mindunitid',
             'name' => 'Name',
             'description' => 'Description',
+            'datein' => 'Datein',
+            'userin' => 'Userin',
+            'dateup' => 'Dateup',
+            'userup' => 'Userup',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsProjects()
+    public function getPsProjectrates()
     {
-        return $this->hasMany(Project::className(), ['statusid' => 'statusid']);
+        return $this->hasMany(Projectrate::className(), ['mindunitid' => 'mindunitid']);
     }
 }

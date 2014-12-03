@@ -5,24 +5,23 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Unit;
+use app\models\Department;
 
 /**
- * UnitSearch represents the model behind the search form about `app\models\Unit`.
+ * DepartmentSearch represents the model behind the search form about `app\models\Department`.
  */
-class UnitSearch extends Unit
+class DepartmentSearch extends Department
 {
-    public $bank;
-
+    public $faculty;
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['unitid', 'BankId'], 'integer'],
-            [['code', 'Name', 'BankAcc'], 'safe'],
-            [['bank'],'safe'],
+            [['departmentid', 'facultyid'], 'integer'],
+            [['name', 'datein', 'userin', 'dateup', 'userup'], 'safe'],
+            [['faculty'],'safe'],
         ];
     }
 
@@ -44,16 +43,16 @@ class UnitSearch extends Unit
      */
     public function search($params)
     {
-        $query = Unit::find();
-        $query->joinWith(['bank']);
+        $query = Department::find();
+        $query->joinWith(['faculty']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
-        $dataProvider->sort->attributes['bank'] = [
-            'asc' => ['concat(ps_bank.code," - ",ps_bank.name)' => SORT_ASC],
-            'desc' => ['concat(ps_bank.code," - ",ps_bank.name)' => SORT_DESC],
+        
+        $dataProvider->sort->attributes['faculty'] = [
+            'asc'=>['concat(ps_faculty.code," - ",ps_faculty.name)'=>SORT_ASC],
+            'desc'=>['concat(ps_faculty.code," - ",ps_faculty.name)'=>SORT_DESC],            
         ];
 
         if (!($this->load($params) && $this->validate())) {
@@ -61,15 +60,15 @@ class UnitSearch extends Unit
         }
 
         $query->andFilterWhere([
-            'unitid' => $this->unitid,            
+            'departmentid' => $this->departmentid,
+            'facultyid' => $this->facultyid,
             'datein' => $this->datein,
             'dateup' => $this->dateup,
         ]);
 
-        $query->andFilterWhere(['like', 'ps_unit.code', $this->code])   
-            ->andFilterWhere(['like', 'ps_unit.Name', $this->Name])
-            ->andFilterWhere(['like', 'concat(ps_bank.code," - ",ps_bank.name)', $this->bank])
-            ->andFilterWhere(['like', 'BankAcc', $this->BankAcc])            
+        
+        $query->andFilterWhere(['like', 'ps_department.name', $this->name])
+            ->andFilterWhere(['like', 'concat(ps_faculty.code, " - ",ps_faculty.name)', ($this->faculty)])
             ->andFilterWhere(['like', 'userin', $this->userin])
             ->andFilterWhere(['like', 'userup', $this->userup]);
 

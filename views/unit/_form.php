@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
+use app\models\Bank;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Unit */
@@ -16,7 +18,14 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'Name')->textInput(['maxlength' => 50]) ?>
 
-    <?= $form->field($model, 'BankId')->textInput() ?>
+    <?php 
+        $dataCategory = [];
+        array_push($dataCategory, ' ');
+        $sql = "select bankid, concat(code,' - ',name) as bank_descr from ps_bank ";        
+        $dataCategory += ArrayHelper::map(Bank::findBySql($sql)->asArray()->all(), 'bankid', 'bank_descr');        
+    ?>
+
+    <?= $form->field($model, 'BankId')->dropDownList($dataCategory) ?>
 
     <?= $form->field($model, 'BankAcc')->textInput(['maxlength' => 15]) ?>
 

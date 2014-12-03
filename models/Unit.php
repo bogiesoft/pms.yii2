@@ -43,6 +43,7 @@ class Unit extends \yii\db\ActiveRecord
             [['code'], 'string', 'max' => 5],
             [['Name', 'userin', 'userup'], 'string', 'max' => 50],
             [['BankAcc'], 'string', 'max' => 15],
+            [['BankAcc'], 'integer'],
             [['code'], 'unique']
         ];
     }
@@ -70,7 +71,7 @@ class Unit extends \yii\db\ActiveRecord
      */
     public function getPsGroupaccessdatas()
     {
-        return $this->hasMany(PsGroupaccessdata::className(), ['unitid' => 'unitid']);
+        return $this->hasMany(Groupaccessdata::className(), ['unitid' => 'unitid']);
     }
 
     /**
@@ -78,7 +79,7 @@ class Unit extends \yii\db\ActiveRecord
      */
     public function getPsProjects()
     {
-        return $this->hasMany(PsProject::className(), ['unitid' => 'unitid']);
+        return $this->hasMany(Project::className(), ['unitid' => 'unitid']);
     }
 
     /**
@@ -86,6 +87,14 @@ class Unit extends \yii\db\ActiveRecord
      */
     public function getBank()
     {
-        return $this->hasOne(PsBank::className(), ['bankid' => 'BankId']);
+        return $this->hasOne(Bank::className(), ['bankid' => 'BankId']);
+    }
+
+    /**
+     * @return [bank code] - [bank name]
+     */
+    public function getBankDescr()
+    {
+        return $this->bank->code . ' - ' . $this->bank->name;
     }
 }

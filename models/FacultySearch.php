@@ -5,24 +5,21 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Unit;
+use app\models\Faculty;
 
 /**
- * UnitSearch represents the model behind the search form about `app\models\Unit`.
+ * FacultySearch represents the model behind the search form about `app\models\Faculty`.
  */
-class UnitSearch extends Unit
+class FacultySearch extends Faculty
 {
-    public $bank;
-
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['unitid', 'BankId'], 'integer'],
-            [['code', 'Name', 'BankAcc'], 'safe'],
-            [['bank'],'safe'],
+            [['facultyid'], 'integer'],
+            [['code', 'name', 'datein', 'userin', 'dateup', 'userup'], 'safe'],
         ];
     }
 
@@ -44,32 +41,24 @@ class UnitSearch extends Unit
      */
     public function search($params)
     {
-        $query = Unit::find();
-        $query->joinWith(['bank']);
+        $query = Faculty::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
-        $dataProvider->sort->attributes['bank'] = [
-            'asc' => ['concat(ps_bank.code," - ",ps_bank.name)' => SORT_ASC],
-            'desc' => ['concat(ps_bank.code," - ",ps_bank.name)' => SORT_DESC],
-        ];
 
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
 
         $query->andFilterWhere([
-            'unitid' => $this->unitid,            
+            'facultyid' => $this->facultyid,
             'datein' => $this->datein,
             'dateup' => $this->dateup,
         ]);
 
-        $query->andFilterWhere(['like', 'ps_unit.code', $this->code])   
-            ->andFilterWhere(['like', 'ps_unit.Name', $this->Name])
-            ->andFilterWhere(['like', 'concat(ps_bank.code," - ",ps_bank.name)', $this->bank])
-            ->andFilterWhere(['like', 'BankAcc', $this->BankAcc])            
+        $query->andFilterWhere(['like', 'code', $this->code])
+            ->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'userin', $this->userin])
             ->andFilterWhere(['like', 'userup', $this->userup]);
 

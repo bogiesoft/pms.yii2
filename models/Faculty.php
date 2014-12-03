@@ -5,9 +5,9 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "ps_bank".
+ * This is the model class for table "ps_faculty".
  *
- * @property integer $bankid
+ * @property integer $facultyid
  * @property string $code
  * @property string $name
  * @property string $datein
@@ -15,17 +15,16 @@ use Yii;
  * @property string $dateup
  * @property string $userup
  *
- * @property PsConsultantbank[] $psConsultantbanks
- * @property PsUnit[] $psUnits
+ * @property PsDepartment[] $psDepartments
  */
-class Bank extends \yii\db\ActiveRecord
+class Faculty extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'ps_bank';
+        return 'ps_faculty';
     }
 
     /**
@@ -38,7 +37,7 @@ class Bank extends \yii\db\ActiveRecord
             [['datein', 'dateup'], 'safe'],
             [['code'], 'string', 'max' => 5],
             [['name', 'userin', 'userup'], 'string', 'max' => 50],
-            [['code', 'name'], 'unique', 'targetAttribute' => ['code', 'name'], 'message' => 'The combination of Code and Name has already been taken.']
+            [['code'], 'unique']
         ];
     }
 
@@ -48,7 +47,7 @@ class Bank extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'bankid' => 'Bankid',
+            'facultyid' => 'Facultyid',
             'code' => 'Code',
             'name' => 'Name',
             'datein' => 'Datein',
@@ -61,17 +60,8 @@ class Bank extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsConsultantbanks()
+    public function getPsDepartments()
     {
-        return $this->hasMany(Consultantbank::className(), ['bankid' => 'bankid']);
+        return $this->hasMany(Department::className(), ['facultyid' => 'facultyid']);
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPsUnits()
-    {
-        return $this->hasMany(Unit::className(), ['BankId' => 'bankid']);
-    }
-    
 }
