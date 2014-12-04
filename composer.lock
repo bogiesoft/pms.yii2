@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "10d8d3b92d960bec820ae06a5e92ecc8",
+    "hash": "1ccd5a7fb95e287bfcd83deac23e4317",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -312,6 +312,144 @@
             "time": "2013-11-30 08:25:19"
         },
         {
+            "name": "kartik-v/php-date-formatter",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/php-date-formatter.git",
+                "reference": "41891ddc734cad7197c519ae19fb62567282b00e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/php-date-formatter/zipball/41891ddc734cad7197c519ae19fb62567282b00e",
+                "reference": "41891ddc734cad7197c519ae19fb62567282b00e",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "kartik\\plugins\\dateformatter\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD 3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "A JQuery datetime formatting and manipulation library using PHP date-time formats in javascript.",
+            "homepage": "https://github.com/kartik-v/php-date-formatter",
+            "keywords": [
+                "date",
+                "datetime",
+                "formatter",
+                "javascript",
+                "jquery",
+                "php",
+                "php-date-formatter.js",
+                "time"
+            ],
+            "time": "2014-11-09 18:22:47"
+        },
+        {
+            "name": "kartik-v/yii2-datecontrol",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/yii2-datecontrol.git",
+                "reference": "8f6ab47a6abc0352e675cfafd0ed46c4c0f601bd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/yii2-datecontrol/zipball/8f6ab47a6abc0352e675cfafd0ed46c4c0f601bd",
+                "reference": "8f6ab47a6abc0352e675cfafd0ed46c4c0f601bd",
+                "shasum": ""
+            },
+            "require": {
+                "kartik-v/php-date-formatter": "*",
+                "kartik-v/yii2-krajee-base": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "kartik\\datecontrol\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD 3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "Date control module allowing separation of formats for View and Model for Yii Framework 2.0",
+            "homepage": "https://github.com/kartik-v/yii2-datecontrol",
+            "keywords": [
+                "control",
+                "date",
+                "extension",
+                "format",
+                "yii",
+                "yii2"
+            ],
+            "time": "2014-12-04 09:42:26"
+        },
+        {
+            "name": "kartik-v/yii2-krajee-base",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/yii2-krajee-base.git",
+                "reference": "b2339ce7e27e765006936c26fce7a8fa26ff85a8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/yii2-krajee-base/zipball/b2339ce7e27e765006936c26fce7a8fa26ff85a8",
+                "reference": "b2339ce7e27e765006936c26fce7a8fa26ff85a8",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2-bootstrap": "@dev"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "kartik\\base\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD 3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "Base library and foundation components for all Yii2 Krajee extensions.",
+            "homepage": "https://github.com/kartik-v/yii2-krajee-base",
+            "keywords": [
+                "base",
+                "extension",
+                "foundation",
+                "krajee",
+                "widget",
+                "yii2"
+            ],
+            "time": "2014-12-04 08:16:19"
+        },
+        {
             "name": "swiftmailer/swiftmailer",
             "version": "dev-master",
             "source": {
@@ -369,12 +507,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "b6813dc9fccdf2ae2a8e485e9d4be48e44da72ed"
+                "reference": "9657695fddd00479664667d285e93339dc2401ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/b6813dc9fccdf2ae2a8e485e9d4be48e44da72ed",
-                "reference": "b6813dc9fccdf2ae2a8e485e9d4be48e44da72ed",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/9657695fddd00479664667d285e93339dc2401ff",
+                "reference": "9657695fddd00479664667d285e93339dc2401ff",
                 "shasum": ""
             },
             "require": {
@@ -449,7 +587,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2014-12-01 10:47:39"
+            "time": "2014-12-03 15:07:09"
         },
         {
             "name": "yiisoft/yii2-bootstrap",
@@ -457,12 +595,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-bootstrap.git",
-                "reference": "c5d0f2518a11a90811735fc6b8fb3c080c0cb2f1"
+                "reference": "14c09f022ddfd0ffe74d8668ad88eb967b8145d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-bootstrap/zipball/c5d0f2518a11a90811735fc6b8fb3c080c0cb2f1",
-                "reference": "c5d0f2518a11a90811735fc6b8fb3c080c0cb2f1",
+                "url": "https://api.github.com/repos/yiisoft/yii2-bootstrap/zipball/14c09f022ddfd0ffe74d8668ad88eb967b8145d5",
+                "reference": "14c09f022ddfd0ffe74d8668ad88eb967b8145d5",
                 "shasum": ""
             },
             "require": {
@@ -495,7 +633,7 @@
                 "bootstrap",
                 "yii2"
             ],
-            "time": "2014-11-30 02:29:53"
+            "time": "2014-12-02 18:33:48"
         },
         {
             "name": "yiisoft/yii2-composer",
@@ -543,6 +681,49 @@
                 "yii2"
             ],
             "time": "2014-11-07 16:17:16"
+        },
+        {
+            "name": "yiisoft/yii2-jui",
+            "version": "2.0.0-beta",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-jui.git",
+                "reference": "24626ae44d56b86275e2dcdadf874bc21028a9f8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/yii2-jui/zipball/24626ae44d56b86275e2dcdadf874bc21028a9f8",
+                "reference": "24626ae44d56b86275e2dcdadf874bc21028a9f8",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "yii\\jui\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Qiang Xue",
+                    "email": "qiang.xue@gmail.com",
+                    "homepage": "http://www.yiiframework.com/",
+                    "role": "Founder and project lead"
+                }
+            ],
+            "description": "The Jquery UI extension for the Yii framework",
+            "keywords": [
+                "jQuery UI",
+                "renderer",
+                "yii2"
+            ],
+            "time": "2014-04-13 21:58:59"
         },
         {
             "name": "yiisoft/yii2-swiftmailer",
@@ -851,12 +1032,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-gii.git",
-                "reference": "2b70572409c3953b8a9ab573e96cd25fd5881a84"
+                "reference": "19fd4a9efc64947b4b60aa580b705c963e086f9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-gii/zipball/2b70572409c3953b8a9ab573e96cd25fd5881a84",
-                "reference": "2b70572409c3953b8a9ab573e96cd25fd5881a84",
+                "url": "https://api.github.com/repos/yiisoft/yii2-gii/zipball/19fd4a9efc64947b4b60aa580b705c963e086f9b",
+                "reference": "19fd4a9efc64947b4b60aa580b705c963e086f9b",
                 "shasum": ""
             },
             "require": {
@@ -892,12 +1073,14 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2014-10-25 12:30:03"
+            "time": "2014-12-04 02:10:04"
         }
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "kartik-v/yii2-datecontrol": 20
+    },
     "prefer-stable": false,
     "platform": {
         "php": ">=5.4.0"

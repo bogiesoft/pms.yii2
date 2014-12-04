@@ -86,8 +86,8 @@ class PhoneTypeController extends Controller
         $model = $this->findModel($id);
 
         //initial user change & date
-        $model->userin = 'sun';
-        $model->datein = new \yii\db\Expression('NOW()');
+        $model->userup = 'sun';
+        $model->dateup = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->phonetypeid]);

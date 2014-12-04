@@ -7,6 +7,7 @@ Yii Framework 2 Change Log
 - Bug #4471: `yii\caching\ApcCache::getValues()` now returns array in case of APC is installed but not enabled in CLI mode (samdark, cebe)
 - Bug #4823: `yii message` accuracy and error handling were improved (samdark)
 - Bug #4889: Application was getting into redirect loop when user wasn't allowed accessing login page. Now shows 403 (samdark)
+- Bug #5070: Gii controller generator should use controller class name instead of controller ID to specify new controller (qiangxue)
 - Bug #5402: Debugger was not loading when there were closures in asset classes (samdark)
 - Bug #5448: Date formatter was doing timezone conversion on date only values resulting in different date displayed than provided (cebe)
 - Bug #5452: Errors occurring after the response is sent are not displayed (qiangxue) 
@@ -49,6 +50,7 @@ Yii Framework 2 Change Log
 - Enh #4146: Added `yii\bootstrap\ButtonDropdown::$containerOptions` (samdark)
 - Enh #4181: Added `yii\bootstrap\Modal::$headerOptions` and `yii\bootstrap\Modal::$footerOptions` (tuxoff, samdark)
 - Enh #4263: Added migration and SQL schema files for `yii\log\DbTarget` (samdark)
+- Enh #4395: Added `$checkAjax` parameter to `yii\web\Response::redirect()` to support default redirection behavior for AJAX/PJAX requests (qiangxue)
 - Enh #4450: Added `yii\bootstrap\Nav::renderDropdown()` (qiangxue)
 - Enh #4457: Added support for using noscript for css files registered through asset bundles and Html helper (samdark)
 - Enh #4492: Support PostgreSQL-specific syntax for `QueryBuilder::alterColumn()` (qiangxue)
@@ -58,6 +60,7 @@ Yii Framework 2 Change Log
 - Enh #5223: Query builder now supports selecting sub-queries as columns (qiangxue)
 - Enh #5367: Added `yii\grid\DataColumn::encodeLabel` (SDKiller)
 - Enh #5480: Added defensive code to `yii\web\User::getIdentity()` to avoid potential infinite recursion (qiangxue)
+- Enh #5503: Added support for `DateTimeImmutable` to Formatter (olegtsvetkov, cebe)
 - Enh #5587: `json_encode` is now used with `JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE` where it makes sense, also
   it is now default for `Json::encode()` (samdark)
 - Enh #5600: Allow configuring debug panels in `yii\debug\Module::panels` as panel class name strings (qiangxue)
