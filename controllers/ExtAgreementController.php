@@ -69,16 +69,23 @@ class ExtAgreementController extends Controller
         $model->datein = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
+
             $file1 = UploadedFile::getInstance($model, 'file');
             
             date_default_timezone_set('Asia/Jakarta');
             
-            $model->filename = $model->project->code.'_'.date('dMY').'_'.date('His').'_'.'Proposal'. '.' . $file1->extension;
+            $model->filename = $model->project->code.'_'.date('dMY').'_'.date('His').'_'.'ExtAgreement'. '.' . $file1->extension;
             $model->file = $file1;
             
-            if ($model->validate() && $model->save()) {                
-                $model->file->saveAs('uploads/' . $model->filename); 
-                return $this->redirect(['view', 'id' => $model->extagreementid]);
+            if ($model->validate()) {
+
+                $model->startdate = date("Y-m-d", strtotime($model->startdate));
+                $model->enddate = date("Y-m-d", strtotime($model->enddate));
+
+                if($model->save()){
+                    $model->file->saveAs('uploads/' . $model->filename); 
+                    return $this->redirect(['view', 'id' => $model->extagreementid]);
+                }
             }
             else {
                 return $this->render('create', [
@@ -117,22 +124,27 @@ class ExtAgreementController extends Controller
         $model->dateup = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
-
+            
             $file1 = UploadedFile::getInstance($model, 'file');
             
             date_default_timezone_set('Asia/Jakarta');
 
-            $model->filename = $model->project->code.'_'.date('dMY').'_'.date('His').'_'.'Proposal'. '.' . $file1->extension;
-            $model->file = $file1;
-            
-            if ($model->validate() && $model->save()) {                
-                $model->file->saveAs('uploads/' . $model->filename); 
-                return $this->redirect(['view', 'id' => $model->extagreementid]);
+            $model->filename = $model->project->code.'_'.date('dMY').'_'.date('His').'_'.'ExtAgreement'. '.' . $file1->extension;
+            $model->file = $file1;            
+            if ($model->validate()) {
+
+                $model->startdate = date("Y-m-d", strtotime($model->startdate));
+                $model->enddate = date("Y-m-d", strtotime($model->enddate));
+
+                if($model->save()){
+                    $model->file->saveAs('uploads/' . $model->filename); 
+                    return $this->redirect(['view', 'id' => $model->extagreementid]);
+                }
             }
             else{
-                return $this->render('update', [
+                return $this->render('update',[
                     'model' => $model,
-                ]);    
+                ]);
             }
         } else {
             return $this->render('update', [

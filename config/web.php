@@ -1,4 +1,5 @@
 <?php
+use \kartik\datecontrol\Module;
 
 $params = require(__DIR__ . '/params.php');
 
@@ -45,6 +46,15 @@ $config = [
             ],
             // ...
         ]
+    ],
+    'modules' => [
+        'datecontrol' =>  [
+            'class' => '\kartik\datecontrol\Module',
+            'saveSettings' => [
+                Module::FORMAT_DATE => 'php:d-M-Y',                
+            ],
+            'displayTimezone' => 'Asia/Jakarta',
+        ],
     ],
     'params' => $params,
 ];

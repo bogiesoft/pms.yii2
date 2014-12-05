@@ -45,6 +45,7 @@ class ExtAgreement extends \yii\db\ActiveRecord
             [['startdate', 'enddate', 'datein', 'dateup'], 'safe'],
             [['agreementno', 'userin', 'userup'], 'string', 'max' => 50],
             [['description', 'filename'], 'string', 'max' => 250],
+            [['startdate','enddate'], 'string', 'max' => 250],        
             [['file'],'safe'],
             [['file'], 'file', 'skipOnEmpty' => false],
             [['file'], 'file', 'extensions' => 'doc, docx', 'mimeTypes' => 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',],

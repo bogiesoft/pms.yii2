@@ -7,6 +7,7 @@ use app\models\Project;
 //use yii\jui\DatePicker;
 use kartik\datecontrol\Module;
 use kartik\datecontrol\DateControl;
+use kartik\date\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\ExtAgreement */
@@ -31,16 +32,21 @@ use kartik\datecontrol\DateControl;
     <?= $form->field($model, 'description')->textInput(['maxlength' => 250]) ?>
 
     <?php
-        echo $form->field($model, 'startdate')->widget(DateControl::classname(),[
-                'displayFormat' => 'php:d - M - Y',
-                'type' => DateControl::FORMAT_DATE
+        echo DatePicker::widget([
+                'model' => $model,
+                'attribute' => 'startdate',
+                'attribute2' => 'enddate',
+                'options' => ['placeholder'=>'Start Date'],
+                'options2' => ['placeholder'=>'End Date'],
+                'type' => DatePicker::TYPE_RANGE,
+                'form' => $form,
+                'pluginOptions' => [
+                    'format' => 'dd-M-yyyy',
+                    'autoclose' => true,
+                ]
             ]);
     ?>
-
-    <?= $form->field($model, 'startdate')->textInput() ?>
-
-    <?= $form->field($model, 'enddate')->textInput() ?>
-
+    
     <?php //$form->field($model, 'filename')->textInput(['maxlength' => 150]) ?>
 
     <?= $form->field($model, 'file')->fileInput() ?> 
