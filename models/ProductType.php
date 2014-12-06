@@ -51,4 +51,12 @@ class ProductType extends \yii\db\ActiveRecord
             'description' => 'Description',
         ];
     }
+
+    /** 
+     * @return \yii\db\ActiveQuery 
+     */ 
+    public function getPsProjects() 
+    { 
+        return $this->hasMany(Project::className(), ['producttypeid' => 'producttypeid']);
+    } 
 }

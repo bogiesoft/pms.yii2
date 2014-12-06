@@ -62,6 +62,10 @@ class ProductTypeController extends Controller
     {
         $model = new ProductType();
 
+        //initial user change & date
+        $model->userin = 'sun';
+        $model->datein = new \yii\db\Expression('NOW()');
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->producttypeid]);
         } else {
@@ -81,6 +85,10 @@ class ProductTypeController extends Controller
     {
         $model = $this->findModel($id);
 
+        //initial user change & date
+        $model->userup = 'sun';
+        $model->dateup = new \yii\db\Expression('NOW()');
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->producttypeid]);
         } else {
