@@ -21,12 +21,12 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'description')->textArea(['maxlength' => 250, 'style' => 'height:120px']) ?>
 
     <?php 
-        $dataCategory = [];
-        array_push($dataCategory, ' ');
-        $dataCategory += yii\helpers\ArrayHelper::map(\app\models\Menu::find()->asArray()->all(), 'menuid', 'caption');
+        $data = [];
+        array_push($data, ' ');
+        $data += yii\helpers\ArrayHelper::map(\app\models\Menu::find()->asArray()->all(), 'menuid', 'caption');
     ?>
 
-    <?= $form->field($model, 'parentid')->dropDownList($dataCategory) ?>
+    <?= $form->field($model, 'parentid')->dropDownList($data) ?>
 
 
     <?= $form->field($model, 'active')->radioList(['1'=>'Yes', '0'=>'No'],['separator'=>'<span style="margin-right:20px"></span>']) ?>

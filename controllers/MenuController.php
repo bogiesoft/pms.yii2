@@ -69,8 +69,13 @@ class MenuController extends Controller
         $model->userin = 'prayogo';
         $model->datein = new \yii\db\Expression('NOW()');
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->menuid]);
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->parentid == 0){
+                $model->parentid = null;
+            }
+            if ($model->save()){
+                return $this->redirect(['view', 'id' => $model->menuid]);
+            }
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -92,8 +97,13 @@ class MenuController extends Controller
         $model->userup = 'prayogo';
         $model->dateup = new \yii\db\Expression('NOW()');
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->menuid]);
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->parentid == 0){
+                $model->parentid = null;
+            }
+            if ($model->save()){
+                return $this->redirect(['view', 'id' => $model->menuid]);
+            }
         } else {
             return $this->render('update', [
                 'model' => $model,

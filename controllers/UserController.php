@@ -133,7 +133,11 @@ class UserController extends Controller
 
                 if ($model->save()){
                     return $this->redirect(['view', 'id' => $model->userid]);    
-                }   
+                }else{
+                    return $this->render('update', [
+                        'model' => $model,
+                    ]);
+                }
             }
         } else {
             return $this->render('update', [
