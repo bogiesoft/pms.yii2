@@ -19,29 +19,26 @@ use app\models\ProjectRate;
 
     <?php 
         $dataCategory = [];
-        array_push($dataCategory, ' ');      
         $dataCategory += ArrayHelper::map(IntAgreement::find()->asArray()->all(), 'intagreementid', 'description');        
     ?>
 
-    <?= $form->field($model, 'intagreementid')->dropDownList($dataCategory) ?>
+    <?= $form->field($model, 'intagreementid')->dropDownList($dataCategory, array('prompt'=>' ')) ?>
 
     <?php 
         $dataCategory1 = [];
-        array_push($dataCategory1, ' ');      
         $dataCategory1 += ArrayHelper::map(ExtDeliverables::find()->asArray()->all(), 'extdeliverableid', 'description');        
     ?>
 
-    <?= $form->field($model, 'extdeliverableid')->dropDownList($dataCategory1) ?>
+    <?= $form->field($model, 'extdeliverableid')->dropDownList($dataCategory1, array('prompt'=>' ')) ?>
 
     <?= $form->field($model, 'code')->textInput(['maxlength' => 5]) ?>
 
     <?php 
         $dataCategory2 = [];
-        array_push($dataCategory2, ' ');      
         $dataCategory2 += ArrayHelper::map(ConsultantPosition::find()->asArray()->all(), 'positionid', 'name');        
     ?>
 
-    <?= $form->field($model, 'positionid')->dropDownList($dataCategory2) ?>
+    <?= $form->field($model, 'positionid')->dropDownList($dataCategory2, array('prompt'=>' ')) ?>
 
     <?= $form->field($model, 'description')->textInput(['maxlength' => 250]) ?>
 
@@ -49,11 +46,10 @@ use app\models\ProjectRate;
 
     <?php 
         $dataCategory3 = [];
-        array_push($dataCategory3, ' ');      
         $dataCategory3 += ArrayHelper::map(ProjectRate::find()->asArray()->all(), 'rateid', 'role');        
     ?>
 
-    <?= $form->field($model, 'rateid')->dropDownList($dataCategory3) ?>
+    <?= $form->field($model, 'rateid')->dropDownList($dataCategory3, array('prompt'=>' ')) ?>
 
     <?= $form->field($model, 'rate')->textInput() ?>
     

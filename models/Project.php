@@ -81,7 +81,7 @@ class Project extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsBusinessassurances()
+    public function getBusinessassurances()
     {
         return $this->hasMany(BusinessAssurance::className(), ['projectid' => 'projectid']);
     }
@@ -89,7 +89,7 @@ class Project extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsCostingapprovals()
+    public function getCostingapprovals()
     {
         return $this->hasMany(CostingApproval::className(), ['projectid' => 'projectid']);
     }
@@ -97,7 +97,7 @@ class Project extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsExtagreements()
+    public function getExtagreements()
     {
         return $this->hasMany(ExtAgreement::className(), ['projectid' => 'projectid']);
     }
@@ -137,7 +137,7 @@ class Project extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsProjectpics()
+    public function getProjectpic()
     {
         return $this->hasMany(ProjectPic::className(), ['projectid' => 'projectid']);
     }
@@ -145,7 +145,7 @@ class Project extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsProposals()
+    public function getProposals()
     {
         return $this->hasMany(Proposal::className(), ['projectid' => 'projectid']);
     }

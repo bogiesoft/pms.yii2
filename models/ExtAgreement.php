@@ -84,7 +84,7 @@ class ExtAgreement extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsExtdeliverables()
+    public function getExtdeliverables()
     {
         return $this->hasMany(ExtDeliverables::className(), ['extagreementid' => 'extagreementid']);
     }
@@ -92,7 +92,7 @@ class ExtAgreement extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsIntagreements()
+    public function getIntagreements()
     {
         return $this->hasMany(IntAgreement::className(), ['extagreementid' => 'extagreementid']);
     }

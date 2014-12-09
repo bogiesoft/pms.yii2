@@ -16,12 +16,11 @@ use app\models\Project;
 
     <?php 
         $dataCategory = [];
-        array_push($dataCategory, ' ');
         $sql = "select projectid, concat(code,' - ',name) as project_descr from ps_project ";        
         $dataCategory += ArrayHelper::map(Project::findBySql($sql)->asArray()->all(), 'projectid', 'project_descr');        
     ?>
 
-    <?= $form->field($model, 'projectid')->dropDownList($dataCategory) ?>
+    <?= $form->field($model, 'projectid')->dropDownList($dataCategory, array('prompt'=>' ')) ?>
 
     <?= $form->field($model, 'remark')->textInput(['maxlength' => 250]) ?>
 

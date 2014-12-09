@@ -18,11 +18,10 @@ use app\models\MindUnit;
 
     <?php 
         $dataCategory = [];
-        array_push($dataCategory, ' ');
         $dataCategory += ArrayHelper::map(MindUnit::find()->asArray()->all(), 'mindunitid', 'name');        
     ?>
 
-    <?= $form->field($model, 'mindunitid')->dropDownList($dataCategory) ?>
+    <?= $form->field($model, 'mindunitid')->dropDownList($dataCategory, array('prompt'=>' ')) ?>
 
     <?= $form->field($model, 'rate')->textInput() ?>
 

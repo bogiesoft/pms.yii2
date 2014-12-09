@@ -22,27 +22,24 @@ use kartik\date\DatePicker;
 
     <?php 
         $dataCategory = [];
-        array_push($dataCategory, ' ');   
         $dataCategory += ArrayHelper::map(ExtAgreement::find()->asArray()->all(), 'extagreementid', 'description');        
     ?>
 
-    <?= $form->field($model, 'extagreementid')->dropDownList($dataCategory) ?>
+    <?= $form->field($model, 'extagreementid')->dropDownList($dataCategory, array('prompt'=>' ')) ?>
 
     <?php 
         $dataCategory1 = [];
-        array_push($dataCategory1, ' ');   
         $dataCategory1 += ArrayHelper::map(Consultant::find()->asArray()->all(), 'consultantid', 'name');        
     ?>
 
-    <?= $form->field($model, 'consultantid')->dropDownList($dataCategory1) ?>
+    <?= $form->field($model, 'consultantid')->dropDownList($dataCategory1, array('prompt'=>' ')) ?>
 
     <?php 
         $dataCategory2 = [];
-        array_push($dataCategory2, ' ');   
         $dataCategory2 += ArrayHelper::map(Department::find()->asArray()->all(), 'departmentid', 'name');        
     ?>
 
-    <?= $form->field($model, 'departmentid')->dropDownList($dataCategory2) ?>
+    <?= $form->field($model, 'departmentid')->dropDownList($dataCategory2, array('prompt'=>' ')) ?>
 
     <?= $form->field($model, 'description')->textInput(['maxlength' => 250]) ?>
 

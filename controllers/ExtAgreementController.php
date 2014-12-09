@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use yii\helpers\FileHelper;
+use yii\data\ActiveDataProvider;
 
 /**
  * ExtAgreementController implements the CRUD actions for ExtAgreement model.

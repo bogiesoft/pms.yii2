@@ -16,12 +16,11 @@ use app\models\Faculty;
 
     <?php 
         $dataCategory = [];
-        array_push($dataCategory, ' ');
         $sql = "select facultyid, concat(code,' - ',name) as faculty_descr from ps_faculty ";        
         $dataCategory += ArrayHelper::map(Faculty::findBySql($sql)->asArray()->all(), 'facultyid', 'faculty_descr');        
     ?>
 
-    <?= $form->field($model, 'facultyid')->dropDownList($dataCategory) ?>
+    <?= $form->field($model, 'facultyid')->dropDownList($dataCategory, array('prompt'=>' ')) ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => 50]) ?>
 

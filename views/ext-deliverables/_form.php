@@ -16,11 +16,10 @@ use app\models\ExtAgreement;
 
     <?php 
         $dataCategory = [];
-        array_push($dataCategory, ' ');
         $dataCategory += ArrayHelper::map(ExtAgreement::find()->asArray()->all(), 'extagreementid', 'description');        
     ?>
 
-    <?= $form->field($model, 'extagreementid')->dropDownList($dataCategory) ?>
+    <?= $form->field($model, 'extagreementid')->dropDownList($dataCategory, array('prompt'=>' ')) ?>
 
     <?= $form->field($model, 'code')->textInput(['maxlength' => 5]) ?>
 
