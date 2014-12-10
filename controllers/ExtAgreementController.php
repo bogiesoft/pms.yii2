@@ -12,6 +12,9 @@ use yii\web\UploadedFile;
 use yii\helpers\FileHelper;
 use yii\data\ActiveDataProvider;
 
+use yii\helpers\ArrayHelper;
+use app\models\ExtDeliverables;
+
 /**
  * ExtAgreementController implements the CRUD actions for ExtAgreement model.
  */
@@ -64,6 +67,7 @@ class ExtAgreementController extends Controller
     public function actionCreate()
     {
         $model = new ExtAgreement();
+        $model_extdeliverables = null;
 
         //initial user change & date
         $model->userin = 'sun';
@@ -76,29 +80,63 @@ class ExtAgreementController extends Controller
             date_default_timezone_set('Asia/Jakarta');
             
             $model->filename = $model->project->code.'_'.date('dMY').'_'.date('His').'_'.'ExtAgreement'. '.' . $file1->extension;
-            $model->file = $file1;
-            
-            if ($model->validate()) {
+            $model->file = $file1;            
 
-                $model->startdate = date("Y-m-d", strtotime($model->startdate));
-                $model->enddate = date("Y-m-d", strtotime($model->enddate));
+            $model->startdate = date("Y-m-d", strtotime($model->startdate));
+            $model->enddate = date("Y-m-d", strtotime($model->enddate));
 
-                if($model->save()){
-                    $model->file->saveAs('uploads/' . $model->filename); 
-                    return $this->redirect(['view', 'id' => $model->extagreementid]);
+            $transaction = Yii::$app->db->beginTransaction();
+            $flag = $model->save();
+
+            if($flag){
+                $model->file->saveAs('uploads/' . $model->filename); 
+
+                $post_extdeliverables = Yii::$app->request->post('ExtDeliverables');
+                
+                foreach($post_extdeliverables as $i => $extdeliverables) {
+                    $extdeliverables1 = new ExtDeliverables();
+                    $extdeliverables1->setAttributes($extdeliverables);                                
+                    $extdeliverables1->extagreementid = $model->extagreementid;
+
+                    $model_extdeliverables[] = $extdeliverables1;                
                 }
-            }
-            else {
-                return $this->render('create', [
-                    'model' => $model,
-                ]);
-            }
+
+                if(ExtDeliverables::validateMultiple($model_extdeliverables)){             
+
+                    try{
+                        foreach($model_extdeliverables as $extdeliverables){
+
+                            //initial user change & date
+                            $extdeliverables->userin = 'sun';                            
+                            $extdeliverables->datein = new \yii\db\Expression('NOW()');
+                            
+                            $flag = $extdeliverables->save();
+
+                            if(!$flag){
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                        if($flag){
+                            $transaction->commit();
+                            return $this->redirect(['view', 'id' => $model->extagreementid]);
+                        }
+                    }
+                    catch (Exception $ex) {
+                        $transaction->rollBack();
+                    }
+                }
+                else {
+                    $transaction->rollBack();
+                }
+            }            
         }
-        else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
+        
+        return $this->render('create', [
+            'model' => $model,
+            'model_extdeliverables'=> (empty($model_extdeliverables)) ? [new ExtDeliverables()] :$model_extdeliverables,
+        ]);
+
         /*
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->extagreementid]);
@@ -124,34 +162,78 @@ class ExtAgreementController extends Controller
         $model->userup = 'sun';
         $model->dateup = new \yii\db\Expression('NOW()');
 
+        $model_extdeliverables = ExtDeliverables::find()->where('extagreementid = :1',[':1'=>$model->extagreementid,])->all();
+
         if ($model->load(Yii::$app->request->post())) {
             
-            $file1 = UploadedFile::getInstance($model, 'file');
-            
+            $file1 = UploadedFile::getInstance($model, 'file');            
             date_default_timezone_set('Asia/Jakarta');
 
             $model->filename = $model->project->code.'_'.date('dMY').'_'.date('His').'_'.'ExtAgreement'. '.' . $file1->extension;
             $model->file = $file1;            
-            if ($model->validate()) {
 
-                $model->startdate = date("Y-m-d", strtotime($model->startdate));
-                $model->enddate = date("Y-m-d", strtotime($model->enddate));
+            $model->startdate = date("Y-m-d", strtotime($model->startdate));
+            $model->enddate = date("Y-m-d", strtotime($model->enddate));
 
-                if($model->save()){
-                    $model->file->saveAs('uploads/' . $model->filename); 
-                    return $this->redirect(['view', 'id' => $model->extagreementid]);
+            $transaction = Yii::$app->db->beginTransaction();
+            $flag = $model->save();
+
+            if($flag){
+                $model->file->saveAs('uploads/' . $model->filename); 
+
+                $post_extdeliverables = Yii::$app->request->post('ExtDeliverables');
+                
+                $model_extdeliverables = [];
+                
+                ExtDeliverables::deleteAll('extagreementid = :1',[':1'=> $model->extagreementid]);
+
+                foreach($post_extdeliverables as $i => $extdeliverables) {
+                    $extdeliverables1 = new ExtDeliverables();
+                    $extdeliverables1->setAttributes($extdeliverables);                                
+                    $extdeliverables1->extagreementid = $model->extagreementid;
+
+                    $model_extdeliverables[] = $extdeliverables1;                
+                }
+
+                if(ExtDeliverables::validateMultiple($model_extdeliverables)){             
+
+                    try{
+                        if($flag){
+                            
+
+                            foreach($model_extdeliverables as $extdeliverables){
+
+                                //initial user change & date
+                                $extdeliverables->userin = 'sun';                            
+                                $extdeliverables->datein = new \yii\db\Expression('NOW()');
+                                
+                                $flag = $extdeliverables->save();
+
+                                if(!$flag){
+                                    $transaction->rollBack();
+                                    break;
+                                }
+                            }
+                            if($flag){
+                                $transaction->commit();
+                                return $this->redirect(['view', 'id' => $model->extagreementid]);
+                            }
+                        }
+                    }
+                    catch (Exception $ex) {
+                        $transaction->rollBack();
+                    }
+                }
+                else {
+                    $transaction->rollBack();
                 }
             }
-            else{
-                return $this->render('update',[
-                    'model' => $model,
-                ]);
-            }
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
+        } 
+
+        return $this->render('update', [
+            'model' => $model,
+            'model_extdeliverables'=> (empty($model_extdeliverables)) ? [new ExtDeliverables()] :$model_extdeliverables,
+        ]);
 
         /*
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -191,5 +273,14 @@ class ExtAgreementController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionAdd($index){
+        $model = new ExtDeliverables();
+
+        return $this->renderPartial('ext-deliverables/_form', [
+                'model'=>$model,
+                'index'=>$index,
+            ]);
     }
 }

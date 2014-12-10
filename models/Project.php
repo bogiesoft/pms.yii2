@@ -145,7 +145,7 @@ class Project extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProposals()
+    public function getProposal()
     {
         return $this->hasMany(Proposal::className(), ['projectid' => 'projectid']);
     }
@@ -165,4 +165,5 @@ class Project extends \yii\db\ActiveRecord
     {
         return $this->producttype->code . ' - ' . $this->producttype->name;
     }
+    
 }

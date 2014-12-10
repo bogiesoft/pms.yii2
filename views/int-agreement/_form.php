@@ -61,6 +61,21 @@ use kartik\date\DatePicker;
 
     <?= $form->field($model, 'file')->fileInput() ?> 
 
+    <div id="int-deliverables">
+        <a id='addIntDeliverable' >Add New Internal Deliverables</a>
+        <?php
+            $index = 0;
+    
+            foreach($model_intdeliverables as $i => $intdeliverables){
+                echo $this->render('int-deliverables/_form', [
+                    'model' => $intdeliverables,
+                    'index' => $i,
+                ]);
+                $index = $i;                
+            }
+        ?>
+    </div>
+
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
@@ -68,3 +83,28 @@ use kartik\date\DatePicker;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+
+<?php    
+    $this->registerJs('
+        index = "'.++$index.'";
+        $("#addIntDeliverable").click(function(e){            
+            $.ajax({
+                url: "'.yii\helpers\URL::toRoute('int-agreement/add').'?index="+index,
+                dataType: "html",
+                success: function(data){
+                    $intDeliverables = $(data).clone();
+                    $("#int-deliverables").append($intDeliverables);
+                }
+            });    
+            index++;
+        });
+    ')
+
+?>
+
+<script>
+    function deleteIntDeliverables(e){
+        $(e).parent().remove();        
+    }
+</script>

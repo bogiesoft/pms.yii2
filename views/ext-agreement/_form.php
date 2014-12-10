@@ -53,6 +53,21 @@ use kartik\grid\GridView;
 
     <?= $form->field($model, 'file')->fileInput() ?> 
 
+    <div id="ext-deliverables">
+        <a id='addExtDeliverable' >Add New External Deliverables</a>
+        <?php
+            $index = 0;
+    
+            foreach($model_extdeliverables as $i => $extdeliverables){
+                echo $this->render('ext-deliverables/_form', [
+                    'model' => $extdeliverables,
+                    'index' => $i,
+                ]);
+                $index = $i;                
+            }
+        ?>
+    </div>
+
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
@@ -60,3 +75,27 @@ use kartik\grid\GridView;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php    
+    $this->registerJs('
+        index = "'.++$index.'";
+        $("#addExtDeliverable").click(function(e){            
+            $.ajax({
+                url: "'.yii\helpers\URL::toRoute('ext-agreement/add').'?index="+index,
+                dataType: "html",
+                success: function(data){
+                    $extDeliverables = $(data).clone();
+                    $("#ext-deliverables").append($extDeliverables);
+                }
+            });    
+            index++;
+        });
+    ')
+
+?>
+
+<script>
+    function deleteExtDeliverables(e){
+        $(e).parent().remove();        
+    }
+</script>

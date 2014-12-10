@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+use yii\helpers\ArrayHelper;
 use app\models\ProjectPic;
 
 /**
@@ -146,17 +147,16 @@ class ProjectController extends Controller
         //initial user change & date
         $model->userup = 'sun';
         $model->dateup = new \yii\db\Expression('NOW()');
-        /*
-        $model_projectpic = null;
-        $dataCategory += ArrayHelper::map(User::find()->asArray()->all(), 'userid', 'name');
-        */
-        $model_projecpic = $model->projectpic;
+
+        $model_projectpic = ProjectPic::find()->where(
+            'projectid = :1',[':1'=>$model->projectid,]
+        )->all();
         
         if ($model->load(Yii::$app->request->post())) {
             $transaction = Yii::$app->db->beginTransaction();
             $flag = $model->save();
 
-            $oldIds = ArrayHelper::map($model_projectpic,'userid','userid');
+            //$oldIds = ArrayHelper::map($model_projectpic,'userid','userid');
             $post_projectpic = Yii::$app->request->post('ProjectPic');
 
             //$valid = true;
@@ -173,16 +173,19 @@ class ProjectController extends Controller
                 $model_projectpic[] = $projectpic1;                
             }
 
-            $deleteIds = array_diff($oldIds, array_filter(ArrayHelper::map($model_projectpic,'userid','userid')));
+            //$deleteIds = array_diff($oldIds, array_filter(ArrayHelper::map($model_projectpic,'userid','userid')));
 
             if(ProjectPic::validateMultiple($model_projectpic)){  
                 try{
                     if($flag){
 
+                        /*
                         if(!empty($deleteIds)){
                             ProjectPic::deleteAll(['projectid'=> $model->projectid, 'userid'=>$deleteIds]);
                         }
-
+                        */
+                        ProjectPic::deleteAll('projectid = :1',[':1'=> $model->projectid]);
+                        
                         foreach($model_projectpic as $ProjectPic){
                             //initial user change & date
                             $ProjectPic->userin = 'sun';                            
@@ -210,14 +213,14 @@ class ProjectController extends Controller
                 }             
             }
             else{
-                $transaction.rollBack();
+                $transaction->rollBack();
             }
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-                'model_projectpic' => (empty($model_projectpic)) ? [new ProjectPic()] :$model_projectpic,
-            ]);
         }
+
+        return $this->render('update', [
+            'model' => $model,
+            'model_projectpic' => (empty($model_projectpic)) ? [new ProjectPic()] :$model_projectpic,
+        ]);
     }
 
     /**

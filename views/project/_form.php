@@ -61,7 +61,6 @@ use app\models\Status;
             $index = 0;
     
             foreach($model_projectpic as $i => $projectpic){
-                
                 echo $this->render('project-pic/_form', [
                     'model' => $projectpic,
                     'index' => $i,
