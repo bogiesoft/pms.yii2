@@ -310,8 +310,9 @@ class InputWidget extends \yii\widgets\InputWidget
                 $script = "{$id}.{$name}({$this->_hashVar}, {$callbackCon})";
             }
             if ($callback != null) {
-                $script = "jQuery.when({$script}).done({$callback});";
+                $script = "jQuery.when({$script}).done({$callback})";
             }
+            $script .= ";\n";
         }
         if (!empty($this->pluginEvents)) {
             $js = [];
@@ -319,10 +320,11 @@ class InputWidget extends \yii\widgets\InputWidget
                 $function = new JsExpression($handler);
                 $js[] = "{$id}.on('{$event}', {$function});";
             }
-            $script .= implode("\n", $js);
+            $script .= implode("\n", $js) . "\n";
         }
         return $script;
     }
+
     /**
      * Validates and sets disabled or readonly inputs
      * @param array $options the HTML attributes for the input

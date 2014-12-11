@@ -39,7 +39,7 @@ use yii\helpers\Html;
  *             'label' => 'Ajax tab',
  *             'url' => ['ajax/content'],
  *         ],
- *     ),
+ *     ],
  *     'options' => ['tag' => 'div'],
  *     'itemOptions' => ['tag' => 'div'],
  *     'headerOptions' => ['class' => 'my-class'],
@@ -69,7 +69,7 @@ class Tabs extends Widget
      * - content: string, the content to show when corresponding tab is clicked. Can be omitted if url is specified.
      * - url: mixed, mixed, optional, the url to load tab contents via AJAX. It is required if no content is specified.
      * - template: string, optional, the header link template to render the header link. If none specified
-     * [[linkTemplate]] will be used instead.
+     *   [[linkTemplate]] will be used instead.
      * - options: array, optional, the HTML attributes of the header.
      * - headerOptions: array, optional, the HTML attributes for the header container tag.
      */
@@ -98,6 +98,7 @@ class Tabs extends Widget
      */
     public $encodeLabels = true;
 
+
     /**
      * Renders the widget.
      */
@@ -108,12 +109,12 @@ class Tabs extends Widget
         echo Html::beginTag($tag, $options) . "\n";
         echo $this->renderItems() . "\n";
         echo Html::endTag($tag) . "\n";
-        $this->registerWidget('tabs', TabsAsset::className());
+        $this->registerWidget('tabs');
     }
 
     /**
      * Renders tab items as specified on [[items]].
-     * @return string                  the rendering result.
+     * @return string the rendering result.
      * @throws InvalidConfigException.
      */
     protected function renderItems()
@@ -127,8 +128,8 @@ class Tabs extends Widget
             if (isset($item['url'])) {
                 $url = Url::to($item['url']);
             } else {
-                if (!isset($item['content'])) {
-                    throw new InvalidConfigException("The 'content' or 'url' option is required.");
+                if (!array_key_exists('content', $item)) {
+                    throw new InvalidConfigException("Either the 'content' or 'url' option is required.");
                 }
                 $options = array_merge($this->itemOptions, ArrayHelper::getValue($item, 'options', []));
                 $tag = ArrayHelper::remove($options, 'tag', 'div');
