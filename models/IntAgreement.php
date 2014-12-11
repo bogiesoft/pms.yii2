@@ -102,7 +102,7 @@ class IntAgreement extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsIntdeliverables()
+    public function getIntdeliverables()
     {
         return $this->hasMany(IntDeliverables::className(), ['intagreementid' => 'intagreementid']);
     }

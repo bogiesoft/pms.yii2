@@ -11,6 +11,9 @@ use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use yii\helpers\FileHelper;
 
+use yii\helpers\ArrayHelper;
+use app\models\IntDeliverables;
+
 /**
  * IntAgreementController implements the CRUD actions for IntAgreement model.
  */
@@ -77,27 +80,61 @@ class IntAgreementController extends Controller
             $model->filename = $model->extagreement->project->code.'_'.date('dMY').'_'.date('His').'_'.'IntAgreement'. '.' . $file1->extension;
             $model->file = $file1;
             
-            if ($model->validate()) {
+            $model->startdate = date("Y-m-d", strtotime($model->startdate));
+            $model->enddate = date("Y-m-d", strtotime($model->enddate));
 
-                $model->startdate = date("Y-m-d", strtotime($model->startdate));
-                $model->enddate = date("Y-m-d", strtotime($model->enddate));
+            $transaction = Yii::$app->db->beginTransaction();
+            $flag = $model->save();
 
-                if($model->save()){
-                    $model->file->saveAs('uploads/' . $model->filename); 
-                    return $this->redirect(['view', 'id' => $model->intagreementid]);
+            if($flag){
+                $model->file->saveAs('uploads/' . $model->filename); 
+
+                $post_intdeliverables = Yii::$app->request->post('IntDeliverables');
+                
+                foreach($post_intdeliverables as $i => $intdeliverables) {
+                    $intdeliverables1 = new IntDeliverables();
+                    $intdeliverables1->setAttributes($intdeliverables);                                
+                    $intdeliverables1->extagreementid = $model->intagreementid;
+
+                    $model_intdeliverables[] = $intdeliverables1;                
                 }
-            }
-            else {
-                return $this->render('create', [
-                    'model' => $model,
-                ]);
-            }
+
+                if(ExtDeliverables::validateMultiple($model_intdeliverables)){             
+
+                    try{
+                        foreach($model_intdeliverables as $intdeliverables){
+
+                            //initial user change & date
+                            $intdeliverables->userin = 'sun';                            
+                            $intdeliverables->datein = new \yii\db\Expression('NOW()');
+                            
+                            $flag = $intdeliverables->save();
+
+                            if(!$flag){
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                        if($flag){
+                            $transaction->commit();
+                            return $this->redirect(['view', 'id' => $model->intagreementid]);
+                        }
+                    }
+                    catch (Exception $ex) {
+                        $transaction->rollBack();
+                    }
+                }
+                else {
+                    $transaction->rollBack();
+                }
+            }         
         }
-        else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
+        
+        return $this->render('create', [
+            'model' => $model,
+            'model_intdeliverables' => (empty($model_intdeliverables)) ? [new IntDeliverables()] :$model_intdeliverables,
+        ]);
+        
 
         /*
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -131,25 +168,62 @@ class IntAgreementController extends Controller
             date_default_timezone_set('Asia/Jakarta');
 
             $model->filename = $model->project->code.'_'.date('dMY').'_'.date('His').'_'.'IntAgreement'. '.' . $file1->extension;
-            $model->file = $file1;            
-            if ($model->validate()) {
+            $model->file = $file1;
 
-                $model->startdate = date("Y-m-d", strtotime($model->startdate));
-                $model->enddate = date("Y-m-d", strtotime($model->enddate));
+            $model->startdate = date("Y-m-d", strtotime($model->startdate));
+            $model->enddate = date("Y-m-d", strtotime($model->enddate));
 
-                if($model->save()){
-                    $model->file->saveAs('uploads/' . $model->filename); 
-                    return $this->redirect(['view', 'id' => $model->intagreementid]);
+            if($flag){
+                $model->file->saveAs('uploads/' . $model->filename); 
+
+                $post_intdeliverables = Yii::$app->request->post('IntDeliverables');
+
+                $model_intdeliverables = [];
+                
+                IntDeliverables::deleteAll('intagreementid = :1',[':1'=> $model->intagreementid]);
+                
+                foreach($post_intdeliverables as $i => $intdeliverables) {
+                    $intdeliverables1 = new IntDeliverables();
+                    $intdeliverables1->setAttributes($intdeliverables);                                
+                    $intdeliverables1->extagreementid = $model->intagreementid;
+
+                    $model_intdeliverables[] = $intdeliverables1;
+                }
+
+                if(ExtDeliverables::validateMultiple($model_intdeliverables)){             
+
+                    try{
+                        foreach($model_intdeliverables as $intdeliverables){
+
+                            //initial user change & date
+                            $intdeliverables->userin = 'sun';                            
+                            $intdeliverables->datein = new \yii\db\Expression('NOW()');
+                            
+                            $flag = $intdeliverables->save();
+
+                            if(!$flag){
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                        if($flag){
+                            $transaction->commit();
+                            return $this->redirect(['view', 'id' => $model->intagreementid]);
+                        }
+                    }
+                    catch (Exception $ex) {
+                        $transaction->rollBack();
+                    }
+                }
+                else {
+                    $transaction->rollBack();
                 }
             }
-            else{
-                return $this->render('update',[
-                    'model' => $model,
-                ]);
-            }
+
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'model_intdeliverables' => (empty($model_intdeliverables)) ? [new IntDeliverables()] :$model_intdeliverables,
             ]);
         }
 
@@ -191,5 +265,14 @@ class IntAgreementController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionAdd($index){
+        $model = new IntDeliverables();
+
+        return $this->renderPartial('int-deliverables/_form', [
+                'model'=>$model,
+                'index'=>$index,
+            ]);
     }
 }

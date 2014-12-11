@@ -7,7 +7,6 @@ use Yii;
 /**
  * This is the model class for table "ps_projectpic".
  *
- * @property integer $projectpicid
  * @property integer $projectid
  * @property integer $userid
  * @property string $datein
@@ -47,7 +46,6 @@ class ProjectPic extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'projectpicid' => 'Projectpicid',
             'projectid' => 'Projectid',
             'userid' => 'Userid',
             'datein' => 'Datein',

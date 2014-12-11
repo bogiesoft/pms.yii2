@@ -9,6 +9,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+use yii\helpers\ArrayHelper;
+use app\models\ProjectPic;
+
 /**
  * ProjectController implements the CRUD actions for Project model.
  */
@@ -61,18 +64,74 @@ class ProjectController extends Controller
     public function actionCreate()
     {
         $model = new Project();
+        $model_projectpic = null;
 
         //initial user change & date
         $model->userin = 'sun';
         $model->datein = new \yii\db\Expression('NOW()');
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->projectid]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        if ($model->load(Yii::$app->request->post())) {
+            $transaction = Yii::$app->db->beginTransaction();
+
+            $flag = $model->save();
+
+            $post_projectpic = Yii::$app->request->post('ProjectPic');
+            //$valid = true;
+            
+            foreach($post_projectpic as $i => $projectpic) {
+                $projectpic1 = new ProjectPic();
+                $projectpic1->setAttributes($projectpic);                                
+                $projectpic1->projectid = $model->projectid;
+                /*
+                if(!$projectpic1->validate()){
+                    $valid = false;
+                }
+                */
+                $model_projectpic[] = $projectpic1;                
+            }
+            
+            //if(ProjectPic::loadMultiple($model_projectpic, Yii::$app->request->post('ProjectPic')) && ProjectPic::validateMultiple($model_projectpic)){                
+            if(ProjectPic::validateMultiple($model_projectpic)){             
+            //if($valid){
+                
+                try{
+                    if($flag){
+                        foreach($model_projectpic as $ProjectPic){
+
+                            //initial user change & date
+                            $ProjectPic->userin = 'sun';                            
+                            $ProjectPic->datein = new \yii\db\Expression('NOW()');
+                            
+                            $flag = $ProjectPic->save();
+
+                            if(!$flag){
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                        if($flag){
+                            $transaction->commit();
+                            return $this->redirect(['view', 'id' => $model->projectid]);
+                        }
+                    }                    
+                    /*
+                    if($model->save())
+                        return $this->redirect(['view', 'id' => $model->projectid]);
+                    */
+                }
+                catch (Exception $ex) {
+                    $transaction->rollBack();
+                }                
+            }
+            else{
+                $transaction->rollBack();
+            }
         }
+            
+        return $this->render('create', [
+            'model' => $model,
+            'model_projectpic' => (empty($model_projectpic)) ? [new ProjectPic()] :$model_projectpic,
+        ]);
     }
 
     /**
@@ -88,14 +147,80 @@ class ProjectController extends Controller
         //initial user change & date
         $model->userup = 'sun';
         $model->dateup = new \yii\db\Expression('NOW()');
+
+        $model_projectpic = ProjectPic::find()->where(
+            'projectid = :1',[':1'=>$model->projectid,]
+        )->all();
         
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->projectid]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        if ($model->load(Yii::$app->request->post())) {
+            $transaction = Yii::$app->db->beginTransaction();
+            $flag = $model->save();
+
+            //$oldIds = ArrayHelper::map($model_projectpic,'userid','userid');
+            $post_projectpic = Yii::$app->request->post('ProjectPic');
+
+            //$valid = true;
+            $model_projectpic = [];
+            foreach($post_projectpic as $i => $projectpic) {
+                $projectpic1 = new ProjectPic();
+                $projectpic1->setAttributes($projectpic);                                
+                $projectpic1->projectid = $model->projectid;
+                /*
+                if(!$projectpic1->validate()){
+                    $valid = false;
+                }
+                */
+                $model_projectpic[] = $projectpic1;                
+            }
+
+            //$deleteIds = array_diff($oldIds, array_filter(ArrayHelper::map($model_projectpic,'userid','userid')));
+
+            if(ProjectPic::validateMultiple($model_projectpic)){  
+                try{
+                    if($flag){
+
+                        /*
+                        if(!empty($deleteIds)){
+                            ProjectPic::deleteAll(['projectid'=> $model->projectid, 'userid'=>$deleteIds]);
+                        }
+                        */
+                        ProjectPic::deleteAll('projectid = :1',[':1'=> $model->projectid]);
+                        
+                        foreach($model_projectpic as $ProjectPic){
+                            //initial user change & date
+                            $ProjectPic->userin = 'sun';                            
+                            $ProjectPic->datein = new \yii\db\Expression('NOW()');
+                            
+                            $flag = $ProjectPic->save();
+
+                            if(!$flag){
+                                $transaction->rollBack();
+                                break;
+                            }
+                        }
+                        if($flag){
+                            $transaction->commit();
+                            return $this->redirect(['view', 'id' => $model->projectid]);
+                        }
+                    }                    
+                    /*
+                    if($model->save())
+                        return $this->redirect(['view', 'id' => $model->projectid]);
+                    */
+                }
+                catch (Exception $ex) {
+                    $transaction->rollBack();
+                }             
+            }
+            else{
+                $transaction->rollBack();
+            }
         }
+
+        return $this->render('update', [
+            'model' => $model,
+            'model_projectpic' => (empty($model_projectpic)) ? [new ProjectPic()] :$model_projectpic,
+        ]);
     }
 
     /**
@@ -125,5 +250,14 @@ class ProjectController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionAdd($index){
+        $model = new ProjectPic();
+
+        return $this->renderPartial('project-pic/_form', [
+                'model'=>$model,
+                'index'=>$index,
+            ]);
     }
 }

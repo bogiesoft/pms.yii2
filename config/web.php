@@ -55,6 +55,9 @@ $config = [
             ],
             'displayTimezone' => 'Asia/Jakarta',
         ],
+        'gridview' =>  [
+            'class' => '\kartik\grid\Module'
+        ],
     ],
     'params' => $params,
 ];

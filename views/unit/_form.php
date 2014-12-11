@@ -20,12 +20,11 @@ use app\models\Bank;
 
     <?php 
         $dataCategory = [];
-        array_push($dataCategory, ' ');
         $sql = "select bankid, concat(code,' - ',name) as bank_descr from ps_bank ";        
         $dataCategory += ArrayHelper::map(Bank::findBySql($sql)->asArray()->all(), 'bankid', 'bank_descr');        
     ?>
 
-    <?= $form->field($model, 'BankId')->dropDownList($dataCategory) ?>
+    <?= $form->field($model, 'BankId')->dropDownList($dataCategory, array('prompt'=>' ')) ?>
 
     <?= $form->field($model, 'BankAcc')->textInput(['maxlength' => 15]) ?>
 
