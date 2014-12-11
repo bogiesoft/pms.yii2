@@ -4,6 +4,9 @@ namespace app\controllers;
 
 use Yii;
 use app\models\User;
+use app\models\GroupUser;
+use app\models\UserAccess;
+use app\models\UserAccessData;
 use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -61,13 +64,13 @@ class UserController extends Controller
     public function actionCreate()
     {
         $model = new User();
+        $groups = [];
+        $menus = [];
+        $units = [];
+        $acc = true;
 
         //initial default value active
         $model->active = '1';
-        
-        //initial user change & date
-        $model->userin = 'prayogo';
-        $model->datein = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
             //check password & confirm password, return error when not same
@@ -79,17 +82,98 @@ class UserController extends Controller
                 //set error message
                 $model->addError('varPassword', 'Password confirm must be the same as password');
                 $model->addError('password', 'Password confirm must be the same as password');
+
+                $acc = false;
+            }else{
+                //if password is default(no update), get existing password
+                if ($model->password == "!@#$%^&*()_+!@#$%"){
+                    $model->password = User::findOne($model->userid)->password;
+                }
+            }
+
+            if (isset($_POST["User"]["UserGroup"])){
+                $post = $_POST["User"]["UserGroup"];  
+                foreach($post as $groupid => $data){
+                    array_push($groups, $groupid);
+                }
+            }
+
+            if (isset($_POST["User"]["UserAccess"])){
+                $post = $_POST["User"]["UserAccess"];   
+                foreach($post as $menuid => $data){
+                    array_push($menus, $menuid);   
+                }
+            }
+
+            if (isset($_POST["User"]["UserUnit"])){
+                $post = $_POST["User"]["UserUnit"];   
+                foreach($post as $unitid => $data){
+                    array_push($units, $unitid);
+                }
+            }
+
+            if (!$acc){
                 return $this->render('create', [
                     'model' => $model,
+                    'groups' => $groups,
+                    'menus' => $menus,
+                    'units' => $units,
                 ]);
-            }else{
-                if ($model->save()){
-                    return $this->redirect(['view', 'id' => $model->userid]);    
-                }   
             }
+
+            $connection = \Yii::$app->db;
+            $transaction = $connection->beginTransaction(); 
+
+            if (!$model->save()){
+                $acc = false;
+            }
+
+            foreach($groups as $groupid){
+                $model_group = new GroupUser();
+                $model_group->userid = $model->userid;
+                $model_group->groupid = $groupid;
+                if (!$model_group->save()){
+                    $acc = false;
+                }
+            }
+
+            foreach($menus as $menuid){
+                $model_access = new UserAccess();
+                $model_access->userid = $model->userid;
+                $model_access->menuid = $menuid;
+                if (!$model_access->save()){
+                    $acc = false;
+                }
+            }
+
+            foreach($units as $unitid){
+                $model_access_data = new UserAccessData();
+                $model_access_data->userid = $model->userid;
+                $model_access_data->unitid = $unitid;
+                if (!$model_access_data->save()){
+                    $acc = false;
+                }
+            }
+
+            if ($acc){
+                $transaction->commit();   
+                return $this->redirect(['view', 'id' => $model->userid]);    
+            }
+
+            $transaction->rollback();  
+            return $this->render('create', [
+                'model' => $model,
+                'groups' => $groups,
+                'menus' => $menus,
+                'units' => $units,
+            ]); 
+        
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'groups' => $groups,
+                'menus' => $menus,
+                'units' => $units,
             ]);
         }
     }
@@ -106,10 +190,10 @@ class UserController extends Controller
         //initial password, hide real password
         $model->password = "!@#$%^&*()_+!@#$%";
         $model->varPassword = "!@#$%^&*()_+!@#$%";
-
-        //initial user change & date
-        $model->userup = 'prayogo';
-        $model->dateup = new \yii\db\Expression('NOW()');
+        $groups = [];
+        $menus = [];
+        $units = [];
+        $acc = true;
 
         if ($model->load(Yii::$app->request->post())) {
             //check password & confirm password, return error when not same
@@ -122,26 +206,132 @@ class UserController extends Controller
                 $model->addError('varPassword', 'Password confirm must be the same as password');
                 $model->addError('password', 'Password confirm must be the same as password');
 
-                return $this->render('update', [
-                    'model' => $model,
-                ]);
+                $acc = false;
             }else{
                 //if password is default(no update), get existing password
                 if ($model->password == "!@#$%^&*()_+!@#$%"){
                     $model->password = User::findOne($model->userid)->password;
                 }
+            }
 
-                if ($model->save()){
-                    return $this->redirect(['view', 'id' => $model->userid]);    
-                }else{
+            if (isset($_POST["User"]["UserGroup"])){
+                $post = $_POST["User"]["UserGroup"];  
+                foreach($post as $groupid => $data){
+                    array_push($groups, $groupid);
+                }
+            }
+
+            if (isset($_POST["User"]["UserAccess"])){
+                $post = $_POST["User"]["UserAccess"];   
+                foreach($post as $menuid => $data){
+                    array_push($menus, $menuid);   
+                }
+            }
+
+            if (isset($_POST["User"]["UserUnit"])){
+                $post = $_POST["User"]["UserUnit"];   
+                foreach($post as $unitid => $data){
+                    array_push($units, $unitid);
+                }
+            }
+
+            if (!$acc){
+                return $this->render('update', [
+                    'model' => $model,
+                    'groups' => $groups,
+                    'menus' => $menus,
+                    'units' => $units,
+                ]);
+            }
+
+            $connection = \Yii::$app->db;
+            $transaction = $connection->beginTransaction(); 
+
+            if (!$model->save()){
+                $transaction->rollback();  
+                return $this->render('update', [
+                    'model' => $model,
+                    'groups' => $groups,
+                    'menus' => $menus,
+                    'units' => $units,
+                ]);
+            }
+
+            GroupUser::deleteAll('userid = :1',[':1'=>$model->userid,]);
+
+            foreach($groups as $groupid){
+                $model_group = new GroupUser();
+                $model_group->userid = $model->userid;
+                $model_group->groupid = $groupid;
+                if (!$model_group->save()){
+                    $transaction->rollback();  
                     return $this->render('update', [
                         'model' => $model,
+                        'groups' => $groups,
+                        'menus' => $menus,
+                        'units' => $units,
                     ]);
                 }
             }
+
+            UserAccess::deleteAll('userid = :1',[':1'=>$model->userid,]);
+
+            foreach($menus as $menuid){
+                $model_access = new UserAccess();
+                $model_access->userid = $model->userid;
+                $model_access->menuid = $menuid;
+                if (!$model_access->save()){
+                    $transaction->rollback();  
+                    return $this->render('update', [
+                        'model' => $model,
+                        'groups' => $groups,
+                        'menus' => $menus,
+                        'units' => $units,
+                    ]);
+                }
+            }
+
+            UserAccessData::deleteAll('userid = :1',[':1'=>$model->userid,]);
+
+            foreach($units as $unitid){
+                $model_access_data = new UserAccessData();
+                $model_access_data->userid = $model->userid;
+                $model_access_data->unitid = $unitid;
+                if (!$model_access_data->save()){
+                    $transaction->rollback();  
+                    return $this->render('update', [
+                        'model' => $model,
+                        'groups' => $groups,
+                        'menus' => $menus,
+                        'units' => $units,
+                    ]);
+                }
+            }
+
+            $transaction->commit();   
+            return $this->redirect(['view', 'id' => $model->userid]);    
+
         } else {
+            $arr = \app\models\GroupUser::find()->where('userid = :1',[':1'=>$model->userid,])->asArray()->all();
+            foreach($arr as $data){
+                array_push($groups, $data["groupid"]);
+            }
+
+            $arr = \app\models\UserAccess::find()->where('userid = :1',[':1'=>$model->userid,])->asArray()->all();
+            foreach($arr as $data){
+                array_push($menus, $data["menuid"]);
+            }
+
+            $arr = \app\models\UserAccessData::find()->where('userid = :1',[':1'=>$model->userid,])->asArray()->all();
+            foreach($arr as $data){
+                array_push($units, $data["unitid"]);
+            }
+
             return $this->render('update', [
                 'model' => $model,
+                'groups' => $groups,
+                'menus' => $menus,
+                'units' => $units,
             ]);
         }
     }

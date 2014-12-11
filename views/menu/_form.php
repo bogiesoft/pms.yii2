@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Menu */
@@ -21,12 +22,20 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'description')->textArea(['maxlength' => 250, 'style' => 'height:120px']) ?>
 
     <?php 
+        if ($model->menuid == null){
+            $model->menuid = 0;
+        }
         $data = [];
-        array_push($data, ' ');
-        $data += yii\helpers\ArrayHelper::map(\app\models\Menu::find()->asArray()->all(), 'menuid', 'caption');
-    ?>
+        $data += yii\helpers\ArrayHelper::map(\app\models\Menu::find()->where('menuid != :1', [':1'=>$model->menuid])->asArray()->all(), 'menuid', 'caption');
+        echo $form->field($model, 'parentid')->widget(Select2::classname(), [
+            'data' => $data,
+            'options' => ['placeholder' => 'Select a parent ...'],
+            'pluginOptions' => [
+                'allowClear' => true
+            ],
+        ]);
 
-    <?= $form->field($model, 'parentid')->dropDownList($data) ?>
+    ?>
 
 
     <?= $form->field($model, 'active')->radioList(['1'=>'Yes', '0'=>'No'],['separator'=>'<span style="margin-right:20px"></span>']) ?>

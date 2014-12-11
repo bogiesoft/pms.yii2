@@ -14,13 +14,11 @@ use Yii;
  * @property string $phone
  * @property string $password
  * @property string $active
- * @property string $datein
- * @property string $userin
- * @property string $dateup
- * @property string $userup
  *
  * @property PsGroupuser[] $psGroupusers
+ * @property PsGroup[] $groups 
  * @property PsProjectpic[] $psProjectpics
+ * @property PsProject[] $projects 
  * @property PsUseraccess[] $psUseraccesses
  */
 class User extends \yii\db\ActiveRecord
@@ -51,12 +49,10 @@ class User extends \yii\db\ActiveRecord
     {
         return [
             [['username', 'name', 'email', 'phone', 'password', 'varPassword', 'active'], 'required'],
-            [['datein', 'dateup'], 'safe'],
             [['username'], 'string', 'max' => 25],
             [['name', 'email', 'password'], 'string', 'max' => 150],
             [['phone'], 'string', 'max' => 15],
             [['active'], 'string', 'max' => 1],
-            [['userin', 'userup'], 'string', 'max' => 50],
             [['username'], 'unique'],
             [['email'], 'unique'],
             [['phone'],'integer','message'=>'{attribute} numbers must be numeric only.'],
@@ -84,13 +80,14 @@ class User extends \yii\db\ActiveRecord
             'userup' => 'Userup',
             'activeText' => 'Active',
             'varActive' => 'Active',
+            'groupusersText' => 'Groups',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsGroupusers()
+    public function getGroupusers()
     {
         return $this->hasMany(GroupUser::className(), ['userid' => 'userid']);
     }
@@ -98,7 +95,7 @@ class User extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsProjectpics()
+    public function getProjectpics()
     {
         return $this->hasMany(ProjectPIC::className(), ['userid' => 'userid']);
     }
@@ -106,7 +103,7 @@ class User extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsUseraccesses()
+    public function getUseraccesses()
     {
         return $this->hasMany(UserAccess::className(), ['userid' => 'userid']);
     }

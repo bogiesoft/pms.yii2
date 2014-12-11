@@ -64,15 +64,16 @@ class MenuController extends Controller
 
         //initial default value active
         $model->active = '1';
-        
-        //initial user change & date
-        $model->userin = 'prayogo';
-        $model->datein = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
-            if ($model->parentid == 0){
+            if ($model->parentid == "" || $model->parentid == 0){
                 $model->parentid = null;
+                $model->level = 1;
+            }else{
+                $levelparent = \app\models\Menu::find()->where('menuid = :1', [':1'=>$model->parentid])->one();
+                $model->level = $levelparent->level + 1;
             }
+            
             if ($model->save()){
                 return $this->redirect(['view', 'id' => $model->menuid]);
             }
@@ -93,14 +94,15 @@ class MenuController extends Controller
     {
         $model = $this->findModel($id);
 
-        //initial user change & date
-        $model->userup = 'prayogo';
-        $model->dateup = new \yii\db\Expression('NOW()');
-
         if ($model->load(Yii::$app->request->post())) {
-            if ($model->parentid == 0){
+            if ($model->parentid == "" || $model->parentid == 0){
                 $model->parentid = null;
+                $model->level = 1;
+            }else{
+                $levelparent = \app\models\Menu::find()->where('menuid = :1', [':1'=>$model->parentid])->one();
+                $model->level = $levelparent->level + 1;
             }
+
             if ($model->save()){
                 return $this->redirect(['view', 'id' => $model->menuid]);
             }

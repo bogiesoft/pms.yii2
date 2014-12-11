@@ -14,10 +14,7 @@ use Yii;
  * @property string $description
  * @property string $active
  * @property integer $parentid
- * @property string $datein
- * @property string $userin
- * @property string $dateup
- * @property string $userup
+ * @property integer $level
  *
  * @property PsGroupaccess[] $psGroupaccesses
  * @property Menu $parent
@@ -51,9 +48,8 @@ class Menu extends \yii\db\ActiveRecord
     {
         return [
             [['caption'], 'required'],
-            [['parentid'], 'integer'],
-            [['datein', 'dateup'], 'safe'],
-            [['caption', 'userin', 'userup'], 'string', 'max' => 50],
+            [['parentid', 'level'], 'integer'],
+            [['caption'], 'string', 'max' => 50],
             [['link', 'icon', 'description'], 'string', 'max' => 250],
             [['active'], 'string', 'max' => 1]
         ];
@@ -72,12 +68,9 @@ class Menu extends \yii\db\ActiveRecord
             'description' => 'Description',
             'active' => 'Active',
             'parentid' => 'Parent',
-            'datein' => 'Datein',
-            'userin' => 'Userin',
-            'dateup' => 'Dateup',
-            'userup' => 'Userup',
             'activeText' => 'Active',
             'varActive' => 'Active',
+            'level' => 'Level',
         ];
     }
 
