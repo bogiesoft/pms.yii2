@@ -31,7 +31,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value'=>'mindunit.name',
                 'label'=>'Mind Unit'
             ],
-            'rate',
+            [
+                'attribute'=>'rate',
+                'value'=>'rateText'
+            ],
             'description',
 
             ['class' => 'yii\grid\ActionColumn'],

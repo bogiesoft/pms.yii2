@@ -36,16 +36,76 @@ AppAsset::register($this);
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
                     ['label' => 'Home', 'url' => ['/site/index']],
-                    ['label' => 'Admin', 'url' => ['#'], 'items'=>[
+                    ['label' => 'Application', 'url' => ['#'], 'items'=>[
+                        
+                        [
+                            'label'=>'<i class="fa fa-list"></i> Partner Types', 
+                            'url'=>['/partner-type/index']],
+                        [
+                            'label'=>'<i class="fa fa-flag"></i> Countries', 
+                            'url'=>['/country/index']],
 
+'<li class="divider"></li>',
+                        [
+                            'label'=>'<i class="fa fa-building-o"></i> Units', 
+                            'url'=>['/unit/index']],
+                        [
+                            'label'=>'<i class="fa fa-list"></i> Product Types', 
+                            'url'=>['/product-type/index']],
+                        [
+                            'label'=>'<i class="fa fa-tag"></i> Project Status', 
+                            'url'=>['/status/index']],
+
+'<li class="divider"></li>',
+                        [
+                            'label'=>'<i class="fa fa-list"></i> Mind Units', 
+                            'url'=>['/mind-unit/index']],
+                        [
+                            'label'=>'<i class="fa fa-calculator"></i> Project Rates', 
+                            'url'=>['/project-rate/index']],
+                        [
+                            'label'=>'<i class="fa fa-list"></i> Consultant Posititions', 
+                            'url'=>['/consultant-position/index']],
+
+'<li class="divider"></li>',
+                        [
+                            'label'=>'<i class="fa fa-list"></i> Faculties', 
+                            'url'=>['/faculty/index']],
+                        [
+                            'label'=>'<i class="fa fa-list"></i> Departments', 
+                            'url'=>['/department/index']],
+                        
+'<li class="divider"></li>',
+                        [
+                            'label'=>'<i class="fa fa-bank"></i> Banks', 
+                            'url'=>['/bank/index']],
+                        [
+                            'label'=>'<i class="fa fa-phone"></i> Phone Types', 
+                            'url'=>['/phone-type/index']],
+
+'<li class="divider"></li>',
+                        [
+                            'label'=>'<i class="fa fa-list"></i> Consultant Categories', 
+                            'url'=>['/category/index']],
                     ]],
                     ['label' => 'User Management', 'url' => ['#'], 'items'=>[
+                        [
+                            'label'=>'<i class="fa fa-list"></i> Menus', 
+                            'url'=>['/menu/index']],
+                        
+                        [
+                            'label'=>'<i class="fa fa-group"></i> Groups', 
+                            'url'=>['/group/index']],
 
+                        [
+                            'label'=>'<i class="fa fa-user"></i> Users', 
+                            'url'=>['/user/index']],
                     ]],
                     ['label' => 'Project', 'url' => ['#'], 'items'=>[
 
                     ]],
                 ],
+                'encodeLabels' => false
             ]);
             NavBar::end();
         ?>
@@ -64,8 +124,14 @@ AppAsset::register($this);
             <p class="pull-right"><?= Yii::powered() ?></p>
         </div>
     </footer>
-
+<style>
+    .fa {
+        text-align: center;
+        width:15px
+    }
+</style>
 <?php $this->endBody() ?>
 </body>
 </html>
 <?php $this->endPage() ?>
+<?=$this->registerCssFile(yii\helpers\BaseUrl::base()."/plugin/font-awesome/css/font-awesome.min.css", [\yii\web\View::POS_HEAD]);?>

@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "ps_country".
  *
  * @property integer $countryid
- * @property string $iso2
+ * @property string $iso3
  * @property string $name
  * @property string $datein
  * @property string $userin
@@ -35,7 +35,7 @@ class Country extends \yii\db\ActiveRecord
         return [
             [['name'], 'required'],
             [['datein', 'dateup'], 'safe'],
-            [['iso2'], 'string', 'max' => 2],
+            [['iso3'], 'string', 'max' => 3],
             [['name', 'userin', 'userup'], 'string', 'max' => 50]
         ];
     }
@@ -47,7 +47,7 @@ class Country extends \yii\db\ActiveRecord
     {
         return [
             'countryid' => 'Countryid',
-            'iso2' => 'Iso2',
+            'iso3' => 'ISO3',
             'name' => 'Name',
             'datein' => 'Datein',
             'userin' => 'Userin',
@@ -59,7 +59,7 @@ class Country extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsCustomers()
+    public function getCustomers()
     {
         return $this->hasMany(Customer::className(), ['countryid' => 'countryid']);
     }

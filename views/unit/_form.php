@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use app\models\Bank;
+use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Unit */
@@ -19,12 +20,19 @@ use app\models\Bank;
     <?= $form->field($model, 'Name')->textInput(['maxlength' => 50]) ?>
 
     <?php 
-        $dataCategory = [];
+        $data = [];
         $sql = "select bankid, concat(code,' - ',name) as bank_descr from ps_bank ";        
-        $dataCategory += ArrayHelper::map(Bank::findBySql($sql)->asArray()->all(), 'bankid', 'bank_descr');        
-    ?>
+        $data += ArrayHelper::map(Bank::findBySql($sql)->asArray()->all(), 'bankid', 'bank_descr');        
 
-    <?= $form->field($model, 'BankId')->dropDownList($dataCategory, array('prompt'=>' ')) ?>
+        echo $form->field($model, 'BankId')->widget(Select2::classname(), [
+            'data' =>$data,
+            'options' => ['placeholder' => 'Select a bank ...'],
+            'pluginOptions' => [
+                'allowClear' => true
+            ],
+        ]);
+
+    ?>
 
     <?= $form->field($model, 'BankAcc')->textInput(['maxlength' => 15]) ?>
 

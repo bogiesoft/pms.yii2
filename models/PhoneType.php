@@ -58,7 +58,7 @@ class PhoneType extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsConsultantphones()
+    public function getConsultantphones()
     {
         return $this->hasMany(ConsultantPhone::className(), ['phonetypeid' => 'phonetypeid']);
     }
@@ -66,7 +66,7 @@ class PhoneType extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsContactpeople()
+    public function getContactpeople3()
     {
         return $this->hasMany(ContactPerson::className(), ['phonetypeid_3' => 'phonetypeid']);
     }
@@ -74,7 +74,7 @@ class PhoneType extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsContactpeople()
+    public function getContactpeople2()
     {
         return $this->hasMany(ContactPerson::className(), ['phonetypeid_2' => 'phonetypeid']);
     }
@@ -82,7 +82,7 @@ class PhoneType extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsContactpeople()
+    public function getContactpeople()
     {
         return $this->hasMany(ContactPerson::className(), ['phonetypeid' => 'phonetypeid']);
     }

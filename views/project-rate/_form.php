@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use app\models\MindUnit;
+use kartik\select2\Select2;
+use kartik\money\MaskMoney;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\ProjectRate */
@@ -17,13 +19,28 @@ use app\models\MindUnit;
     <?= $form->field($model, 'role')->textInput(['maxlength' => 50]) ?>
 
     <?php 
-        $dataCategory = [];
-        $dataCategory += ArrayHelper::map(MindUnit::find()->asArray()->all(), 'mindunitid', 'name');        
+        $data = [];
+        $data += ArrayHelper::map(MindUnit::find()->asArray()->all(), 'mindunitid', 'name');        
+
+        echo $form->field($model, 'mindunitid')->widget(Select2::classname(), [
+            'data' =>$data,
+            'options' => ['placeholder' => 'Select a mind unit ...'],
+            'pluginOptions' => [
+                'allowClear' => true
+            ],
+        ]);
+
+        echo $form->field($model, 'rate')->widget(MaskMoney::classname(), [
+            'pluginOptions' => [
+                'prefix' => '',
+                'suffix' => '',
+                'allowNegative' => false,
+                'thousands' => ',',
+                'precision' => 2,
+                'allowZero' => true,
+            ]
+        ]);
     ?>
-
-    <?= $form->field($model, 'mindunitid')->dropDownList($dataCategory, array('prompt'=>' ')) ?>
-
-    <?= $form->field($model, 'rate')->textInput() ?>
 
     <?= $form->field($model, 'description')->textInput(['maxlength' => 250]) ?>
 

@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use app\models\Faculty;
+use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Department */
@@ -15,12 +16,18 @@ use app\models\Faculty;
     <?php $form = ActiveForm::begin(); ?>
 
     <?php 
-        $dataCategory = [];
+        $data = [];
         $sql = "select facultyid, concat(code,' - ',name) as faculty_descr from ps_faculty ";        
-        $dataCategory += ArrayHelper::map(Faculty::findBySql($sql)->asArray()->all(), 'facultyid', 'faculty_descr');        
-    ?>
+        $data += ArrayHelper::map(Faculty::findBySql($sql)->asArray()->all(), 'facultyid', 'faculty_descr');        
 
-    <?= $form->field($model, 'facultyid')->dropDownList($dataCategory, array('prompt'=>' ')) ?>
+        echo $form->field($model, 'facultyid')->widget(Select2::classname(), [
+            'data' =>$data,
+            'options' => ['placeholder' => 'Select a faculty ...'],
+            'pluginOptions' => [
+                'allowClear' => true
+            ],
+        ]);
+    ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => 50]) ?>
 

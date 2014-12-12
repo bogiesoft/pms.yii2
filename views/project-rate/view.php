@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\ProjectRate */
 
-$this->title = $model->rateid;
+$this->title = $model->role;
 $this->params['breadcrumbs'][] = ['label' => 'Project Rates', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -34,7 +34,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value'=>$model->mindunit->name,
                 'label'=>'Mind Unit'
             ],
-            'rate',
+            [
+                'attribute'=>'rate',
+                'value'=>$model->rateText
+            ],
             'description',
         ],
     ]) ?>

@@ -19,7 +19,7 @@ class CountrySearch extends Country
     {
         return [
             [['countryid'], 'integer'],
-            [['iso2', 'name', 'datein', 'userin', 'dateup', 'userup'], 'safe'],
+            [['iso3', 'name', 'datein', 'userin', 'dateup', 'userup'], 'safe'],
         ];
     }
 
@@ -57,7 +57,7 @@ class CountrySearch extends Country
             'dateup' => $this->dateup,
         ]);
 
-        $query->andFilterWhere(['like', 'iso2', $this->iso2])
+        $query->andFilterWhere(['like', 'iso3', $this->iso3])
             ->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'userin', $this->userin])
             ->andFilterWhere(['like', 'userup', $this->userup]);

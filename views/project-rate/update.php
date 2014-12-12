@@ -5,9 +5,9 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\ProjectRate */
 
-$this->title = 'Update Project Rate: ' . ' ' . $model->rateid;
+$this->title = 'Update Project Rate: ' . ' ' . $model->role;
 $this->params['breadcrumbs'][] = ['label' => 'Project Rates', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->rateid, 'url' => ['view', 'id' => $model->rateid]];
+$this->params['breadcrumbs'][] = ['label' => $model->role, 'url' => ['view', 'id' => $model->rateid]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="project-rate-update">

@@ -17,7 +17,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'countryid') ?>
 
-    <?= $form->field($model, 'iso2') ?>
+    <?= $form->field($model, 'iso3') ?>
 
     <?= $form->field($model, 'name') ?>
 

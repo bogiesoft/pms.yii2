@@ -51,9 +51,9 @@ class ProjectRate extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'rateid' => 'Rateid',
+            'rateid' => 'ID',
             'role' => 'Role',
-            'mindunitid' => 'Mindunitid',
+            'mindunitid' => 'Mind unit',
             'rate' => 'Rate',
             'description' => 'Description',
             'datein' => 'Datein',
@@ -77,6 +77,10 @@ class ProjectRate extends \yii\db\ActiveRecord
     public function getMindunit()
     {
         return $this->hasOne(MindUnit::className(), ['mindunitid' => 'mindunitid']);
+    }
+
+    public function getRateText(){
+        return number_format($this->rate);
     }
     
 }

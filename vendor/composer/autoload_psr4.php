@@ -20,6 +20,7 @@ return array(
     'kartik\\plugins\\tabs\\' => array($vendorDir . '/kartik-v/bootstrap-tabs-x'),
     'kartik\\plugins\\dateformatter\\' => array($vendorDir . '/kartik-v/php-date-formatter'),
     'kartik\\plugins\\checkbox\\' => array($vendorDir . '/kartik-v/bootstrap-checkbox-x'),
+    'kartik\\money\\' => array($vendorDir . '/kartik-v/yii2-money'),
     'kartik\\grid\\' => array($vendorDir . '/kartik-v/yii2-grid'),
     'kartik\\form\\' => array($vendorDir . '/kartik-v/yii2-widget-activeform'),
     'kartik\\field\\' => array($vendorDir . '/kartik-v/yii2-field-range'),

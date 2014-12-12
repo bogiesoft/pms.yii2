@@ -54,11 +54,11 @@ class Unit extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'unitid' => 'Unitid',
+            'unitid' => 'ID',
             'code' => 'Code',
             'Name' => 'Name',
-            'BankId' => 'Bank ID',
-            'BankAcc' => 'Bank Acc',
+            'BankId' => 'Bank',
+            'BankAcc' => 'Account',
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',

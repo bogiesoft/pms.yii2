@@ -47,8 +47,8 @@ class Department extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [            
-            'departmentid' => 'Departmentid',
-            'facultyid' => 'Facultyid',
+            'departmentid' => 'ID',
+            'facultyid' => 'Faculty',
             'name' => 'Name',
             'datein' => 'Datein',
             'userin' => 'Userin',
