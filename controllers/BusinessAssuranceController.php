@@ -11,6 +11,8 @@ use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use yii\helpers\FileHelper;
 
+use app\models\ProjectSearch;
+
 /**
  * BusinessAssuranceController implements the CRUD actions for BusinessAssurance model.
  */
@@ -32,15 +34,26 @@ class BusinessAssuranceController extends Controller
      * Lists all BusinessAssurance models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($projectid = 0)
     {
-        $searchModel = new BusinessAssuranceSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if($projectid == 0){
+            $searchModel = new ProjectSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('project-index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
+        else {
+            $searchModel = new BusinessAssuranceSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $projectid);
+
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
     }
 
     /**
@@ -60,10 +73,10 @@ class BusinessAssuranceController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($projectid = 0)
     {
         $model = new BusinessAssurance();
-
+        $model->projectid = $projectid;
         //initial user change & date
         $model->userin = 'sun';
         $model->datein = new \yii\db\Expression('NOW()');

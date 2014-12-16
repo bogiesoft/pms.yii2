@@ -166,4 +166,11 @@ class Project extends \yii\db\ActiveRecord
         return $this->producttype->code . ' - ' . $this->producttype->name;
     }
     
+    /**
+     * @return [extagreement code] - [extagreement name]
+     */
+    public function getExtAgreementDescr()
+    {
+        return $this->extagreements->agreementno . ' - ' . $this->extagreements->description;
+    }
 }

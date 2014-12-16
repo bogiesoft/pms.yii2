@@ -41,10 +41,14 @@ class CostingApprovalSearch extends CostingApproval
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $projectid = 0)
     {
         $query = CostingApproval::find();
-        $query->joinWith(['project']);
+        $query->joinWith(['project'])
+            ->where(['ps_costingapproval.projectid'=>$projectid])
+            ->orderBy([
+                    'date'=> SORT_DESC,
+                ]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

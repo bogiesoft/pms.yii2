@@ -11,6 +11,8 @@ use kartik\datecontrol\Module;
 use kartik\datecontrol\DateControl;
 use kartik\date\DatePicker;
 
+use kartik\select2\Select2;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\IntAgreement */
 /* @var $form yii\widgets\ActiveForm */
@@ -22,24 +24,42 @@ use kartik\date\DatePicker;
 
     <?php 
         $dataCategory = [];
-        $dataCategory += ArrayHelper::map(ExtAgreement::find()->asArray()->all(), 'extagreementid', 'description');        
-    ?>
+        $dataCategory += ArrayHelper::map(ExtAgreement::find()->where(['extagreementid'=> Yii::$app->request->get('extagreementid')])->asArray()->all(), 'extagreementid', 'description');        
 
-    <?= $form->field($model, 'extagreementid')->dropDownList($dataCategory, array('prompt'=>' ')) ?>
+        echo $form->field($model, 'extagreementid')->widget(Select2::classname(), [
+            'data' =>$dataCategory,
+            'options' => ['placeholder' => 'Select External Agreement ...'],
+            'pluginOptions' => [
+                'allowClear' => true
+            ],
+        ]);
+    ?>
 
     <?php 
         $dataCategory1 = [];
         $dataCategory1 += ArrayHelper::map(Consultant::find()->asArray()->all(), 'consultantid', 'name');        
-    ?>
 
-    <?= $form->field($model, 'consultantid')->dropDownList($dataCategory1, array('prompt'=>' ')) ?>
+        echo $form->field($model, 'consultantid')->widget(Select2::classname(), [
+            'data' =>$dataCategory1,
+            'options' => ['placeholder' => 'Select Consultant ...'],
+            'pluginOptions' => [
+                'allowClear' => true
+            ],
+        ]);
+    ?>
 
     <?php 
         $dataCategory2 = [];
         $dataCategory2 += ArrayHelper::map(Department::find()->asArray()->all(), 'departmentid', 'name');        
-    ?>
 
-    <?= $form->field($model, 'departmentid')->dropDownList($dataCategory2, array('prompt'=>' ')) ?>
+        echo $form->field($model, 'departmentid')->widget(Select2::classname(), [
+            'data' =>$dataCategory2,
+            'options' => ['placeholder' => 'Select Department ...'],
+            'pluginOptions' => [
+                'allowClear' => true
+            ],
+        ]);
+    ?>
 
     <?= $form->field($model, 'description')->textInput(['maxlength' => 250]) ?>
 
@@ -90,7 +110,7 @@ use kartik\date\DatePicker;
         index = "'.++$index.'";
         $("#addIntDeliverable").click(function(e){            
             $.ajax({
-                url: "'.yii\helpers\URL::toRoute('int-agreement/add').'?index="+index,
+                url: "'.yii\helpers\URL::toRoute('int-agreement/add').'?index="+index+"&extagreementid='.Yii::$app->request->get('extagreementid').'",
                 dataType: "html",
                 success: function(data){
                     $intDeliverables = $(data).clone();

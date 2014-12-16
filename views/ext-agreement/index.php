@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Ext Agreement', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Ext Agreement', ['create', 'projectid' => Yii::$app->request->get('projectid')], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([

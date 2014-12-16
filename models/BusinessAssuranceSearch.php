@@ -41,10 +41,14 @@ class BusinessAssuranceSearch extends BusinessAssurance
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $projectid = 0)
     {
         $query = BusinessAssurance::find();
-        $query->joinWith(['project']);
+        $query->joinWith(['project'])
+            ->where(['ps_businessassurance.projectid'=>$projectid])
+            ->orderBy([
+                    'date'=> SORT_DESC,
+                ]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

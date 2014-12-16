@@ -14,6 +14,9 @@ use yii\helpers\FileHelper;
 use yii\helpers\ArrayHelper;
 use app\models\IntDeliverables;
 
+use app\models\ProjectSearch;
+use app\models\ExtAgreementSearch;
+
 /**
  * IntAgreementController implements the CRUD actions for IntAgreement model.
  */
@@ -35,15 +38,27 @@ class IntAgreementController extends Controller
      * Lists all IntAgreement models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($extagreementid = 0)
     {
-        $searchModel = new IntAgreementSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if($extagreementid == 0){
+            //$searchModel = new ProjectSearch();
+            $searchModel = new ExtAgreementSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('extagreement-index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
+        else {
+            $searchModel = new IntAgreementSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $extagreementid);
+
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }        
     }
 
     /**
@@ -63,9 +78,10 @@ class IntAgreementController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($extagreementid = 0)
     {
         $model = new IntAgreement();
+        $model->extagreementid = $extagreementid;
 
         //initial user change & date
         $model->userin = 'sun';
@@ -94,7 +110,7 @@ class IntAgreementController extends Controller
                 foreach($post_intdeliverables as $i => $intdeliverables) {
                     $intdeliverables1 = new IntDeliverables();
                     $intdeliverables1->setAttributes($intdeliverables);                                
-                    $intdeliverables1->extagreementid = $model->intagreementid;
+                    $intdeliverables1->intagreementid = $model->intagreementid;
 
                     $model_intdeliverables[] = $intdeliverables1;                
                 }
@@ -185,7 +201,7 @@ class IntAgreementController extends Controller
                 foreach($post_intdeliverables as $i => $intdeliverables) {
                     $intdeliverables1 = new IntDeliverables();
                     $intdeliverables1->setAttributes($intdeliverables);                                
-                    $intdeliverables1->extagreementid = $model->intagreementid;
+                    $intdeliverables1->intagreementid = $model->intagreementid;
 
                     $model_intdeliverables[] = $intdeliverables1;
                 }
@@ -270,7 +286,7 @@ class IntAgreementController extends Controller
     public function actionAdd($index){
         $model = new IntDeliverables();
 
-        return $this->renderPartial('int-deliverables/_form', [
+        return $this->renderAjax('int-deliverables/_form', [
                 'model'=>$model,
                 'index'=>$index,
             ]);

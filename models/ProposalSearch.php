@@ -41,10 +41,15 @@ class ProposalSearch extends Proposal
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $projectid = 0)
     {
         $query = Proposal::find();
-        $query->joinWith(['project']);
+        $query->joinWith(['project'])
+            ->where(['ps_proposal.projectid'=>$projectid])
+            ->orderBy([
+                    'date'=> SORT_DESC,
+                ]);
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

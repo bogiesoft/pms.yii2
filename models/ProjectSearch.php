@@ -95,6 +95,7 @@ class ProjectSearch extends Project
             ->andFilterWhere(['like', 'concat(ps_unit.code," - ",ps_unit.Name)', $this->unit])
             ->andFilterWhere(['like', 'ps_customer.company', $this->customer])
             ->andFilterWhere(['like', 'concat(ps_producttype.code," - ",ps_producttype.name)', $this->producttype])
+            ->andFilterWhere(['like', 'concat(ps_extagreement.code," - ",ps_extagreement.name)', $this->extagreement])
             ->andFilterWhere(['like', 'ps_status.name', $this->status])
             ->andFilterWhere(['like', 'userin', $this->userin])
             ->andFilterWhere(['like', 'userup', $this->userup]);

@@ -13,6 +13,11 @@ use app\models\ExtAgreement;
 class ExtAgreementSearch extends ExtAgreement
 {
     public $project;
+    public $unit;
+    public $customer;
+    public $producttype;
+    public $status;
+    public $initiationyear;
     /**
      * @inheritdoc
      */
@@ -21,7 +26,7 @@ class ExtAgreementSearch extends ExtAgreement
         return [
             [['extagreementid', 'projectid'], 'integer'],
             [['agreementno', 'description', 'startdate', 'enddate', 'filename', 'datein', 'userin', 'dateup', 'userup'], 'safe'],
-            [['project'],'safe'],
+            [['project','unit','customer','producttype','status','initiationyear'],'safe'],
         ];
     }
 
@@ -41,18 +46,51 @@ class ExtAgreementSearch extends ExtAgreement
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $projectid = 0)
     {
         $query = ExtAgreement::find();
-        $query->joinWith(['project']);
+        $query->joinWith(['project'])
+            ->leftJoin('ps_unit', 'ps_project.unitid = ps_unit.unitid')
+            ->leftJoin('ps_customer', 'ps_project.customerid = ps_customer.customerid')
+            ->leftJoin('ps_producttype', 'ps_project.producttypeid = ps_producttype.producttypeid')
+            ->leftJoin('ps_status', 'ps_project.statusid = ps_status.statusid');
+
+        if($projectid > 0){
+            $query->where(['ps_extagreement.projectid'=>$projectid]);
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
+        $dataProvider->sort->attributes['unit'] = [
+            'asc'=>['concat(ps_unit.code," - ",ps_unit.Name)'=>SORT_ASC],
+            'desc'=>['concat(ps_unit.code," - ",ps_unit.Name)'=>SORT_DESC],            
+        ];
+
+        $dataProvider->sort->attributes['customer'] = [
+            'asc'=>['ps_customer.company'=>SORT_ASC],
+            'desc'=>['ps_customer.company'=>SORT_DESC],            
+        ];
+
+        $dataProvider->sort->attributes['producttype'] = [
+            'asc'=>['concat(ps_producttype.code," - ",ps_producttype.name)'=>SORT_ASC],
+            'desc'=>['concat(ps_producttype.code," - ",ps_producttype.name)'=>SORT_DESC],            
+        ];
+
+        $dataProvider->sort->attributes['status'] = [
+            'asc'=>['ps_status.name'=>SORT_ASC],
+            'desc'=>['ps_status.name'=>SORT_DESC],            
+        ];
+
         $dataProvider->sort->attributes['project'] = [
             'asc'=>['concat(ps_project.code," - ",ps_project.name)'=>SORT_ASC],
             'desc'=>['concat(ps_project.code," - ",ps_project.name)'=>SORT_DESC],            
+        ];
+
+        $dataProvider->sort->attributes['initiationyear'] = [
+            'asc'=>['ps_project.initiationyear'=>SORT_ASC],
+            'desc'=>['ps_project.initiationyear'=>SORT_DESC],
         ];
 
         if (!($this->load($params) && $this->validate())) {
@@ -78,3 +116,4 @@ class ExtAgreementSearch extends ExtAgreement
         return $dataProvider;
     }
 }
+
