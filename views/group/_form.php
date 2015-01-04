@@ -35,32 +35,12 @@ use kartik\tabs\TabsX;
 
 ////////////////////////////Setting Menu Form////////////////////////////////////////////////////////////////////
 
-    $menu = \app\models\Menu::findBySql('select * from ps_menu where active = "1" order by coalesce(parentid, menuid)')->all();
+    $menu = new \app\models\Menu();
+    $strTree = $menu->getStructureTree($menus, '', 'GroupAccess', 'Group[GroupAccess]');
+    $strTree = '<div id="tree"><ul class="ul">' . $strTree;
+    $strTree = $strTree . '</ul></div>';
 
-    $strTree = '<div id="tree">';
-    $index = 0;
-    foreach($menu as $data){
-        $attr = "";
-        if (in_array($data->menuid, $menus)){
-            $attr = "checked";
-        }
-
-        if ($index < $data->level){
-            $strTree = $strTree.'<ul class="ul">';
-        }
-
-        if ($index > $data->level){
-            for($i = 0; $i < $index - $data->level; $i++){
-                $strTree = $strTree.'</ul>';
-            }
-        }
-
-        $strTree = $strTree.'<li><div class="checkbox"><input type="checkbox" '.$attr.' id="GroupAccess-'.$data->menuid.'" name="Group[GroupAccess]['.$data->menuid.']"><label class="noselect" for="GroupAccess-'.$data->menuid.'">'.$data->caption.'</label></div>';
-        $index = $data->level;
-    }
-    $strTree = $strTree . '</div>';
-
-    if (sizeof($menu) == 0){
+    if ($strTree == ''){
         $strTree = Html::a('Menu is empty. Please add menu first...', ['menu/index']);
     }
 
@@ -175,7 +155,6 @@ $this->registerJsFile(yii\helpers\BaseUrl::base()."/plugin/jquery/jquery-1.11.1.
 $this->registerJsFile(yii\helpers\BaseUrl::base()."/plugin/jquery-ui/jquery-ui.js", [\yii\web\View::POS_HEAD]);
 $this->registerJsFile(yii\helpers\BaseUrl::base()."/plugin/jtree/jquery.tree.min.js", [\yii\web\View::POS_HEAD]);
 
-$this->registerCssFile(yii\helpers\BaseUrl::base()."/plugin/font-awesome/css/font-awesome.min.css", [\yii\web\View::POS_HEAD]);
 $this->registerCssFile(yii\helpers\BaseUrl::base()."/plugin/jquery-ui/jquery-ui.css", [\yii\web\View::POS_HEAD]);
 $this->registerCssFile(yii\helpers\BaseUrl::base()."/plugin/jtree/jquery.tree.min.css", [\yii\web\View::POS_HEAD]);
 ?>

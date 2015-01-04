@@ -18,7 +18,7 @@ class MenuSearch extends Menu
     public function rules()
     {
         return [
-            [['menuid'], 'integer'],
+            [['menuid', 'parentid', 'index'], 'integer'],
             [['caption', 'link', 'icon', 'description', 'varActive'], 'safe'],
         ];
     }
@@ -45,6 +45,7 @@ class MenuSearch extends Menu
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=> ['defaultOrder' => ['index'=>SORT_ASC, 'caption'=>SORT_ASC]]
         ]);
 
         $dataProvider->sort->attributes['varActive'] = [
@@ -58,6 +59,8 @@ class MenuSearch extends Menu
 
         $query->andFilterWhere([
             'menuid' => $this->menuid,
+            'parentid' => $this->parentid, 
+            'index' => $this->index, 
         ]);
 
         $query->andFilterWhere(['like', 'caption', $this->caption])

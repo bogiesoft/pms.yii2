@@ -62,15 +62,15 @@ class Project extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'projectid' => 'Projectid',
-            'unitid' => 'Unitid',
+            'projectid' => 'ID',
+            'unitid' => 'Unit',
             'code' => 'Code',
             'name' => 'Name',
-            'customerid' => 'Customerid',
+            'customerid' => 'Customer',
             'description' => 'Description',
-            'producttypeid' => 'Producttypeid',
-            'initiationyear' => 'Initiationyear',
-            'statusid' => 'Statusid',
+            'producttypeid' => 'Product Type',
+            'initiationyear' => 'Initiation Year',
+            'statusid' => 'Status',
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',

@@ -26,7 +26,7 @@ use kartik\select2\Select2;
             $model->menuid = 0;
         }
         $data = [];
-        $data += yii\helpers\ArrayHelper::map(\app\models\Menu::find()->where('menuid != :1', [':1'=>$model->menuid])->asArray()->all(), 'menuid', 'caption');
+        $data += yii\helpers\ArrayHelper::map(\app\models\Menu::find()->where('menuid != :1', [':1'=>$model->menuid])->orderBy('caption')->asArray()->all(), 'menuid', 'caption');
         echo $form->field($model, 'parentid')->widget(Select2::classname(), [
             'data' => $data,
             'options' => ['placeholder' => 'Select a parent ...'],
@@ -36,6 +36,8 @@ use kartik\select2\Select2;
         ]);
 
     ?>
+
+    <?= $form->field($model, 'index')->textInput() ?>
 
 
     <?= $form->field($model, 'active')->radioList(['1'=>'Yes', '0'=>'No'],['separator'=>'<span style="margin-right:20px"></span>']) ?>

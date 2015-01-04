@@ -22,26 +22,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php
 
-    $menu = \app\models\Menu::findBySql('select * from ps_menu order by coalesce(parentid, menuid)')->all();
-    
-    $strTree = '<div id="tree">';
-    $index = 0;
-    foreach($menu as $data){
-
-        if ($index < $data->level){
-            $strTree = $strTree.'<ul class="ul">';
-        }
-
-        if ($index > $data->level){
-            for($i = 0; $i < $index - $data->level; $i++){
-                $strTree = $strTree.'</ul>';
-            }
-        }
-
-        $strTree = $strTree.'<li>'.Html::a($data->caption, [$data->link]).'</b>';
-        $index = $data->level;
-    }
-    $strTree = $strTree . '</div>';
+    $menu = new \app\models\Menu();
+    $strTree = $menu->getStructureTreeLink();
+    $strTree = '<div id="tree"><ul class="ul">' . $strTree;
+    $strTree = $strTree . '</ul></div>';
 //////////////////////////////////////////////////////////////////////////////////////////
     $items = [
     [
@@ -101,6 +85,10 @@ $this->params['breadcrumbs'][] = $this->title;
     .daredevel-tree li span.daredevel-tree-anchor{
         margin-top:0px;
     }
+    .a {
+        color: #337ab7 !important;
+        text-decoration: none;
+    }
 </style>
 
 <?php
@@ -108,7 +96,6 @@ $this->registerJsFile(yii\helpers\BaseUrl::base()."/plugin/jquery/jquery-1.11.1.
 $this->registerJsFile(yii\helpers\BaseUrl::base()."/plugin/jquery-ui/jquery-ui.js", [\yii\web\View::POS_HEAD]);
 $this->registerJsFile(yii\helpers\BaseUrl::base()."/plugin/jtree/jquery.tree.min.js", [\yii\web\View::POS_HEAD]);
 
-$this->registerCssFile(yii\helpers\BaseUrl::base()."/plugin/font-awesome/css/font-awesome.min.css", [\yii\web\View::POS_HEAD]);
 $this->registerCssFile(yii\helpers\BaseUrl::base()."/plugin/jquery-ui/jquery-ui.css", [\yii\web\View::POS_HEAD]);
 $this->registerCssFile(yii\helpers\BaseUrl::base()."/plugin/jtree/jquery.tree.min.css", [\yii\web\View::POS_HEAD]);
 ?>

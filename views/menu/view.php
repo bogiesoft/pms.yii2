@@ -32,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'link',
             'icon',
             'description',
+            'index',
             'activeText',
         ],
     ]) ?>

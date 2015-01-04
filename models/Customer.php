@@ -39,13 +39,15 @@ class Customer extends \yii\db\ActiveRecord
         return 'ps_customer';
     }
 
+    public $varPartnertype;
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['company', 'dayofjoin', 'phone', 'address', 'city', 'state', 'countryid', 'partnertypeid', 'webpage'], 'required'],
+            [['company', 'dayofjoin', 'phone', 'address', 'city', 'state', 'countryid', 'partnertypeid'], 'required'],
             [['dayofjoin', 'datein', 'dateup'], 'safe'],
             [['countryid', 'partnertypeid'], 'integer'],
             [['company', 'city', 'state', 'userin', 'userup'], 'string', 'max' => 50],
@@ -61,22 +63,24 @@ class Customer extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'customerid' => 'Customerid',
-            'company' => 'Company',
-            'dayofjoin' => 'Dayofjoin',
-            'npwp' => 'Npwp',
+            'customerid' => 'ID',
+            'company' => 'Name',
+            'dayofjoin' => 'Day Of Join',
+            'npwp' => 'NPWP',
             'phone' => 'Phone',
             'fax' => 'Fax',
             'address' => 'Address',
             'city' => 'City',
             'state' => 'State',
-            'countryid' => 'Countryid',
-            'partnertypeid' => 'Partnertypeid',
+            'countryid' => 'Country',
+            'partnertypeid' => 'Partner Type',
             'webpage' => 'Webpage',
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',
             'userup' => 'Userup',
+            'dateText' => 'Day Of Join',
+            'varPartnertype' => 'Partner Type',
         ];
     }
 
@@ -110,5 +114,9 @@ class Customer extends \yii\db\ActiveRecord
     public function getPsProjects()
     {
         return $this->hasMany(Project::className(), ['customerid' => 'customerid']);
+    }
+
+    public function getDateText(){
+        return date("d-M-Y", strtotime($this->dayofjoin));
     }
 }

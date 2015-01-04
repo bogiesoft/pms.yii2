@@ -19,6 +19,7 @@ AppAsset::register($this);
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
+
 </head>
 <body>
 
@@ -102,7 +103,10 @@ AppAsset::register($this);
                             'url'=>['/user/index']],
                     ]],
                     ['label' => 'Project', 'url' => ['#'], 'items'=>[
-
+                        [
+                            'label'=>'<i class="fa fa-list"></i> Projects', 
+                            'url'=>['/project/index']],
+                        
                     ]],
                 ],
                 'encodeLabels' => false
@@ -134,4 +138,4 @@ AppAsset::register($this);
 </body>
 </html>
 <?php $this->endPage() ?>
-<?=$this->registerCssFile(yii\helpers\BaseUrl::base()."/plugin/font-awesome/css/font-awesome.min.css", [\yii\web\View::POS_HEAD]);?>
+
