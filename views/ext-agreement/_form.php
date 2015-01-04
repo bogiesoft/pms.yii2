@@ -12,6 +12,8 @@ use kartik\form\ActiveForm;
 use kartik\builder\TabularForm;
 use kartik\grid\GridView;
 
+use kartik\select2\Select2;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\ExtAgreement */
 /* @var $form yii\widgets\ActiveForm */
@@ -23,11 +25,17 @@ use kartik\grid\GridView;
 
     <?php 
         $dataCategory = [];
-        $sql = "select projectid, concat(code,' - ',name) as project_descr from ps_project ";        
+        $sql = "select projectid, concat(code,' - ',name) as project_descr from ps_project where projectid = ".$model->projectid;        
         $dataCategory += ArrayHelper::map(Project::findBySql($sql)->asArray()->all(), 'projectid', 'project_descr');        
-    ?>
 
-    <?= $form->field($model, 'projectid')->dropDownList($dataCategory, array('prompt'=>' ')) ?>
+        echo $form->field($model, 'projectid')->widget(Select2::classname(), [
+            'data' =>$dataCategory,
+            'options' => ['placeholder' => 'Select a Project ...'],
+            'pluginOptions' => [
+                'allowClear' => true
+            ],
+        ]);
+    ?>
 
     <?= $form->field($model, 'agreementno')->textInput(['maxlength' => 50]) ?>
 

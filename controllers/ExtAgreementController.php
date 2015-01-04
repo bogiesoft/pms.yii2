@@ -14,6 +14,7 @@ use yii\data\ActiveDataProvider;
 
 use yii\helpers\ArrayHelper;
 use app\models\ExtDeliverables;
+use app\models\ProjectSearch;
 
 /**
  * ExtAgreementController implements the CRUD actions for ExtAgreement model.
@@ -36,15 +37,26 @@ class ExtAgreementController extends Controller
      * Lists all ExtAgreement models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($projectid = 0)
     {
-        $searchModel = new ExtAgreementSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if($projectid == 0){
+            $searchModel = new ProjectSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('project-index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
+        else {
+            $searchModel = new ExtAgreementSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $projectid);
+
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
     }
 
     /**
@@ -64,11 +76,11 @@ class ExtAgreementController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($projectid = 0)
     {
         $model = new ExtAgreement();
         $model_extdeliverables = null;
-
+        $model->projectid = $projectid;
         //initial user change & date
         $model->userin = 'sun';
         $model->datein = new \yii\db\Expression('NOW()');

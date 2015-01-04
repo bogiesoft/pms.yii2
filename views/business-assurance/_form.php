@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use app\models\Project;
+use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\BusinessAssurance */
@@ -16,11 +17,17 @@ use app\models\Project;
 
     <?php 
         $dataCategory = [];
-        $sql = "select projectid, concat(code,' - ',name) as project_descr from ps_project ";        
-        $dataCategory += ArrayHelper::map(Project::findBySql($sql)->asArray()->all(), 'projectid', 'project_descr');        
-    ?>
+        $sql = "select projectid, concat(code,' - ',name) as project_descr from ps_project where projectid = ".$model->projectid;        
+        $dataCategory += ArrayHelper::map(Project::findBySql($sql)->asArray()->all(), 'projectid', 'project_descr');      
 
-    <?= $form->field($model, 'projectid')->dropDownList($dataCategory, array('prompt'=>' ')) ?>
+        echo $form->field($model, 'projectid')->widget(Select2::classname(), [
+            'data' =>$dataCategory,
+            'options' => ['placeholder' => 'Select a Project ...'],
+            'pluginOptions' => [
+                'allowClear' => true
+            ],
+        ]);
+    ?>
 
     <?= $form->field($model, 'remark')->textInput(['maxlength' => 250]) ?>
 

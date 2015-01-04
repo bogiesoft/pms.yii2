@@ -43,10 +43,11 @@ class IntAgreementSearch extends IntAgreement
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $projectid = 0)
     {
         $query = IntAgreement::find();
-        $query->joinWith(['extagreement','consultant','department']);
+        $query->joinWith(['extagreement','consultant','department'])
+            ->where(['ps_extagreement.projectid'=>$projectid]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
