@@ -42,7 +42,7 @@ class BusinessAssurance extends \yii\db\ActiveRecord
             [['remark'], 'string', 'max' => 250],
             [['file'],'safe'],
             [['file'], 'file', 'skipOnEmpty' => false],
-            [['file'], 'file', 'extensions' => 'doc, docx', 'mimeTypes' => 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',],
+            //[['file'], 'file', 'extensions' => 'doc, docx', 'mimeTypes' => 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',],
             [['filename'], 'string', 'max' => 150],
             [['userin', 'userup'], 'string', 'max' => 50]
         ];

@@ -103,6 +103,12 @@ class ExtAgreementController extends Controller
             if($flag){
                 $model->file->saveAs('uploads/' . $model->filename); 
 
+                $model_project = new Project();
+                $model_project = Project::findOne($projectid);                
+
+                $model_project->statusid = 8;
+                $model_project->save();
+
                 $post_extdeliverables = Yii::$app->request->post('ExtDeliverables');
                 
                 foreach($post_extdeliverables as $i => $extdeliverables) {
@@ -267,6 +273,12 @@ class ExtAgreementController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+
+        $model_project = new Project();
+        $model_project = Project::findOne($projectid);                
+
+        $model_project->statusid = 5;
+        $model_project->save();
 
         return $this->redirect(['index']);
     }
