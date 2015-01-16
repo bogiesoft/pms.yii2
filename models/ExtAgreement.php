@@ -48,7 +48,7 @@ class ExtAgreement extends \yii\db\ActiveRecord
             [['startdate','enddate'], 'string', 'max' => 250],        
             [['file'],'safe'],
             [['file'], 'file', 'skipOnEmpty' => false],
-            [['file'], 'file', 'extensions' => 'doc, docx', 'mimeTypes' => 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',],
+            //[['file'], 'file', 'extensions' => 'doc, docx', 'mimeTypes' => 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',],
             [['projectid', 'agreementno'], 'unique', 'targetAttribute' => ['projectid', 'agreementno'], 'message' => 'The combination of Projectid and Agreementno has already been taken.']
         ];
     }

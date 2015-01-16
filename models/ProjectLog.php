@@ -5,13 +5,12 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "ps_businessassurance".
+ * This is the model class for table "ps_projectlog".
  *
- * @property integer $businessassuranceid
+ * @property integer $projectlogid
  * @property integer $projectid
  * @property string $date
  * @property string $remark
- * @property string $filename
  * @property string $datein
  * @property string $userin
  * @property string $dateup
@@ -19,15 +18,14 @@ use Yii;
  *
  * @property PsProject $project
  */
-class BusinessAssurance extends \yii\db\ActiveRecord
+class ProjectLog extends \yii\db\ActiveRecord
 {
-    public $file;
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'ps_businessassurance';
+        return 'ps_projectlog';
     }
 
     /**
@@ -36,14 +34,10 @@ class BusinessAssurance extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['projectid', 'date', 'remark', 'filename'], 'required'],
+            [['projectid', 'date', 'remark'], 'required'],
             [['projectid'], 'integer'],
             [['date', 'datein', 'dateup'], 'safe'],
             [['remark'], 'string', 'max' => 250],
-            [['file'],'safe'],
-            [['file'], 'file', 'skipOnEmpty' => false],
-            //[['file'], 'file', 'extensions' => 'doc, docx', 'mimeTypes' => 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',],
-            [['filename'], 'string', 'max' => 150],
             [['userin', 'userup'], 'string', 'max' => 50]
         ];
     }
@@ -54,11 +48,10 @@ class BusinessAssurance extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'businessassuranceid' => 'Businessassuranceid',
+            'projectlogid' => 'Projectlogid',
             'projectid' => 'Projectid',
             'date' => 'Date',
             'remark' => 'Remark',
-            'filename' => 'Filename',
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',

@@ -41,7 +41,7 @@ class CostingApproval extends \yii\db\ActiveRecord
             [['date', 'datein', 'dateup'], 'safe'],
             [['file'],'safe'],
             [['file'], 'file', 'skipOnEmpty' => false],
-            [['file'], 'file', 'extensions' => 'doc, docx', 'mimeTypes' => 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',],
+            //[['file'], 'file', 'extensions' => 'doc, docx', 'mimeTypes' => 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',],
             [['remark'], 'string', 'max' => 250],
             [['filename'], 'string', 'max' => 150],
             [['userin', 'userup'], 'string', 'max' => 50]

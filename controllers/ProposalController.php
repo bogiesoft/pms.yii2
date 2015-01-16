@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use yii\helpers\FileHelper;
 
+use app\models\Project;
 use app\models\ProjectSearch;
 /**
  * ProposalController implements the CRUD actions for Proposal model.
@@ -86,12 +87,20 @@ class ProposalController extends Controller
             
             date_default_timezone_set('Asia/Jakarta');
 
-            $model->date =  new \yii\db\Expression('NOW()');            
+            $model->date =  new \yii\db\Expression('NOW()');         
+            
             $model->filename = $model->project->code.'_'.date('dMY').'_'.date('His').'_'.'Proposal'. '.' . $file1->extension;
             $model->file = $file1;
-            
-            if ($model->validate() && $model->save()) {                
+                
+            if ($model->validate() && $model->save()) {
                 $model->file->saveAs('uploads/' . $model->filename); 
+
+                $model_project = new Project();
+                $model_project = Project::findOne($projectid);                
+
+                $model_project->statusid = 2;
+                $model_project->save();
+
                 return $this->redirect(['view', 'id' => $model->proposalid]);
             }
             else {
@@ -174,6 +183,12 @@ class ProposalController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+
+        $model_project = new Project();
+        $model_project = Project::findOne($projectid);                
+
+        $model_project->statusid = 1;
+        $model_project->save();
 
         return $this->redirect(['index']);
     }

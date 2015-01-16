@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use yii\helpers\FileHelper;
 
+use app\models\Project;
 use app\models\ProjectSearch;
 
 /**
@@ -92,7 +93,14 @@ class CostingApprovalController extends Controller
             $model->filename = $model->project->code.'_'.date('dMY').'_'.date('His').'_'.'CostingApproval'. '.' . $file1->extension;
             $model->file = $file1;
             
-            if ($model->validate() && $model->save()) {                
+            if ($model->validate() && $model->save()) {
+
+                $model_project = new Project();
+                $model_project = Project::findOne($projectid);                
+
+                $model_project->statusid = 2;
+                $model_project->save();
+
                 $model->file->saveAs('uploads/' . $model->filename); 
                 return $this->redirect(['view', 'id' => $model->costingapprovalid]);
             }
@@ -178,6 +186,12 @@ class CostingApprovalController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+
+        $model_project = new Project();
+        $model_project = Project::findOne($projectid);                
+
+        $model_project->statusid = 1;
+        $model_project->save();
 
         return $this->redirect(['index']);
     }

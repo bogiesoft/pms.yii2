@@ -44,7 +44,7 @@ class Proposal extends \yii\db\ActiveRecord
             [['filename'], 'string', 'max' => 150],
             [['file'],'safe'],
             [['file'], 'file', 'skipOnEmpty' => false],
-            [['file'], 'file', 'extensions' => 'doc, docx', 'mimeTypes' => 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',],
+            //[['file'], 'file', 'extensions' => 'doc, docx', 'mimeTypes' => 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',],
             [['userin', 'userup'], 'string', 'max' => 50]
         ];
     }
