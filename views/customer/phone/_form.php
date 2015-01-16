@@ -8,32 +8,53 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="contact-person-form">
+<div class="contact-person-phone-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <div class="form-inline" role="form">
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => 150]) ?>
+    <?php
+        if ($model->hasErrors('phonetypeid')){
+            echo '<div class="form-group required has-error">';
+        }else{
+            echo '<div class="form-group">';
+        }
+    ?>
+     <?php 
 
-    <?= $form->field($model, 'email')->textInput(['maxlength' => 150]) ?>
+    $data = [];
+    $data += yii\helpers\ArrayHelper::map(\app\models\PhoneType::find()->asArray()->orderBy('name')->all(), 
+        'phonetypeid', 'name');
 
-    <?= $form->field($model, 'job')->textInput(['maxlength' => 150]) ?>
+    echo Html::activeDropDownList($model, '[' . $index . ']phonetypeid', $data, [
+        'style'=>'width:100%;min-width:250px;',
+        'class'=>'phonetypeddl form-control select2',
+        'name'=>'ContactPerson['.$target.'][ContactPersonPhone][' . $index . '][phonetypeid]'
+    ]);
+    echo Html::error($model, 'phonetypeid', ['class'=>'help-block']);
 
-    <?= $form->field($model, 'phonetypeid')->textInput() ?>
-
-    <?= $form->field($model, 'phone')->textInput(['maxlength' => 15]) ?>
-
-    <?= $form->field($model, 'phonetypeid_2')->textInput() ?>
-
-    <?= $form->field($model, 'phone_2')->textInput(['maxlength' => 15]) ?>
-
-    <?= $form->field($model, 'phonetypeid_3')->textInput() ?>
-
-    <?= $form->field($model, 'phone_3')->textInput(['maxlength' => 15]) ?>
-
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+    ?>
     </div>
 
-    <?php ActiveForm::end(); ?>
+    <?php
+        if ($model->hasErrors('phone')){
+            echo '<div class="form-group required has-error">';
+        }else{
+            echo '<div class="form-group">';
+        }
+    ?>
+    <?php
+        echo Html::activeTextInput($model, '[' . $index . ']phone', [
+            'maxlength' => 15, 
+            'class'=>'form-control phoneinput',
+            'style'=>'margin-right:50px;min-width:300px;',
+            'name'=>'ContactPerson['.$target.'][ContactPersonPhone][' . $index . '][phone]'
+        ]);
+        echo Html::error($model, 'phone', ['class'=>'help-block']);
+    ?>
+    </div>
+    <a type="button" class="btnAddPhone btn btn-primary" data-target="<?= $target ?>" style="vertical-align: top;"><i class="glyphicon glyphicon-plus"></i></a>
+    <a type="button" class="btnDeletePhone btn btn-danger" style="vertical-align: top;"><i class="glyphicon glyphicon-minus"></i></a>
+        
+    </div>
 
 </div>

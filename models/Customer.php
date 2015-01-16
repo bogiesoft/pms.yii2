@@ -87,7 +87,7 @@ class Customer extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsContactpeople()
+    public function getContactpeople()
     {
         return $this->hasMany(ContactPerson::className(), ['customerid' => 'customerid']);
     }
@@ -118,5 +118,29 @@ class Customer extends \yii\db\ActiveRecord
 
     public function getDateText(){
         return date("d-M-Y", strtotime($this->dayofjoin));
+    }
+
+    public function getContactPersonWithPhone(){
+        $str = "<table class='table table-bordered table-striped inside' style='border: none;margin-bottom:0px'>";
+        $str = $str . "<thead><th>Name</th><th>Email</th><th>Job</th><th>Phones</th></thead>";
+        $contacts = ContactPerson::find()->where('customerid = :1', [':1'=>$this->customerid])->asArray()->all();
+        foreach($contacts as $contact){
+            $str = $str . "<tr>".
+                    "<td>".$contact["name"]."</td>".
+                    "<td>".$contact["email"]."</td>".
+                    "<td>".$contact["job"]."</td>";
+            
+            $phones = ContactPersonPhone::find()->where('contactpersonid = :1', [':1'=>$contact["contactpersonid"]])->all();
+            if (isset($phones) && count($phones) > 0){
+                $str = $str . "<td style='padding: 0px;'><table class='table table-bordered table-striped inside' style='border: none;margin-bottom:0px'>";
+            }
+            foreach($phones as $phone){
+                $str = $str . '<tr><td>' . $phone->phonetype->name . ' : ' . $phone->phone . '</td></tr>';
+            }
+            $str = $str . "</table></td>";
+
+            $str = $str . "</tr>";
+        }
+        return $str."</table>";
     }
 }
