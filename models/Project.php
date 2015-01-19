@@ -48,11 +48,12 @@ class Project extends \yii\db\ActiveRecord
     {
         return [
             [['unitid', 'code', 'name', 'customerid', 'producttypeid', 'initiationyear', 'statusid'], 'required'],
-            [['unitid', 'customerid', 'producttypeid', 'statusid','initiationyear'], 'integer'],
-            [['datein', 'dateup'], 'safe'],
-            [['code', 'initiationyear'], 'string', 'max' => 5],
+            [['unitid', 'customerid', 'producttypeid', 'statusid'], 'integer'],
+            [['datein', 'dateup', 'initiationyear'], 'safe'], 
+            [['code'], 'string', 'max' => 8],
             [['name', 'userin', 'userup'], 'string', 'max' => 50],
-            [['description'], 'string', 'max' => 250]
+            [['description'], 'string', 'max' => 250],
+            [['code'], 'unique']
         ];
     }
 
@@ -69,7 +70,7 @@ class Project extends \yii\db\ActiveRecord
             'customerid' => 'Customer',
             'description' => 'Description',
             'producttypeid' => 'Product Type',
-            'initiationyear' => 'Initiation Year',
+            'initiationyear' => 'Initiation Date',
             'statusid' => 'Status',
             'datein' => 'Datein',
             'userin' => 'Userin',

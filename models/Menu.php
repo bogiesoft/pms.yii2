@@ -51,7 +51,7 @@ class Menu extends \yii\db\ActiveRecord
         return [
             [['caption'], 'required'],
             [['parentid', 'index'], 'integer'],
-            [['caption'], 'string', 'max' => 50],
+            [['caption','accessid'], 'string', 'max' => 50],
             [['link', 'icon', 'description'], 'string', 'max' => 250],
             [['active'], 'string', 'max' => 1]
         ];
@@ -73,6 +73,7 @@ class Menu extends \yii\db\ActiveRecord
             'activeText' => 'Active',
             'varActive' => 'Active',
             'index' => 'Index',
+            'accessid' => 'Access ID'
         ];
     }
 
@@ -163,7 +164,7 @@ class Menu extends \yii\db\ActiveRecord
     }
 
     public function getChildLink($data){
-        $link = Html::a('<i class="'.$data->icon.'"></i>'.$data->caption, ['menu/view?id='.$data->menuid], ['class'=>'a']);
+        $link = Html::a('<i class="'.$data->icon.'"></i> '.$data->caption, ['menu/view?id='.$data->menuid], ['class'=>'a']);
         $str = '<li>'.$link;
         if (count($data->menus) > 0){
             $str = $str . '<ul class="ul">';
@@ -202,6 +203,64 @@ class Menu extends \yii\db\ActiveRecord
             $str = $str . '<ul class="ul">';
             foreach($data->menus as $child){
                 $str = $str . $this->getChildLabel($child, $checked, $disable, $id, $name, $groups);
+            }
+            $str = $str . '</ul>';
+        }
+        
+        return $str;
+    }
+
+    public function getMenuUserManagement(){
+        if (isset(Yii::$app->user->identity->userid)){
+            $menu = $this->findBySql('
+    select * from ps_menu 
+    where active = 1 and parentid is null and menuid in (
+        select menuid from ps_useraccess
+        where userid = :1
+        union
+        select menuid from ps_groupaccess
+        where groupid in (
+            select groupid from ps_groupuser
+            where userid = :1
+        )
+    ) order by `index`, caption;', [':1'=>Yii::$app->user->identity->userid])->all();
+            $str = '';
+            foreach($menu as $data){
+                $str = $str . $this->getChildMenuUserManagement($data);
+            }
+            return $str;
+        }else{
+            return '';
+        }
+    }
+        
+    public function getChildMenuUserManagement($data){
+        $menus = $this->findBySql('
+select * from ps_menu 
+where active = 1 and ParentId = :2 and menuid in (
+    select menuid from ps_useraccess
+    where userid = :1
+    union
+    select menuid from ps_groupaccess
+    where groupid in (
+        select groupid from ps_groupuser
+        where userid = :1
+    )
+) order by `index`, caption;', [':1'=>Yii::$app->user->identity->userid, ':2'=>$data->menuid])->all();
+        if (count($menus) > 0){
+            $link = Html::a('<i class="'.$data->icon.'"></i> '.$data->caption.' <b class="caret"></b>', [$data->link], 
+                ['class'=>'dropdown-toggle','data-toggle'=>'dropdown']);
+            $str = '<li class="dropdown">'.$link;   
+        }
+        else {
+            $link = Html::a('<i class="'.$data->icon.'"></i> '.$data->caption, [$data->link]);
+            $str = '<li>'.$link;    
+        }
+
+        if (count($menus) > 0){
+            $str = $str . '<ul class="dropdown-menu">';
+            foreach($menus as $child){
+                $str = $str . $this->getChildMenuUserManagement($child);
             }
             $str = $str . '</ul>';
         }

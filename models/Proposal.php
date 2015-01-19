@@ -82,4 +82,12 @@ class Proposal extends \yii\db\ActiveRecord
     {
         return $this->project->code . ' - ' . $this->project->name;
     }
+
+    public function getDateFormat(){
+        return date('d-M-Y H:i:s', strtotime($this->date));
+    }
+
+    public function getUrlFile(){
+        return yii\helpers\Html::a($this->filename, \Yii::$app->request->BaseUrl.'/uploads/'.$this->filename);
+    }
 }

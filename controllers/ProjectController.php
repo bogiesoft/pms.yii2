@@ -11,15 +11,34 @@ use yii\filters\VerbFilter;
 
 use yii\helpers\ArrayHelper;
 use app\models\ProjectPic;
+use yii\filters\AccessControl;
 
 /**
  * ProjectController implements the CRUD actions for Project model.
  */
 class ProjectController extends Controller
 {
+    private $accessid = "CREATE-PDEFINITION";
+
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        //'actions' => ['login', 'error'], // Define specific actions
+                        'allow' => true, // Has access
+                        'matchCallback' => function ($rule, $action) {
+                            return \app\models\User::getIsAccessMenu($this->accessid);
+                        }
+                    ],
+                    [
+                        'allow' => false, // Do not have access
+                        'roles'=>['?'], // Guests '?'
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -64,74 +83,75 @@ class ProjectController extends Controller
     public function actionCreate()
     {
         $model = new Project();
-        $model_projectpic = null;
+        $projectpics = null;
 
         //initial user change & date
-        $model->userin = 'sun';
+        $model->userin = Yii::$app->user->identity->userid;
         $model->datein = new \yii\db\Expression('NOW()');
 
-        if ($model->load(Yii::$app->request->post())) {
-            $transaction = Yii::$app->db->beginTransaction();
+        $status = \app\models\Status::find()->where("name like '%potential%'")->one();
+        $model->statusid = isset($status->statusid) ? $status->statusid : 0;
 
-            $flag = $model->save();
-
-            $post_projectpic = Yii::$app->request->post('ProjectPic');
-            //$valid = true;
-            
-            foreach($post_projectpic as $i => $projectpic) {
-                $projectpic1 = new ProjectPic();
-                $projectpic1->setAttributes($projectpic);                                
-                $projectpic1->projectid = $model->projectid;
-                /*
-                if(!$projectpic1->validate()){
-                    $valid = false;
-                }
-                */
-                $model_projectpic[] = $projectpic1;                
-            }
-            
-            //if(ProjectPic::loadMultiple($model_projectpic, Yii::$app->request->post('ProjectPic')) && ProjectPic::validateMultiple($model_projectpic)){                
-            if(ProjectPic::validateMultiple($model_projectpic)){             
-            //if($valid){
-                
-                try{
-                    if($flag){
-                        foreach($model_projectpic as $ProjectPic){
-
-                            //initial user change & date
-                            $ProjectPic->userin = 'sun';                            
-                            $ProjectPic->datein = new \yii\db\Expression('NOW()');
-                            
-                            $flag = $ProjectPic->save();
-
-                            if(!$flag){
-                                $transaction->rollBack();
-                                break;
-                            }
-                        }
-                        if($flag){
-                            $transaction->commit();
-                            return $this->redirect(['view', 'id' => $model->projectid]);
-                        }
-                    }                    
-                    /*
-                    if($model->save())
-                        return $this->redirect(['view', 'id' => $model->projectid]);
-                    */
-                }
-                catch (Exception $ex) {
-                    $transaction->rollBack();
-                }                
-            }
-            else{
-                $transaction->rollBack();
-            }
+        $sql = "select count(projectid) as code from ps_project where year(initiationyear) = year(now())";
+        $res = Project::findBySql($sql)->asArray()->one();
+        $code = 1;
+        if (isset($res["code"]) && isset($res["code"]) != null && isset($res["code"]) != ""){
+            $code = $code + $res["code"];
         }
+
+        $model->code = date('Y') . '/' . str_pad($code,(3 - strlen($code) + 1),'0',STR_PAD_LEFT);
+
+        if ($model->load(Yii::$app->request->post())) {
+            $flag = true;
+            $model->initiationyear = date("Y-m-d", strtotime($model->initiationyear));
             
-        return $this->render('create', [
-            'model' => $model,
-            'model_projectpic' => (empty($model_projectpic)) ? [new ProjectPic()] :$model_projectpic,
-        ]);
+            if (isset($_POST["ProjectPic"])){
+                foreach($_POST["ProjectPic"] as $pic){
+                    $modelPIC = new ProjectPic();
+                    if (isset($pic["userid"]) && $pic["userid"] != ""){
+                        $modelPIC->userid = $pic["userid"];
+                    }
+                    $projectpics[] = $modelPIC;
+                }
+            }else{
+                $pic = new ProjectPic();
+                $pic->validate();
+                $projectpics[] = $pic;
+                $flag = false;
+            } 
+
+            $connection = \Yii::$app->db;
+            $transaction = $connection->beginTransaction(); 
+
+            if (!$model->save()){
+                $model->initiationyear = date("d-M-Y", strtotime($model->initiationyear));
+                return $this->render('create', [
+                    'model' => $model,
+                    'model_projectpic' => $projectpics,
+                ]);  
+            }
+
+            foreach($projectpics as $pic){
+                $pic->projectid = $model->projectid;
+                if (!$pic->save()){
+                    $model->initiationyear = date("d-M-Y", strtotime($model->initiationyear));
+                    return $this->render('create', [
+                        'model' => $model,
+                        'model_projectpic' => $projectpics,
+                    ]); 
+                }
+            }
+
+            $transaction->commit();
+
+            return $this->redirect(['view', 'id' => $model->projectid]);
+
+        }else{
+            return $this->render('create', [
+                'model' => $model,
+                'model_projectpic' => $projectpics,
+            ]);   
+        }
     }
 
     /**
@@ -145,82 +165,69 @@ class ProjectController extends Controller
         $model = $this->findModel($id);
 
         //initial user change & date
-        $model->userup = 'sun';
+        $model->userup = Yii::$app->user->identity->userid;
         $model->dateup = new \yii\db\Expression('NOW()');
-
-        $model_projectpic = ProjectPic::find()->where(
-            'projectid = :1',[':1'=>$model->projectid,]
-        )->all();
+        $projectpics = null;
         
         if ($model->load(Yii::$app->request->post())) {
-            $transaction = Yii::$app->db->beginTransaction();
-            $flag = $model->save();
-
-            //$oldIds = ArrayHelper::map($model_projectpic,'userid','userid');
-            $post_projectpic = Yii::$app->request->post('ProjectPic');
-
-            //$valid = true;
-            $model_projectpic = [];
-            foreach($post_projectpic as $i => $projectpic) {
-                $projectpic1 = new ProjectPic();
-                $projectpic1->setAttributes($projectpic);                                
-                $projectpic1->projectid = $model->projectid;
-                /*
-                if(!$projectpic1->validate()){
-                    $valid = false;
+            $flag = true;
+            $model->initiationyear = date("Y-m-d", strtotime($model->initiationyear));
+            
+            if (isset($_POST["ProjectPic"])){
+                foreach($_POST["ProjectPic"] as $pic){
+                    $modelPIC = new ProjectPic();
+                    if (isset($pic["userid"]) && $pic["userid"] != ""){
+                        $modelPIC->userid = $pic["userid"];
+                    }
+                    $projectpics[] = $modelPIC;
                 }
-                */
-                $model_projectpic[] = $projectpic1;                
+            }else{
+                $pic = new ProjectPic();
+                $pic->validate();
+                $projectpics[] = $pic;
+                $flag = false;
             }
 
-            //$deleteIds = array_diff($oldIds, array_filter(ArrayHelper::map($model_projectpic,'userid','userid')));
+            $connection = \Yii::$app->db;
+            $transaction = $connection->beginTransaction(); 
 
-            if(ProjectPic::validateMultiple($model_projectpic)){  
-                try{
-                    if($flag){
+            if (!$model->save()){
+                $model->initiationyear = date("d-M-Y", strtotime($model->initiationyear));
+                return $this->render('update', [
+                    'model' => $model,
+                    'model_projectpic' => $projectpics,
+                ]);  
+            }
 
-                        /*
-                        if(!empty($deleteIds)){
-                            ProjectPic::deleteAll(['projectid'=> $model->projectid, 'userid'=>$deleteIds]);
-                        }
-                        */
-                        ProjectPic::deleteAll('projectid = :1',[':1'=> $model->projectid]);
-                        
-                        foreach($model_projectpic as $ProjectPic){
-                            //initial user change & date
-                            $ProjectPic->userin = 'sun';                            
-                            $ProjectPic->datein = new \yii\db\Expression('NOW()');
-                            
-                            $flag = $ProjectPic->save();
-
-                            if(!$flag){
-                                $transaction->rollBack();
-                                break;
-                            }
-                        }
-                        if($flag){
-                            $transaction->commit();
-                            return $this->redirect(['view', 'id' => $model->projectid]);
-                        }
-                    }                    
-                    /*
-                    if($model->save())
-                        return $this->redirect(['view', 'id' => $model->projectid]);
-                    */
+            ProjectPic::deleteAll('projectid = :1', [':1'=>$model->projectid]);
+            foreach($projectpics as $pic){
+                $pic->projectid = $model->projectid;
+                if (!$pic->save()){
+                    $model->initiationyear = date("d-M-Y", strtotime($model->initiationyear));
+                    return $this->render('update', [
+                        'model' => $model,
+                        'model_projectpic' => $projectpics,
+                    ]); 
                 }
-                catch (Exception $ex) {
-                    $transaction->rollBack();
-                }             
             }
-            else{
-                $transaction->rollBack();
+
+            $transaction->commit();
+
+            return $this->redirect(['view', 'id' => $model->projectid]);
+
+        }else{
+            $model->initiationyear = date("d-M-Y", strtotime($model->initiationyear));
+
+            $picModel = ProjectPic::find()->where('projectid = :1', [':1'=>$model->projectid])->all();
+            foreach($picModel as $pic){                
+                $projectpics[] = $pic;
             }
+
+            return $this->render('update', [
+                'model' => $model,
+                'model_projectpic' => $projectpics,
+            ]);   
         }
-
-        return $this->render('update', [
-            'model' => $model,
-            'model_projectpic' => (empty($model_projectpic)) ? [new ProjectPic()] :$model_projectpic,
-        ]);
     }
 
     /**

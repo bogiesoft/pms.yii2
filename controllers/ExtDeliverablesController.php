@@ -8,6 +8,7 @@ use app\models\ExtDeliverablesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * ExtDeliverablesController implements the CRUD actions for ExtDeliverables model.

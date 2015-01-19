@@ -36,7 +36,8 @@ class ProjectPic extends \yii\db\ActiveRecord
             [['projectid', 'userid'], 'required'],
             [['projectid', 'userid'], 'integer'],
             [['datein', 'dateup'], 'safe'],
-            [['userin', 'userup'], 'string', 'max' => 50]
+            [['userin', 'userup'], 'string', 'max' => 50],
+            [['projectid', 'userid'], 'unique', 'targetAttribute' => ['projectid', 'userid'], 'message' => 'User already chosen to be PIC in this project.']
         ];
     }
 

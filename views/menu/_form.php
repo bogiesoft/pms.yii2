@@ -39,8 +39,10 @@ use kartik\select2\Select2;
 
     <?= $form->field($model, 'index')->textInput() ?>
 
+    <?= $form->field($model, 'accessid')->textInput() ?>
 
     <?= $form->field($model, 'active')->radioList(['1'=>'Yes', '0'=>'No'],['separator'=>'<span style="margin-right:20px"></span>']) ?>
+
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

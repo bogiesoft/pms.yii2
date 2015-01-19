@@ -11,7 +11,6 @@ use Yii;
  * @property integer $consultantid
  * @property integer $phonetypeid
  * @property string $phone
- * @property string $active
  * @property string $datein
  * @property string $userin
  * @property string $dateup
@@ -40,7 +39,6 @@ class ConsultantPhone extends \yii\db\ActiveRecord
             [['consultantid', 'phonetypeid'], 'integer'],
             [['datein', 'dateup'], 'safe'],
             [['phone'], 'string', 'max' => 15],
-            [['active'], 'string', 'max' => 1],
             [['userin', 'userup'], 'string', 'max' => 50]
         ];
     }
@@ -55,7 +53,6 @@ class ConsultantPhone extends \yii\db\ActiveRecord
             'consultantid' => 'Consultantid',
             'phonetypeid' => 'Phonetypeid',
             'phone' => 'Phone',
-            'active' => 'Active',
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',
@@ -76,6 +73,6 @@ class ConsultantPhone extends \yii\db\ActiveRecord
      */
     public function getPhonetype()
     {
-        return $this->hasOne(PsPhonetype::className(), ['phonetypeid' => 'phonetypeid']);
+        return $this->hasOne(PhoneType::className(), ['phonetypeid' => 'phonetypeid']);
     }
 }

@@ -13,14 +13,34 @@ use yii\helpers\FileHelper;
 
 use app\models\Project;
 use app\models\ProjectSearch;
+use yii\filters\AccessControl;
+
 /**
  * ProposalController implements the CRUD actions for Proposal model.
  */
 class ProposalController extends Controller
 {
+    private $accessid = "CREATE-PROPOSAL";
+
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        //'actions' => ['login', 'error'], // Define specific actions
+                        'allow' => true, // Has access
+                        'matchCallback' => function ($rule, $action) {
+                            return \app\models\User::getIsAccessMenu($this->accessid);
+                        }
+                    ],
+                    [
+                        'allow' => false, // Do not have access
+                        'roles'=>['?'], // Guests '?'
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -62,7 +82,7 @@ class ProposalController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionView($projectid, $id)
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -131,7 +151,7 @@ class ProposalController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionUpdate($projectid, $id)
     {
         $model = $this->findModel($id);
 

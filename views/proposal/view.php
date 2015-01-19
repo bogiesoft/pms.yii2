@@ -5,9 +5,9 @@ use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Proposal */
-
-$this->title = $model->proposalid;
-$this->params['breadcrumbs'][] = ['label' => 'Proposals', 'url' => ['index']];
+$this->title = 'Proposal@'.date('d.M.Y H:i:s', strtotime($model->date));
+$this->params['breadcrumbs'][] = ['label' => 'Proposals: Select Project', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Proposals', 'url' => ['index?projectid='.Yii::$app->request->get('projectid')]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="proposal-view">
@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->proposalid], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Update', ['update', 'id' => $model->proposalid, 'projectid'=>Yii::$app->request->get('projectid')], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->proposalid], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -33,9 +33,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'project',
                 'value'=>$model->project->code. ' - ' .$model->project->name,                
             ],
-            'date',
+            [
+                'attribute'=>'date',
+                'value'=>$model->dateFormat,
+            ],
             'remark',
-            'filename',
+            [
+                'attribute' => 'filename',
+                'value'=>Html::a($model->filename, \Yii::$app->request->BaseUrl.'/uploads/'.$model->filename),
+                'format' => 'html'
+            ],
 
         ],
     ]) ?>

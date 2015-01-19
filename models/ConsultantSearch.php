@@ -19,7 +19,7 @@ class ConsultantSearch extends Consultant
     {
         return [
             [['consultantid', 'categoryid'], 'integer'],
-            [['lectureid', 'employeeid', 'name', 'residentid', 'datein', 'userin', 'dateup', 'userup'], 'safe'],
+            [['lectureid', 'varCategory', 'employeeid', 'name', 'residentid', 'datein', 'userin', 'dateup', 'userup'], 'safe'],
         ];
     }
 
@@ -42,10 +42,16 @@ class ConsultantSearch extends Consultant
     public function search($params)
     {
         $query = Consultant::find();
+        $query->joinWith(['category']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        $dataProvider->sort->attributes['varCategory'] = [
+            'asc' => ['ps_category.category' => SORT_ASC],
+            'desc' => ['ps_category.category' => SORT_DESC],
+        ];
 
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
@@ -62,6 +68,7 @@ class ConsultantSearch extends Consultant
             ->andFilterWhere(['like', 'employeeid', $this->employeeid])
             ->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'residentid', $this->residentid])
+            ->andFilterWhere(['like', 'ps_category.category', $this->varCategory])
             ->andFilterWhere(['like', 'userin', $this->userin])
             ->andFilterWhere(['like', 'userup', $this->userup]);
 

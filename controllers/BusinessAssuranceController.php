@@ -10,17 +10,35 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use yii\helpers\FileHelper;
-
 use app\models\ProjectSearch;
+use yii\filters\AccessControl;
 
 /**
  * BusinessAssuranceController implements the CRUD actions for BusinessAssurance model.
  */
 class BusinessAssuranceController extends Controller
 {
+    private $accessid = "CREATE-BASSURANCE";
+
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        //'actions' => ['login', 'error'], // Define specific actions
+                        'allow' => true, // Has access
+                        'matchCallback' => function ($rule, $action) {
+                            return \app\models\User::getIsAccessMenu($this->accessid);
+                        }
+                    ],
+                    [
+                        'allow' => false, // Do not have access
+                        'roles'=>['?'], // Guests '?'
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

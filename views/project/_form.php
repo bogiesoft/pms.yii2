@@ -8,6 +8,9 @@ use app\models\Customer;
 use app\models\ProductType;
 use app\models\Status;
 use kartik\select2\Select2;
+use kartik\datecontrol\Module;
+use kartik\datecontrol\DateControl;
+use kartik\date\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Project */
@@ -17,6 +20,16 @@ use kartik\select2\Select2;
 <div class="project-form">
 
     <?php $form = ActiveForm::begin(); ?>
+
+    <?php
+        echo $form->field($model, 'initiationyear')->widget(DatePicker::classname(), [
+            'options' => ['placeholder' => 'Enter initiation date ...'],
+            'pluginOptions' => [
+                'autoclose'=>true,
+                'format' => 'd-M-yyyy'
+            ]
+        ]);
+    ?>
 
     <?php 
         $data = [];
@@ -32,7 +45,7 @@ use kartik\select2\Select2;
         ]);
     ?>
 
-    <?= $form->field($model, 'code')->textInput(['maxlength' => 5]) ?>
+    <?= $form->field($model, 'code')->textInput(['maxlength' => 8]) ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => 50]) ?>
 
@@ -64,35 +77,23 @@ use kartik\select2\Select2;
             ],
         ]);             
     ?>
-
-    <?= $form->field($model, 'initiationyear')->textInput(['maxlength' => 5]) ?>
-
-    <?php 
-        $data= [];                   
-        $data += ArrayHelper::map(Status::find()->orderBy('name')->asArray()->all(), 'statusid', 'name');             
-
-        echo $form->field($model, 'statusid')->widget(Select2::classname(), [
-            'data' => $data,
-            'options' => ['placeholder' => 'Select a status ...'],
-            'pluginOptions' => [
-                'allowClear' => true
-            ],
-        ]);  
-    ?>
-
-    <div id="project-pic">
-        <a id='addPIC' >Add New PIC </a>        
-        <?php
-            $index = 0;
     
-            foreach($model_projectpic as $i => $projectpic){
-                echo $this->render('project-pic/_form', [
-                    'model' => $projectpic,
-                    'index' => $i,
-                ]);
-                $index = $i;                
+    <div class="form-group">
+    <label class="control-label" for="project-statusid">Project PICs</label>
+    <div id="project-pic">
+        <?php
+            $index = 1;
+            if (isset($projectpic)){
+                foreach($model_projectpic as $projectpic){
+                    echo $this->render('project-pic/_form', [
+                        'model' => $projectpic,
+                        'index' => $index,
+                    ]);
+                    $index++;
+                }   
             }
         ?>
+    </div>
     </div>
 
     <div class="form-group">
@@ -104,20 +105,95 @@ use kartik\select2\Select2;
 </div>
 
 <?php    
-    $this->registerJs('
-        index = "'.++$index.'";
-        $("#addPIC").click(function(e){            
-            $.ajax({
-                url: "'.yii\helpers\URL::toRoute('project/add').'?index="+index,                        
-                dataType: "html",
-                success: function(data){
-                    $pic = $(data).clone();
-                    $("#project-pic").append($pic);                    
-                }
-            });    
-            index++;
+$this->registerJs('
+var _index = "'.$index.'";
+
+function addUser(){
+    var _url = "' . yii\helpers\Url::toRoute('project/add') . '?index="+_index;
+    $.ajax({
+        url: _url,
+        async: false,
+        success:function(response){
+            $("#project-pic").append(response);
+            $("#project-pic .select2").select2();
+            $("#project-pic .select2").removeClass("select2");
+            $("#project-pic .crow").last().animate({
+                opacity : 1, 
+                left: "+50", 
+                height: "toggle"
+            });
+
+            $(".btnDeleteUser").click(function (elm){ 
+                if ($(".project-pic-form").length >1){
+                    element=$(elm.currentTarget).closest(".project-pic-form");
+                    /* animate div */
+                    $(element).animate(
+                    {
+                        opacity: 0.25,
+                        left: "+=50",
+                        height: "toggle"
+                    }, 400,
+                    function() {
+                        /* remove div */
+                        $(element).remove();
+                        if ($("#project-pic").find("div.has-error").length < 1){
+                            $("#project-pic").find("label").css("color", "");
+                        }
+                    });
+                }else{
+                    alert("Required at least one project pic.");
+                    elm.stopImmediatePropagation();
+                }                
+            });
+
+            $(".btnAddUser").click(function (elm){
+                $(".btnAddUser").unbind( "click" );
+                elm.stopImmediatePropagation();
+                addUser();
+            });
+        }
+    });
+
+    _index++;
+}
+
+$(".btnDeleteUser").click(function (elm){ 
+    if ($(".project-pic-form").length >1){
+        element=$(elm.currentTarget).closest(".project-pic-form");
+        /* animate div */
+        $(element).animate(
+        {
+            opacity: 0.25,
+            left: "+=50",
+            height: "toggle"
+        }, 400,
+        function() {
+            /* remove div */
+            $(element).remove();
+            if ($("#project-pic").find("div.has-error").length < 1){
+                $("#project-pic").find("label").css("color", "");
+            }
         });
-    ')
+    }else{
+        alert("Required at least one project pic.");
+        elm.stopImmediatePropagation();
+    }                
+});
+
+$(".btnAddUser").click(function (elm){
+    $(".btnAddUser").unbind( "click" );
+    elm.stopImmediatePropagation();
+    addUser();
+});
+
+$("#project-pic .select2").select2();
+$("#project-pic .select2").removeClass("select2");
+
+if ($("#project-pic").find(".project-pic-form").length == 0){
+    addUser();
+}
+
+')
 
 ?>
 

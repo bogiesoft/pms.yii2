@@ -13,15 +13,34 @@ use yii\helpers\FileHelper;
 
 use app\models\Project;
 use app\models\ProjectSearch;
+use yii\filters\AccessControl;
 
 /**
  * CostingApprovalController implements the CRUD actions for CostingApproval model.
  */
 class CostingApprovalController extends Controller
 {
+    private $accessid = "CREATE-CAPPROVAL";
+
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        //'actions' => ['login', 'error'], // Define specific actions
+                        'allow' => true, // Has access
+                        'matchCallback' => function ($rule, $action) {
+                            return \app\models\User::getIsAccessMenu($this->accessid);
+                        }
+                    ],
+                    [
+                        'allow' => false, // Do not have access
+                        'roles'=>['?'], // Guests '?'
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

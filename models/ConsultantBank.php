@@ -31,6 +31,14 @@ class ConsultantBank extends \yii\db\ActiveRecord
         return 'ps_consultantbank';
     }
 
+    public function getActiveText(){
+        if ($this->active == "1"){
+            return "Yes";
+        }else{
+            return "No";
+        }
+    }
+
     /**
      * @inheritdoc
      */
@@ -55,7 +63,7 @@ class ConsultantBank extends \yii\db\ActiveRecord
         return [
             'consultantbankid' => 'Consultantbankid',
             'consultantid' => 'Consultantid',
-            'bankid' => 'Bankid',
+            'bankid' => 'Bank',
             'branch' => 'Branch',
             'account' => 'Account',
             'active' => 'Active',
@@ -71,7 +79,7 @@ class ConsultantBank extends \yii\db\ActiveRecord
      */
     public function getConsultant()
     {
-        return $this->hasOne(PsConsultant::className(), ['consultantid' => 'consultantid']);
+        return $this->hasOne(Consultant::className(), ['consultantid' => 'consultantid']);
     }
 
     /**
@@ -79,6 +87,6 @@ class ConsultantBank extends \yii\db\ActiveRecord
      */
     public function getBank()
     {
-        return $this->hasOne(PsBank::className(), ['bankid' => 'bankid']);
+        return $this->hasOne(Bank::className(), ['bankid' => 'bankid']);
     }
 }

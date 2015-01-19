@@ -8,15 +8,34 @@ use app\models\BankSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * BankController implements the CRUD actions for Bank model.
  */
 class BankController extends Controller
 {
+    private $accessid = "CREATE-BANKS";
+
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        //'actions' => ['login', 'error'], // Define specific actions
+                        'allow' => true, // Has access
+                        'matchCallback' => function ($rule, $action) {
+                            return \app\models\User::getIsAccessMenu($this->accessid);
+                        }
+                    ],
+                    [
+                        'allow' => false, // Do not have access
+                        'roles'=>['?'], // Guests '?'
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -63,7 +82,7 @@ class BankController extends Controller
         $model = new Bank();
 
         //initial user change & date
-        $model->userin = 'sun';
+        $model->userin = Yii::$app->user->identity->userid;
         $model->datein = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -86,7 +105,7 @@ class BankController extends Controller
         $model = $this->findModel($id);
 
         //initial user change & date
-        $model->userup = 'sun';
+        $model->userup = Yii::$app->user->identity->userid;
         $model->dateup = new \yii\db\Expression('NOW()');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

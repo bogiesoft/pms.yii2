@@ -38,7 +38,6 @@ class ConsultantEmail extends \yii\db\ActiveRecord
             [['consultantid'], 'integer'],
             [['datein', 'dateup'], 'safe'],
             [['email'], 'string', 'max' => 150],
-            [['active'], 'string', 'max' => 1],
             [['userin', 'userup'], 'string', 'max' => 50],
             [['consultantid', 'email'], 'unique', 'targetAttribute' => ['consultantid', 'email'], 'message' => 'The combination of Consultantid and Email has already been taken.']
         ];
@@ -53,7 +52,6 @@ class ConsultantEmail extends \yii\db\ActiveRecord
             'consultantemailid' => 'Consultantemailid',
             'consultantid' => 'Consultantid',
             'email' => 'Email',
-            'active' => 'Active',
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',
@@ -66,6 +64,6 @@ class ConsultantEmail extends \yii\db\ActiveRecord
      */
     public function getConsultant()
     {
-        return $this->hasOne(PsConsultant::className(), ['consultantid' => 'consultantid']);
+        return $this->hasOne(Consultant::className(), ['consultantid' => 'consultantid']);
     }
 }

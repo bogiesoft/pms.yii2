@@ -10,14 +10,29 @@ use app\models\User;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="project-pic-form" id="project-pic-[<?= $index ?>]" ?>
-    <a style="cursor:pointer;text-decoration:none;" onclick="deletePhone(this)">Delete</a>
+<div class="project-pic-form">
+
+	<div class="form-inline" role="form">
+	<?php
+        if ($model->hasErrors('userid')){
+            echo '<div class="form-group required has-error" style="width:60%">';
+        }else{
+            echo '<div class="form-group" style="width:60%">';
+        }
+    ?>
+
     <?php 
         $dataCategory = [];
         $dataCategory += ArrayHelper::map(User::find()->asArray()->all(), 'userid', 'name');
 
-        echo HTML::activeDropDownList($model, '['.$index.']userid', $dataCategory, array('prompt'=>' '));
-        echo HTML::Error($model, '['.$index.']userid');
+        echo Html::activeDropDownList($model, '[' . $index . ']userid', $dataCategory, [
+	        'style'=>'width:100%;min-width:100%;',
+	        'class'=>'userddl form-control select2',
+	    ]);
+        echo Html::error($model, 'userid', ['class'=>'help-block']);
     ?>
-
+    </div>
+    <a type="button" class="btnAddUser btn btn-primary" style="vertical-align: top;"><i class="glyphicon glyphicon-plus"></i></a>
+    <a type="button" class="btnDeleteUser btn btn-danger" style="vertical-align: top;"><i class="glyphicon glyphicon-minus"></i></a>
+    </div>
 </div>

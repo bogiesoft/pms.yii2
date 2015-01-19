@@ -34,6 +34,8 @@ class Consultant extends \yii\db\ActiveRecord
         return 'ps_consultant';
     }
 
+    public $varCategory;
+
     /**
      * @inheritdoc
      */
@@ -60,11 +62,12 @@ class Consultant extends \yii\db\ActiveRecord
     {
         return [
             'consultantid' => 'Consultantid',
-            'lectureid' => 'Lectureid',
-            'employeeid' => 'Employeeid',
+            'lectureid' => 'Lecturer ID',
+            'employeeid' => 'Employee ID',
             'name' => 'Name',
-            'residentid' => 'Residentid',
-            'categoryid' => 'Categoryid',
+            'residentid' => 'Resident ID',
+            'categoryid' => 'Category',
+            'varCategory' => 'Category',
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',
@@ -77,38 +80,38 @@ class Consultant extends \yii\db\ActiveRecord
      */
     public function getCategory()
     {
-        return $this->hasOne(PsCategory::className(), ['categoryid' => 'categoryid']);
+        return $this->hasOne(Category::className(), ['categoryid' => 'categoryid']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsConsultantbanks()
+    public function getConsultantbanks()
     {
-        return $this->hasMany(PsConsultantbank::className(), ['consultantid' => 'consultantid']);
+        return $this->hasMany(ConsultantBank::className(), ['consultantid' => 'consultantid']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsConsultantemails()
+    public function getConsultantemails()
     {
-        return $this->hasMany(PsConsultantemail::className(), ['consultantid' => 'consultantid']);
+        return $this->hasMany(ConsultantEmail::className(), ['consultantid' => 'consultantid']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsConsultantphones()
+    public function getConsultantphones()
     {
-        return $this->hasMany(PsConsultantphone::className(), ['consultantid' => 'consultantid']);
+        return $this->hasMany(ConsultantPhone::className(), ['consultantid' => 'consultantid']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsIntagreements()
+    public function getIntagreements()
     {
-        return $this->hasMany(PsIntagreement::className(), ['consultantid' => 'consultantid']);
+        return $this->hasMany(IntAgreement::className(), ['consultantid' => 'consultantid']);
     }
 }

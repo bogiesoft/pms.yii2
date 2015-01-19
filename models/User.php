@@ -3,6 +3,10 @@
 namespace app\models;
 
 use Yii;
+use yii\base\NotSupportedException;
+use yii\db\ActiveRecord;
+use yii\helpers\Security;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "ps_user".
@@ -21,7 +25,7 @@ use Yii;
  * @property PsProject[] $projects 
  * @property PsUseraccess[] $psUseraccesses
  */
-class User extends \yii\db\ActiveRecord
+class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
     /**
      * @inheritdoc
@@ -106,5 +110,88 @@ class User extends \yii\db\ActiveRecord
     public function getUseraccesses()
     {
         return $this->hasMany(UserAccess::className(), ['userid' => 'userid']);
+    }
+
+    /**
+     * Validates password
+     *
+     * @param  string  $password password to validate
+     * @return boolean if password provided is valid for current user
+     */
+    public function validatePassword($password)
+    {
+        return $this->password === $password;
+    }
+
+    public static function findByUsername($username)
+    {        
+        return static::findOne(['username' => $username, 'active' => '1']);
+    }
+
+    /** INCLUDE USER LOGIN VALIDATION FUNCTIONS**/
+    /**
+     * @inheritdoc
+     */
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
+
+     /**
+     * @inheritdoc
+     */
+    public function getId()
+    {
+        return $this->getPrimaryKey();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAuthKey()
+    {
+        return "CREATE-AUTH";
+    }
+
+     /**
+     * @inheritdoc
+     */
+    public function validateAuthKey($authKey)
+    {
+        return $this->getAuthKey() === $authKey;
+    }
+
+     /**
+     * @inheritdoc
+     */
+    /* modified */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+          return null;
+    }
+
+    public function getIsAccessMenu($accessid){
+        if (!isset(Yii::$app->user->identity->userid)){
+            return false;
+        }
+
+        $access = Menu::findBySql("
+            select * from ps_menu 
+            where menuid in (
+                select menuid from ps_useraccess
+                where userid = :1
+                union
+                select menuid from ps_groupaccess
+                where groupid in (
+                    select groupid from ps_groupuser
+                    where userid = :1
+                )
+            ) and active = 1 and accessid = :2", [':1'=>Yii::$app->user->identity->userid, ':2'=>$accessid])->one();
+
+        if (isset($access->menuid) && $access->menuid != null){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

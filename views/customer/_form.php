@@ -32,7 +32,7 @@ use kartik\tabs\TabsX;
 <?php $form = ActiveForm::begin(['options'=>['class'=>'form-horizontal']]); ?>
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title"><i class="glyphicon glyphicon-info-sign"></i> Customer Information</h3>
+    <i class="glyphicon glyphicon-info-sign"></i> Customer Information
   </div>
   <div class="panel-body">
 <?php
@@ -140,7 +140,7 @@ use kartik\tabs\TabsX;
 
 echo '</div></div>';
     echo '<div class="divcontact panel panel-default"><div class="panel-heading">
-    <h3 class="panel-title"><i class="glyphicon glyphicon-user"></i> Contact Person</h3>
+    <i class="glyphicon glyphicon-user"></i> Contact Person
   </div><div id="contact" class="panel-body">';
             
             if (isset($contacts) && $contacts != null){

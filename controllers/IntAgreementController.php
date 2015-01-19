@@ -16,15 +16,34 @@ use app\models\IntDeliverables;
 
 use app\models\ProjectSearch;
 use app\models\ExtAgreementSearch;
+use yii\filters\AccessControl;
 
 /**
  * IntAgreementController implements the CRUD actions for IntAgreement model.
  */
 class IntAgreementController extends Controller
 {
+    private $accessid = "CREATE-IAGREEMENT";
+
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        //'actions' => ['login', 'error'], // Define specific actions
+                        'allow' => true, // Has access
+                        'matchCallback' => function ($rule, $action) {
+                            return \app\models\User::getIsAccessMenu($this->accessid);
+                        }
+                    ],
+                    [
+                        'allow' => false, // Do not have access
+                        'roles'=>['?'], // Guests '?'
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

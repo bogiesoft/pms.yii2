@@ -22,7 +22,9 @@ AppAsset::register($this);
 
 </head>
 <body>
-
+<?php
+    $menu = new \app\models\Menu();
+?>
 <?php $this->beginBody() ?>
     <div class="wrap">
         <?php
@@ -33,87 +35,26 @@ AppAsset::register($this);
                     'class' => 'navbar-inverse navbar-fixed-top',
                 ],
             ]);
-            echo Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-right'],
-                'items' => [
-                    ['label' => 'Home', 'url' => ['/site/index']],
-                    ['label' => 'Application', 'url' => ['#'], 'items'=>[
+        ?>
+<div id="w2-collapse" class="collapse navbar-collapse">
+    <ul id="w3" class="navbar-nav navbar-right nav">
+        <?php echo $menu->getMenuUserManagement(); ?>
+         <?php
+    if (Yii::$app->user->isGuest){
+        $link = Html::a('<i class="fa fa-sign-in"></i> Login', ['/site/login']);
+        $str = '<li>'.$link.'</li>';
+        echo $str;
+    }else{
+        $link = Html::a('<i class="fa fa-sign-out"></i> Logout (' . Yii::$app->user->identity->name . ')', ['/site/logout'],['data-method' => 'post']);
+        $str = '<li>'.$link.'</li>';
+        echo $str;
+    }
                         
-                        [
-                            'label'=>'<i class="fa fa-list"></i> Partner Types', 
-                            'url'=>['/partner-type/index']],
-                        [
-                            'label'=>'<i class="fa fa-flag"></i> Countries', 
-                            'url'=>['/country/index']],
-
-'<li class="divider"></li>',
-                        [
-                            'label'=>'<i class="fa fa-building-o"></i> Units', 
-                            'url'=>['/unit/index']],
-                        [
-                            'label'=>'<i class="fa fa-list"></i> Product Types', 
-                            'url'=>['/product-type/index']],
-                        [
-                            'label'=>'<i class="fa fa-tag"></i> Project Status', 
-                            'url'=>['/status/index']],
-
-'<li class="divider"></li>',
-                        [
-                            'label'=>'<i class="fa fa-list"></i> Mind Units', 
-                            'url'=>['/mind-unit/index']],
-                        [
-                            'label'=>'<i class="fa fa-calculator"></i> Project Rates', 
-                            'url'=>['/project-rate/index']],
-                        [
-                            'label'=>'<i class="fa fa-list"></i> Consultant Posititions', 
-                            'url'=>['/consultant-position/index']],
-
-'<li class="divider"></li>',
-                        [
-                            'label'=>'<i class="fa fa-list"></i> Faculties', 
-                            'url'=>['/faculty/index']],
-                        [
-                            'label'=>'<i class="fa fa-list"></i> Departments', 
-                            'url'=>['/department/index']],
-                        
-'<li class="divider"></li>',
-                        [
-                            'label'=>'<i class="fa fa-bank"></i> Banks', 
-                            'url'=>['/bank/index']],
-                        [
-                            'label'=>'<i class="fa fa-phone"></i> Phone Types', 
-                            'url'=>['/phone-type/index']],
-
-'<li class="divider"></li>',
-                        [
-                            'label'=>'<i class="fa fa-list"></i> Consultant Categories', 
-                            'url'=>['/category/index']],
-                    ]],
-                    ['label' => 'User Management', 'url' => ['#'], 'items'=>[
-                        [
-                            'label'=>'<i class="fa fa-list"></i> Menus', 
-                            'url'=>['/menu/index']],
-                        
-                        [
-                            'label'=>'<i class="fa fa-group"></i> Groups', 
-                            'url'=>['/group/index']],
-
-                        [
-                            'label'=>'<i class="fa fa-user"></i> Users', 
-                            'url'=>['/user/index']],
-                    ]],
-                    ['label' => 'Project', 'url' => ['#'], 'items'=>[
-                        [
-                            'label'=>'<i class="fa fa-list"></i> Projects', 
-                            'url'=>['/project/index']],
-                        
-                    ]],
-                ],
-                'encodeLabels' => false
-            ]);
+ ?>
+    </ul>
+</div>  <?php
             NavBar::end();
         ?>
-
         <div class="container">
             <?= Breadcrumbs::widget([
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
@@ -121,6 +62,8 @@ AppAsset::register($this);
             <?= $content ?>
         </div>
     </div>
+
+
 
     <footer class="footer">
         <div class="container">

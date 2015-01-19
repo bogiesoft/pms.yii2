@@ -15,15 +15,34 @@ use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use app\models\ExtDeliverables;
 use app\models\ProjectSearch;
+use yii\filters\AccessControl;
 
 /**
  * ExtAgreementController implements the CRUD actions for ExtAgreement model.
  */
 class ExtAgreementController extends Controller
 {
+    private $accessid = "CREATE-EAGREEMENT";
+
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        //'actions' => ['login', 'error'], // Define specific actions
+                        'allow' => true, // Has access
+                        'matchCallback' => function ($rule, $action) {
+                            return \app\models\User::getIsAccessMenu($this->accessid);
+                        }
+                    ],
+                    [
+                        'allow' => false, // Do not have access
+                        'roles'=>['?'], // Guests '?'
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

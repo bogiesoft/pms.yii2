@@ -8,6 +8,7 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Proposals';
+$this->params['breadcrumbs'][] = ['label' => 'Proposals: Select Project', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="proposal-index">
@@ -31,9 +32,28 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'date',
             'remark',
-            'filename',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'attribute' => 'filename',
+                'value'=>'urlFile',
+                'format' => 'html'
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'buttons' => [
+                    'view' => function($url, $model, $key){                    
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', \yii\helpers\Url::toRoute(['proposal/view','projectid'=>$model->projectid, 'id'=>$model->proposalid],false), [
+                            'title' => Yii::t('yii', 'View'),
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                    'update' => function($url, $model, $key){                    
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', \yii\helpers\Url::toRoute(['proposal/update','projectid'=>$model->projectid, 'id'=>$model->proposalid],false), [
+                            'title' => Yii::t('yii', 'Update'),
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                ]
+            ],
         ],
     ]); ?>
 

@@ -10,15 +10,34 @@ use app\models\CustomerSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * CustomerController implements the CRUD actions for Customer model.
  */
 class CustomerController extends Controller
 {
+    private $accessid = "CREATE-CUSTOMER";
+
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        //'actions' => ['login', 'error'], // Define specific actions
+                        'allow' => true, // Has access
+                        'matchCallback' => function ($rule, $action) {
+                            return \app\models\User::getIsAccessMenu($this->accessid);
+                        }
+                    ],
+                    [
+                        'allow' => false, // Do not have access
+                        'roles'=>['?'], // Guests '?'
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -123,6 +142,7 @@ class CustomerController extends Controller
             }
 
             if (!$flag){
+                $model->dayofjoin = date("d-M-Y", strtotime($model->dayofjoin));
                 return $this->render('create', [
                     'model' => $model,
                     'index' => $index,
