@@ -77,7 +77,7 @@ use kartik\checkbox\CheckboxX;
                         ],
                         'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
                     ]
-                )->textInput(['maxlength' => 25]).
+                )->textInput(['maxlength' => 25, 'disabled'=>'<?= !$model->isNewRecord ? disabled ?>']).
                 
                 $form->field($model, 'name', 
                     [

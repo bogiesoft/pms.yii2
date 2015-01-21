@@ -55,7 +55,7 @@ class BusinessAssurance extends \yii\db\ActiveRecord
     {
         return [
             'businessassuranceid' => 'Businessassuranceid',
-            'projectid' => 'Projectid',
+            'projectid' => 'Project',
             'date' => 'Date',
             'remark' => 'Remark',
             'filename' => 'Filename',
@@ -80,5 +80,9 @@ class BusinessAssurance extends \yii\db\ActiveRecord
     public function getProjectDescr()
     {
         return $this->project->code . ' - ' . $this->project->name;
+    }
+
+    public function getUrlFile(){
+        return yii\helpers\Html::a($this->filename, \Yii::$app->request->BaseUrl.'/uploads/'.$this->filename);
     }
 }

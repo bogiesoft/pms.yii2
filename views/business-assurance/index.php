@@ -8,6 +8,7 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Business Assurances';
+$this->params['breadcrumbs'][] = ['label' => 'Business Assurance: Select Project', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="business-assurance-index">
@@ -31,9 +32,29 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'date',
             'remark',
-            'filename',
+            [
+                'attribute' => 'filename',
+                'value'=>'urlFile',
+                'format' => 'html'
+            ],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'buttons' => [
+                    'view' => function($url, $model, $key){                    
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', \yii\helpers\Url::toRoute(['business-assurance/view','projectid'=>$model->projectid, 'id'=>$model->businessassuranceid],false), [
+                            'title' => Yii::t('yii', 'View'),
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                    'update' => function($url, $model, $key){                    
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', \yii\helpers\Url::toRoute(['business-assurance/update','projectid'=>$model->projectid, 'id'=>$model->businessassuranceid],false), [
+                            'title' => Yii::t('yii', 'Update'),
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                ]
+            ],
         ],
     ]); ?>
 

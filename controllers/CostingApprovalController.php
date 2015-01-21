@@ -82,7 +82,7 @@ class CostingApprovalController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionView($id, $projectid)
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -100,7 +100,7 @@ class CostingApprovalController extends Controller
         $model->projectid = $projectid;
 
         //initial user change & date
-        $model->userin = 'sun';
+        $model->userin = Yii::$app->user->identity->username;
         $model->datein = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
@@ -109,19 +109,18 @@ class CostingApprovalController extends Controller
             date_default_timezone_set('Asia/Jakarta');
 
             $model->date =  new \yii\db\Expression('NOW()');            
-            $model->filename = $model->project->code.'_'.date('dMY').'_'.date('His').'_'.'CostingApproval'. '.' . $file1->extension;
+            $model->filename = str_replace('/', '.', $model->project->code).'_'.date('d.M.Y').'_'.date('His').'_'.'CostingApproval'. '.' . $file1->extension;
+            $model->filename = strtoupper($model->filename);
             $model->file = $file1;
             
             if ($model->validate() && $model->save()) {
 
                 $model_project = new Project();
                 $model_project = Project::findOne($projectid);                
-
-                $model_project->statusid = 2;
-                $model_project->save();
+                $model_project->setProjectStatus();
 
                 $model->file->saveAs('uploads/' . $model->filename); 
-                return $this->redirect(['view', 'id' => $model->costingapprovalid]);
+                return $this->redirect(['view', 'id' => $model->costingapprovalid, 'projectid'=>$projectid]);
             }
             else {
                 return $this->render('create', [
@@ -152,12 +151,12 @@ class CostingApprovalController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionUpdate($id, $projectid)
     {
         $model = $this->findModel($id);
 
         //initial user change & date
-        $model->userup = 'sun';
+        $model->userup = Yii::$app->user->identity->username;
         $model->dateup = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
@@ -167,12 +166,18 @@ class CostingApprovalController extends Controller
             date_default_timezone_set('Asia/Jakarta');
 
             $model->date =  new \yii\db\Expression('NOW()');
-            $model->filename = $model->project->code.'_'.date('dMY').'_'.date('His').'_'.'CostingApproval'. '.' . $file1->extension;
+            $model->filename = str_replace('/', '.', $model->project->code).'_'.date('d.M.Y').'_'.date('His').'_'.'CostingApproval'. '.' . $file1->extension;
+            $model->filename = strtoupper($model->filename);
             $model->file = $file1;
             
             if ($model->validate() && $model->save()) {                
                 $model->file->saveAs('uploads/' . $model->filename); 
-                return $this->redirect(['view', 'id' => $model->costingapprovalid]);
+
+                $model_project = new Project();
+                $model_project = Project::findOne($projectid);                
+                $model_project->setProjectStatus();
+
+                return $this->redirect(['view', 'id' => $model->costingapprovalid, 'projectid'=>$projectid]);
             }
             else{
                 return $this->render('update', [
@@ -204,15 +209,15 @@ class CostingApprovalController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $projectid = $model->projectid;
+        $model->delete();
 
         $model_project = new Project();
         $model_project = Project::findOne($projectid);                
+        $model_project->setProjectStatus();
 
-        $model_project->statusid = 1;
-        $model_project->save();
-
-        return $this->redirect(['index']);
+        return $this->redirect(['index', 'projectid'=>$projectid]);
     }
 
     /**

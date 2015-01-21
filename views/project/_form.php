@@ -62,7 +62,7 @@ use kartik\date\DatePicker;
         ]);
     ?>
 
-    <?= $form->field($model, 'description')->textInput(['maxlength' => 250]) ?>
+    <?= $form->field($model, 'description')->textArea(['maxlength' => 250, 'style' => 'height:120px']) ?>
 
     <?php 
         $data= [];
@@ -83,7 +83,7 @@ use kartik\date\DatePicker;
     <div id="project-pic">
         <?php
             $index = 1;
-            if (isset($projectpic)){
+            if (isset($model_projectpic)){
                 foreach($model_projectpic as $projectpic){
                     echo $this->render('project-pic/_form', [
                         'model' => $projectpic,

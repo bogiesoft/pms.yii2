@@ -6,8 +6,9 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\CostingApproval */
 
-$this->title = $model->costingapprovalid;
-$this->params['breadcrumbs'][] = ['label' => 'Costing Approvals', 'url' => ['index']];
+$this->title = 'Costing Approval@'.date('d.M.Y H:i:s', strtotime($model->date));
+$this->params['breadcrumbs'][] = ['label' => 'Costing Approval: Select Project', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Costing Approvals', 'url' => ['index', 'projectid'=>Yii::$app->request->get('projectid')]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="costing-approval-view">
@@ -15,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->costingapprovalid], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Update', ['update', 'id' => $model->costingapprovalid, 'projectid' => Yii::$app->request->get('projectid')], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->costingapprovalid], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -35,7 +36,11 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'date',
             'remark',
-            'filename',            
+            [
+                'attribute' => 'filename',
+                'value'=>Html::a($model->filename, \Yii::$app->request->BaseUrl.'/uploads/'.$model->filename),
+                'format' => 'html'
+            ],        
         ],
     ]) ?>
 

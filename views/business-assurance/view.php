@@ -6,8 +6,9 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\BusinessAssurance */
 
-$this->title = $model->businessassuranceid;
-$this->params['breadcrumbs'][] = ['label' => 'Business Assurances', 'url' => ['index']];
+$this->title = 'Business Assurance@'.date('d.M.Y H:i:s', strtotime($model->date));
+$this->params['breadcrumbs'][] = ['label' => 'Business Assurance: Select Project', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Business Assurances', 'url' => ['index', 'projectid'=>Yii::$app->request->get('projectid')]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="business-assurance-view">
@@ -15,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->businessassuranceid], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Update', ['update', 'id' => $model->businessassuranceid,'projectid'=>Yii::$app->request->get('projectid')], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->businessassuranceid], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -35,7 +36,11 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'date',
             'remark',
-            'filename',
+            [
+                'attribute' => 'filename',
+                'value'=>Html::a($model->filename, \Yii::$app->request->BaseUrl.'/uploads/'.$model->filename),
+                'format' => 'html'
+            ],
         ],
     ]) ?>
 

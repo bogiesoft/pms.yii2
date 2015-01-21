@@ -7,7 +7,8 @@ use yii\helpers\Html;
 /* @var $model app\models\CostingApproval */
 
 $this->title = 'Create Costing Approval';
-$this->params['breadcrumbs'][] = ['label' => 'Costing Approvals', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Costing Approval: Select Project', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Costing Approvals', 'url' => ['index?projectid='.Yii::$app->request->get('projectid')]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="costing-approval-create">

@@ -86,7 +86,7 @@ class ProjectController extends Controller
         $projectpics = null;
 
         //initial user change & date
-        $model->userin = Yii::$app->user->identity->userid;
+        $model->userin = Yii::$app->user->identity->username;
         $model->datein = new \yii\db\Expression('NOW()');
 
         $status = \app\models\Status::find()->where("name like '%potential%'")->one();
@@ -120,10 +120,18 @@ class ProjectController extends Controller
                 $flag = false;
             } 
 
+            if (!$flag){
+                return $this->render('update', [
+                    'model' => $model,
+                    'model_projectpic' => $projectpics,
+                ]); 
+            }            
+
             $connection = \Yii::$app->db;
             $transaction = $connection->beginTransaction(); 
 
             if (!$model->save()){
+                var_dump($model);
                 $model->initiationyear = date("d-M-Y", strtotime($model->initiationyear));
                 return $this->render('create', [
                     'model' => $model,
@@ -165,7 +173,7 @@ class ProjectController extends Controller
         $model = $this->findModel($id);
 
         //initial user change & date
-        $model->userup = Yii::$app->user->identity->userid;
+        $model->userup = Yii::$app->user->identity->username;
         $model->dateup = new \yii\db\Expression('NOW()');
         $projectpics = null;
         
@@ -186,6 +194,13 @@ class ProjectController extends Controller
                 $pic->validate();
                 $projectpics[] = $pic;
                 $flag = false;
+            }
+
+            if (!$flag){
+                return $this->render('update', [
+                    'model' => $model,
+                    'model_projectpic' => $projectpics,
+                ]); 
             }
 
             $connection = \Yii::$app->db;

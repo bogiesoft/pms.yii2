@@ -55,8 +55,8 @@ class Proposal extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'proposalid' => 'Proposalid',
-            'projectid' => 'Projectid',
+            'proposalid' => 'Proposal',
+            'projectid' => 'Project',
             'date' => 'Date',
             'remark' => 'Remark',
             'filename' => 'Filename',

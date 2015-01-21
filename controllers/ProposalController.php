@@ -109,19 +109,18 @@ class ProposalController extends Controller
 
             $model->date =  new \yii\db\Expression('NOW()');         
             
-            $model->filename = $model->project->code.'_'.date('dMY').'_'.date('His').'_'.'Proposal'. '.' . $file1->extension;
+            $model->filename = str_replace('/', '.', $model->project->code).'_'.date('d.M.Y').'_'.date('His').'_'.'Proposal'. '.' . $file1->extension;
+            $model->filename = strtoupper($model->filename);
             $model->file = $file1;
                 
             if ($model->validate() && $model->save()) {
                 $model->file->saveAs('uploads/' . $model->filename); 
 
                 $model_project = new Project();
-                $model_project = Project::findOne($projectid);                
+                $model_project = Project::findOne($projectid);  
+                $model_project->setProjectStatus();
 
-                $model_project->statusid = 2;
-                $model_project->save();
-
-                return $this->redirect(['view', 'id' => $model->proposalid]);
+                return $this->redirect(['view', 'id' => $model->proposalid, 'projectid'=>$projectid]);
             }
             else {
                 return $this->render('create', [
@@ -166,12 +165,18 @@ class ProposalController extends Controller
             date_default_timezone_set('Asia/Jakarta');
 
             $model->date =  new \yii\db\Expression('NOW()');
-            $model->filename = $model->project->code.'_'.date('dMY').'_'.date('His').'_'.'Proposal'. '.' . $file1->extension;
+            $model->filename = str_replace('/', '.', $model->project->code).'_'.date('d.M.Y').'_'.date('His').'_'.'Proposal'. '.' . $file1->extension;
+            $model->filename = strtoupper($model->filename);
             $model->file = $file1;
             
             if ($model->validate() && $model->save()) {                
                 $model->file->saveAs('uploads/' . $model->filename); 
-                return $this->redirect(['view', 'id' => $model->proposalid]);
+                
+                $model_project = new Project();
+                $model_project = Project::findOne($projectid);                
+                $model_project->setProjectStatus();
+
+                return $this->redirect(['view', 'id' => $model->proposalid, 'projectid'=>$projectid]);
             }
             else{
                 return $this->render('update', [
@@ -202,15 +207,15 @@ class ProposalController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $projectid = $model->projectid;
+        $model->delete();
 
         $model_project = new Project();
         $model_project = Project::findOne($projectid);                
+        $model_project->setProjectStatus();
 
-        $model_project->statusid = 1;
-        $model_project->save();
-
-        return $this->redirect(['index']);
+        return $this->redirect(['index', 'projectid'=>$projectid]);
     }
 
     /**

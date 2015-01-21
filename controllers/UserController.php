@@ -233,6 +233,8 @@ class UserController extends Controller
                 }
             }
 
+            $model->username = User::findOne($model->userid)->username;
+
             if (isset($_POST["User"]["UserGroup"])){
                 $post = $_POST["User"]["UserGroup"];  
                 foreach($post as $groupid => $data){

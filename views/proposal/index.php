@@ -8,7 +8,7 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Proposals';
-$this->params['breadcrumbs'][] = ['label' => 'Proposals: Select Project', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Proposal: Select Project', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="proposal-index">

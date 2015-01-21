@@ -5,8 +5,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Proposal */
 
-$this->title = 'Update Proposal: ' . ' ' . $model->proposalid;
-$this->params['breadcrumbs'][] = ['label' => 'Proposals: Select Project', 'url' => ['index']];
+$this->title = 'Update Proposal';
+$this->params['breadcrumbs'][] = ['label' => 'Proposal: Select Project', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => 'Proposals', 'url' => ['index?projectid='.Yii::$app->request->get('projectid')]];
 $this->params['breadcrumbs'][] = ['label' => 'Proposal@'.date('d.M.Y H:i:s', strtotime($model->date)), 'url' => ['view', 'id' => $model->proposalid, 'projectid' => Yii::$app->request->get('projectid')]];
 $this->params['breadcrumbs'][] = 'Update';

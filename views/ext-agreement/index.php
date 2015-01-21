@@ -7,7 +7,8 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\ExtAgreementSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Ext Agreements';
+$this->title = 'External Agreements';
+$this->params['breadcrumbs'][] = ['label' => 'External Agreement: Select Project', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="ext-agreement-index">
@@ -35,7 +36,23 @@ $this->params['breadcrumbs'][] = $this->title;
             'enddate',
             'filename',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'buttons' => [
+                    'view' => function($url, $model, $key){                    
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', \yii\helpers\Url::toRoute(['ext-agreement/view','projectid'=>$model->projectid, 'id'=>$model->extagreementid],false), [
+                            'title' => Yii::t('yii', 'View'),
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                    'update' => function($url, $model, $key){                    
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', \yii\helpers\Url::toRoute(['ext-agreement/update','projectid'=>$model->projectid, 'id'=>$model->extagreementid],false), [
+                            'title' => Yii::t('yii', 'Update'),
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                ]
+            ],
         ],
     ]); ?>
 

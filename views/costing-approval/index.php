@@ -8,6 +8,7 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Costing Approvals';
+$this->params['breadcrumbs'][] = ['label' => 'Costing Approval: Select Project', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="costing-approval-index">
@@ -31,9 +32,28 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'date',
             'remark',
-            'filename',
-            
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'attribute' => 'filename',
+                'value'=>'urlFile',
+                'format' => 'html'
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'buttons' => [
+                    'view' => function($url, $model, $key){                    
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', \yii\helpers\Url::toRoute(['costing-approval/view','projectid'=>$model->projectid, 'id'=>$model->costingapprovalid],false), [
+                            'title' => Yii::t('yii', 'View'),
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                    'update' => function($url, $model, $key){                    
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', \yii\helpers\Url::toRoute(['costing-approval/update','projectid'=>$model->projectid, 'id'=>$model->costingapprovalid],false), [
+                            'title' => Yii::t('yii', 'Update'),
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                ]
+            ],
         ],
     ]); ?>
 

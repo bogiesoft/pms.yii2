@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Proposal */
 $this->title = 'Proposal@'.date('d.M.Y H:i:s', strtotime($model->date));
-$this->params['breadcrumbs'][] = ['label' => 'Proposals: Select Project', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Proposal: Select Project', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => 'Proposals', 'url' => ['index?projectid='.Yii::$app->request->get('projectid')]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

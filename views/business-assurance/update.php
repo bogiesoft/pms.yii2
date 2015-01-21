@@ -5,9 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\BusinessAssurance */
 
-$this->title = 'Update Business Assurance: ' . ' ' . $model->businessassuranceid;
-$this->params['breadcrumbs'][] = ['label' => 'Business Assurances', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->businessassuranceid, 'url' => ['view', 'id' => $model->businessassuranceid]];
+$this->title = 'Update Business Assurance';
+$this->params['breadcrumbs'][] = ['label' => 'Business Assurance: Select Project', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Business Assurances', 'url' => ['index', 'projectid'=>Yii::$app->request->get('projectid')]];
+$this->params['breadcrumbs'][] = ['label' => 'Business Assurance@'.date('d.M.Y H:i:s', strtotime($model->date)), 'url' => ['view', 'id' => $model->businessassuranceid, 'projectid'=>Yii::$app->request->get('projectid')]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="business-assurance-update">

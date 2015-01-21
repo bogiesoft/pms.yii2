@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\BusinessAssurance;
+use app\models\Project;
 use app\models\BusinessAssuranceSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -79,7 +80,7 @@ class BusinessAssuranceController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionView($id, $projectid)
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -96,7 +97,7 @@ class BusinessAssuranceController extends Controller
         $model = new BusinessAssurance();
         $model->projectid = $projectid;
         //initial user change & date
-        $model->userin = 'sun';
+        $model->userin = Yii::$app->user->identity->username;
         $model->datein = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
@@ -105,19 +106,18 @@ class BusinessAssuranceController extends Controller
             date_default_timezone_set('Asia/Jakarta');
 
             $model->date =  new \yii\db\Expression('NOW()');            
-            $model->filename = $model->project->code.'_'.date('dMY').'_'.date('His').'_'.'BusinessAssurance'. '.' . $file1->extension;
+            $model->filename = str_replace('/', '.', $model->project->code).'_'.date('d.M.Y').'_'.date('His').'_'.'BusinessAssurance'. '.' . $file1->extension;
+            $model->filename = strtoupper($model->filename);
             $model->file = $file1;
             
             if ($model->validate() && $model->save()) {              
 
                 $model_project = new Project();
                 $model_project = Project::findOne($projectid);                
-
-                $model_project->statusid = 5;
-                $model_project->save();
+                $model_project->setProjectStatus();
 
                 $model->file->saveAs('uploads/' . $model->filename); 
-                return $this->redirect(['view', 'id' => $model->businessassuranceid]);
+                return $this->redirect(['view', 'id' => $model->businessassuranceid, 'projectid'=>$projectid]);
             }
             else {
                 return $this->render('create', [
@@ -148,12 +148,12 @@ class BusinessAssuranceController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionUpdate($id, $projectid)
     {
         $model = $this->findModel($id);
 
         //initial user change & date
-        $model->userup = 'sun';
+        $model->userup = Yii::$app->user->identity->username;
         $model->dateup = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
@@ -163,12 +163,18 @@ class BusinessAssuranceController extends Controller
             date_default_timezone_set('Asia/Jakarta');
 
             $model->date =  new \yii\db\Expression('NOW()');
-            $model->filename = $model->project->code.'_'.date('dMY').'_'.date('His').'_'.'BusinessAssurance'. '.' . $file1->extension;
+            $model->filename = str_replace('/', '.', $model->project->code).'_'.date('d.M.Y').'_'.date('His').'_'.'BusinessAssurance'. '.' . $file1->extension;
+            $model->filename = strtoupper($model->filename);
             $model->file = $file1;
             
             if ($model->validate() && $model->save()) {                
+                
+                $model_project = new Project();
+                $model_project = Project::findOne($projectid);                
+                $model_project->setProjectStatus();
+
                 $model->file->saveAs('uploads/' . $model->filename); 
-                return $this->redirect(['view', 'id' => $model->businessassuranceid]);
+                return $this->redirect(['view', 'id' => $model->businessassuranceid, 'projectid'=>$projectid]);
             }
             else{
                 return $this->render('update', [
@@ -200,15 +206,15 @@ class BusinessAssuranceController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-        
+        $model = $this->findModel($id);
+        $projectid = $model->projectid;
+        $model->delete();
+
         $model_project = new Project();
         $model_project = Project::findOne($projectid);                
+        $model_project->setProjectStatus();
 
-        $model_project->statusid = 2;
-        $model_project->save();
-
-        return $this->redirect(['index']);
+        return $this->redirect(['index', 'projectid'=>$projectid]);
     }
 
     /**

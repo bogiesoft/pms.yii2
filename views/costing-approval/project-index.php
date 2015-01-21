@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\ProjectSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Projects';
+$this->title = 'Costing Approval: Select Project';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="proposal-index">

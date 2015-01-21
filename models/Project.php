@@ -174,4 +174,32 @@ class Project extends \yii\db\ActiveRecord
     {
         return $this->extagreements->agreementno . ' - ' . $this->extagreements->description;
     }
+
+    public function setProjectStatus(){
+        if (count($this->proposal) == 0 && count($this->costingapprovals) == 0){
+            $status = \app\models\Status::find()->where("name like '%potential%'")->one();
+            $this->statusid = isset($status->statusid) ? $status->statusid : 0;
+            $this->save();
+            return true;
+        }
+
+        if (count($this->businessassurances) == 0){
+            $status = \app\models\Status::find()->where("name like '%preparation%'")->one();
+            $this->statusid = isset($status->statusid) ? $status->statusid : 0;
+            $this->save();
+            return true;
+        }
+
+        if (count($this->extagreements) == 0){
+            $status = \app\models\Status::find()->where("name like '%Business%Assurance%'")->one();
+            $this->statusid = isset($status->statusid) ? $status->statusid : 0;
+            $this->save();
+            return true;
+        }
+
+        $status = \app\models\Status::find()->where("name like '%in%progress%'")->one();
+        $this->statusid = isset($status->statusid) ? $status->statusid : 0;
+        $this->save();
+        return true;
+    }
 }

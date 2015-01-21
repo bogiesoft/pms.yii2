@@ -36,13 +36,13 @@ class ExtDeliverables extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['extagreementid', 'code'], 'required'],
+            [['extagreementid', 'code', 'description', 'rate', 'duedate'], 'required'],
             [['extagreementid', 'rate'], 'integer'],
-            [['datein', 'dateup'], 'safe'],
+            [['datein', 'dateup', 'duedate'], 'safe'],
             [['code'], 'string', 'max' => 5],
             [['description'], 'string', 'max' => 250],
             [['userin', 'userup'], 'string', 'max' => 50],
-            [['extagreementid', 'code'], 'unique', 'targetAttribute' => ['extagreementid', 'code'], 'message' => 'The combination of Extagreementid and Code has already been taken.']
+            [['extagreementid', 'code'], 'unique', 'targetAttribute' => ['extagreementid', 'code'], 'message' => 'The combination of External Agreementid and Code has already been taken.']
         ];
     }
 
@@ -53,10 +53,11 @@ class ExtDeliverables extends \yii\db\ActiveRecord
     {
         return [
             'extdeliverableid' => 'Extdeliverableid',
-            'extagreementid' => 'Extagreementid',
-            'code' => 'Code',
-            'description' => 'Description',
-            'rate' => 'Rate',
+            'extagreementid' => 'External Agreement ID',
+            'code' => 'Number',
+            'description' => 'Deliverable Name',
+            'rate' => 'Invesment',
+            'duedate' => 'Due date',
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',

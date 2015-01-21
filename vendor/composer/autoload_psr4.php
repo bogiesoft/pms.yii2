@@ -24,6 +24,7 @@ return array(
     'kartik\\grid\\' => array($vendorDir . '/kartik-v/yii2-grid'),
     'kartik\\form\\' => array($vendorDir . '/kartik-v/yii2-widget-activeform'),
     'kartik\\field\\' => array($vendorDir . '/kartik-v/yii2-field-range'),
+    'kartik\\daterange\\' => array($vendorDir . '/kartik-v/yii2-date-range'),
     'kartik\\datecontrol\\' => array($vendorDir . '/kartik-v/yii2-datecontrol'),
     'kartik\\date\\' => array($vendorDir . '/kartik-v/yii2-widget-datepicker'),
     'kartik\\checkbox\\' => array($vendorDir . '/kartik-v/yii2-checkbox-x'),

@@ -29,7 +29,7 @@ use kartik\select2\Select2;
         ]);
     ?>
 
-    <?= $form->field($model, 'remark')->textInput(['maxlength' => 250]) ?>
+    <?= $form->field($model, 'remark')->textArea(['maxlength' => 250, 'style' => 'height:120px']) ?>
 
     <?php //$form->field($model, 'filename')->textInput(['maxlength' => 150]) ?>
 
