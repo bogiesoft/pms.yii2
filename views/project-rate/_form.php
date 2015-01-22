@@ -24,7 +24,7 @@ use kartik\money\MaskMoney;
 
         echo $form->field($model, 'mindunitid')->widget(Select2::classname(), [
             'data' =>$data,
-            'options' => ['placeholder' => 'Select a mind unit ...'],
+            'options' => ['placeholder' => 'Select a rate unit ...'],
             'pluginOptions' => [
                 'allowClear' => true
             ],

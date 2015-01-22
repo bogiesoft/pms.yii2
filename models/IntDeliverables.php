@@ -16,6 +16,7 @@ use Yii;
  * @property integer $frequency
  * @property integer $rateid
  * @property integer $rate
+ * @property string $duedate 
  * @property string $datein
  * @property string $userin
  * @property string $dateup
@@ -42,9 +43,9 @@ class IntDeliverables extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['intagreementid', 'extdeliverableid', 'code', 'positionid', 'frequency', 'rateid', 'rate'], 'required'],
+            [['intagreementid', 'extdeliverableid', 'code', 'positionid', 'frequency', 'rateid', 'rate', 'description', 'duedate'], 'required'],
             [['intagreementid', 'extdeliverableid', 'positionid', 'frequency', 'rateid', 'rate'], 'integer'],
-            [['datein', 'dateup'], 'safe'],
+            [['datein', 'dateup', 'duedate'], 'safe'],
             [['code'], 'string', 'max' => 5],
             [['description'], 'string', 'max' => 250],
             [['userin', 'userup'], 'string', 'max' => 50],
@@ -60,13 +61,14 @@ class IntDeliverables extends \yii\db\ActiveRecord
         return [
             'intdeliverableid' => 'Intdeliverableid',
             'intagreementid' => 'Intagreementid',
-            'extdeliverableid' => 'Extdeliverableid',
-            'code' => 'Code',
-            'positionid' => 'Positionid',
-            'description' => 'Description',
+            'extdeliverableid' => 'External Deliverable',
+            'code' => 'Number',
+            'positionid' => 'Consultant Position',
+            'description' => 'Deliverable Name',
             'frequency' => 'Frequency',
-            'rateid' => 'Rateid',
+            'rateid' => 'Rate Unit',
             'rate' => 'Rate',
+            'duedate' => 'Due Date', 
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',

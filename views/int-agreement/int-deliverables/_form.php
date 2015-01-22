@@ -8,93 +8,392 @@ use app\models\ExtAgreement;
 use app\models\ExtDeliverables;
 use app\models\ConsultantPosition;
 use app\models\ProjectRate;
-
+use kartik\date\DatePicker;
 use kartik\select2\Select2;
+use kartik\money\MaskMoney;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\ExtDeliverables */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="ext-deliverables-form" id="ext-deliverables-[<?= $index ?>]" ?>
-    <a style="cursor:pointer;text-decoration:none;" onclick="deleteIntDeliverables(this)">Delete</a>    
-    </br>
-    <?php 
-        $dataCategory1 = [];
-        $dataCategory1 += ArrayHelper::map(ExtDeliverables::find()->where(['extagreementid'=> Yii::$app->request->get('extagreementid')])->asArray()->all(), 'extdeliverableid', 'description');        
+<div class="ext-deliverables-form">
+    
+    <div class="form-horizontal" role="form">
 
-        echo HTML::activeLabel($model, '['.$index.']extdeliverableid');
-    	//echo HTML::activeDropDownList($model, '['.$index.']extdeliverableid', $dataCategory1, array('prompt'=>' ')); 
+    <?php
+        if ($model->hasErrors('extdeliverableid')){
+            echo '<div class="form-group required has-error">';
+        }else{
+            echo '<div class="form-group">';
+        }
+    ?>
+    <?php
+        
+        $data = [];
+        $sql = "select extdeliverableid, concat(code, ' - ', description) as descr from ps_extdeliverables where extagreementid = 7";
+        $data += ArrayHelper::map(ExtDeliverables::findBySql($sql, [':1' => $extagreementid])
+            ->asArray()->all(), 'extdeliverableid', 'descr');
+
+        
+        //echo Html::activeHiddenInput($model, '[' . $index . ']extdeliverableid');
+        echo Html::activeLabel($model, '[' . $index . ']extdeliverableid', ['class'=>'col-sm-2 control-label']);
+        echo '<div class="col-sm-10">';
         echo Select2::widget([
             'model'=>$model,
             'attribute'=> '['.$index.']extdeliverableid',
-            'data'=>$dataCategory1,
-            'options' => ['placeholder' => 'Select External Deliverables ...'],
+            'data'=>$data,
+            'options' => [
+                'placeholder' => 'Select external deliverable..', 
+                'class'=>'extdeliverableddl form-control', 
+                'style' => 'width:100%;'],
             'pluginOptions' => [
                 'allowClear' => true
             ],
         ]);
-    	echo HTML::Error($model, '['.$index.']extdeliverableid');
+        echo Html::error($model, 'extdeliverableid', ['class'=>'help-block']);
+        echo '</div>';
+    ?>    
+    </div>
+
+    <?php
+        if ($model->hasErrors('code')){
+            echo '<div class="form-group required has-error">';
+        }else{
+            echo '<div class="form-group">';
+        }
     ?>
-
     <?php 
-        echo HTML::activeLabel($model, '['.$index.']code');
-    	echo HTML::activeInput('text', $model, '['.$index.']code',['maxlength'=> 5]); 
-    	echo HTML::Error($model, '['.$index.']code');
+        
+        echo Html::activeLabel($model, '[' . $index . ']code', ['class'=>'col-sm-2 control-label']);
+        echo '<div class="col-sm-10">';
+        echo Html::activeTextInput($model, '[' . $index . ']code', [
+            'maxlength' => 5, 'placeholder'=>'Enter number..',
+            'class'=>'form-control codeinput',
+            'style'=>'width:100%;',
+        ]);
+        echo Html::error($model, 'code', ['class'=>'help-block']);
+        echo '</div>';
+
     ?>
+    </div>
 
+    <?php
+        if ($model->hasErrors('positionid')){
+            echo '<div class="form-group required has-error">';
+        }else{
+            echo '<div class="form-group">';
+        }
+    ?>
     <?php 
-        $dataCategory2 = [];
-        $dataCategory2 += ArrayHelper::map(ConsultantPosition::find()->asArray()->all(), 'positionid', 'name');        
+        $data2 = [];
+        $data2 += ArrayHelper::map(ConsultantPosition::find()->asArray()->all(), 'positionid', 'name');        
 
-        echo HTML::activeLabel($model, '['.$index.']positionid');
-    	//echo HTML::activeDropDownList($model, '['.$index.']positionid', $dataCategory2, array('prompt'=>' ')); 
+        echo Html::activeLabel($model, '[' . $index . ']positionid', ['class'=>'col-sm-2 control-label']);
+        echo '<div class="col-sm-10">';
         echo Select2::widget([
             'model'=>$model,
             'attribute'=> '['.$index.']positionid',
-            'data'=>$dataCategory2,
-            'options' => ['placeholder' => 'Select Position ...'],
+            'data'=>$data2,
+            'options' => [
+                'placeholder' => 'Select position..', 
+                'class'=>'positionddl form-control',
+                'style' => 'width:100%;'],
             'pluginOptions' => [
                 'allowClear' => true
             ],
         ]);
-    	echo HTML::Error($model, '['.$index.']positionid');
+        echo Html::error($model, 'positionid', ['class'=>'help-block']);
+        echo '</div>';
     ?>
+    </div>
 
-    <?php 
-        echo HTML::activeLabel($model, '['.$index.']description');
-        echo HTML::activeInput('text', $model, '['.$index.']description',['maxlength'=> 250]); 
-        echo HTML::Error($model, '['.$index.']description');
+    <?php
+        if ($model->hasErrors('description')){
+            echo '<div class="form-group required has-error">';
+        }else{
+            echo '<div class="form-group">';
+        }
     ?>
+    <?php
+        echo Html::activeLabel($model, '[' . $index . ']description', ['class'=>'col-sm-2 control-label']);
+        echo '<div class="col-sm-10">';
+        echo Html::activeTextInput($model, '[' . $index . ']description', [
+            'maxlength' => 250, 'placeholder'=>'Enter deliverable name..',
+            'class'=>'form-control descriptioninput',
+            'style'=>'width:100%;',
+        ]);
+        echo Html::error($model, 'description', ['class'=>'help-block']);
+        echo '</div>';
+    ?>    
+    </div>
 
-    <?php 
-        echo HTML::activeLabel($model, '['.$index.']frequency');
-        echo HTML::activeInput('text', $model, '['.$index.']frequency');
-        echo HTML::Error($model, '['.$index.']frequency');
+    <?php
+        if ($model->hasErrors('frequency')){
+            echo '<div class="form-group required has-error">';
+        }else{
+            echo '<div class="form-group">';
+        }
     ?>
+    <?php
+        echo Html::activeLabel($model, '[' . $index . ']frequency', ['class'=>'col-sm-2 control-label']);
+        echo '<div class="col-sm-10">';
+        echo Html::activeTextInput($model, '[' . $index . ']frequency', [
+            'maxlength' => 11, 'placeholder'=>'Enter frequency..',
+            'class'=>'form-control frequencyinput',
+            'style'=>'width:100%;',
+        ]);
+        echo Html::error($model, 'frequency', ['class'=>'help-block']);
+        echo '</div>';
+    ?>    
+    </div>
 
+    <?php
+        if ($model->hasErrors('positionid')){
+            echo '<div class="form-group required has-error">';
+        }else{
+            echo '<div class="form-group">';
+        }
+    ?>
     <?php 
-        $dataCategory3 = [];
-        $dataCategory3 += ArrayHelper::map(ProjectRate::find()->asArray()->all(), 'rateid', 'role');        
+        $data3 = [];
+        $sql = "select ps_projectrate.rateid, concat(ps_projectrate.role, ' (', ps_mindunit.name, ')') as descr
+                from ps_projectrate
+                left join ps_mindunit on ps_projectrate.mindunitid = ps_mindunit.mindunitid";
+        $data3 += ArrayHelper::map(ProjectRate::findBySql($sql)->asArray()->all(), 'rateid', 'descr');         
 
-        echo HTML::activeLabel($model, '['.$index.']rateid');
-        //echo HTML::activeDropDownList($model, '['.$index.']rateid', $dataCategory3, array('prompt'=>' ')); 
+        echo Html::activeLabel($model, '[' . $index . ']rateid', ['class'=>'col-sm-2 control-label']);
+        echo '<div class="col-sm-10">';
         echo Select2::widget([
             'model'=>$model,
             'attribute'=> '['.$index.']rateid',
-            'data'=>$dataCategory3,
-            'options' => ['placeholder' => 'Select Rate ...'],
+            'data'=>$data3,
+            'options' => [
+                'placeholder' => 'Select rate unit..',
+                'class'=>'rateddl form-control',
+                'style' => 'width:100%;'],
             'pluginOptions' => [
                 'allowClear' => true
             ],
         ]);
-        echo HTML::Error($model, '['.$index.']rateid');
-    ?>    
-    
-    <?php 
-        echo HTML::activeLabel($model, '['.$index.']rate');
-        echo HTML::activeInput('text', $model, '['.$index.']rate');
-        echo HTML::Error($model, '['.$index.']rate');
+        echo Html::error($model, 'rateid', ['class'=>'help-block']);
+        echo '</div>';
     ?>
+    </div>
+
+    <?php
+        if ($model->hasErrors('rate')){
+            echo '<div class="form-group required has-error">';
+        }else{
+            echo '<div class="form-group">';
+        }
+    ?>
+    <?php
+        echo Html::activeLabel($model, '[' . $index . ']rate', ['class'=>'col-sm-2 control-label']);
+        echo '<div class="col-sm-10">';
+        echo MaskMoney::widget([
+            'model'=>$model,
+            'attribute'=> '['.$index.']rate',
+            'options'=>[
+                'maxlength' => 11,
+                'title'=>'Rate..',
+                'style'=>'width:100%;',
+                'class'=>'form-control rateinput',
+                'readonly'=>true
+            ],
+            'pluginOptions' => [
+                'prefix' => '',
+                'suffix' => '',
+                'allowNegative' => false,
+                'thousands' => ',',
+                'precision' => 2,
+                'allowZero' => true,
+            ]
+        ]);
+        echo Html::error($model, 'rate', ['class'=>'help-block']);
+        echo '</div>';
+    ?>    
+    </div>
+
+    <?php
+        if ($model->hasErrors('duedate')){
+            echo '<div class="form-group required has-error">';
+        }else{
+            echo '<div class="form-group">';
+        }
+    ?>
+    <?php
+        echo Html::activeLabel($model, '[' . $index . ']duedate', ['class'=>'col-sm-2 control-label']);
+        echo '<div class="col-sm-10">';
+        echo DatePicker::widget([
+            'model' => $model, 
+            'attribute' => '[' . $index . ']duedate',
+            'options' => ['placeholder' => 'Enter due date...', 'style'=>'width:100%;', 'class'=>'duedateinput'],
+            'pluginOptions' => [
+                'autoclose'=>true,
+                'format'=>'d.M.yyyy',
+            ]
+        ]);
+        echo Html::error($model, 'duedate', ['class'=>'help-block']);
+        echo '</div>';
+    ?>    
+    </div>
+
+    <div class="form-group" style="margin-bottom:20px">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+            <a style="cursor:pointer; margin-right:5px" class="btnDeleteDeliverable">Delete..</a>
+            <a style="cursor:pointer;" class="btnAddDeliverable">Add more deliverable..</a>
+        </div>
+    </div>
+
+    </div>
 
 </div>
+<script>
+$('.rateddl').change(function(e){
+    $form = $(this).closest('.ext-deliverables-form');
+    var freq = $form.find('.frequencyinput').val();
+    var rateid = $form.find('select.rateddl').val();
+
+    $form.find('.rateinput').val(CalculateRate(freq, rateid));
+    $form.find('.rateinput').focus().blur();
+});
+
+$('.frequencyinput').keyup(function(e){
+    $form = $(this).closest('.ext-deliverables-form');
+    var freq = $form.find('.frequencyinput').val();
+    var rateid = $form.find('select.rateddl').val();
+
+    $form.find('.rateinput').val(CalculateRate(freq, rateid));
+    $form.find('.rateinput').focus().blur();
+    $(this).focus();
+});
+
+$('.rateddl').change(function(e){
+    if ($(e.currentTarget).val() == ""){
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("Rate unit cannot be blank.");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
+    }else{
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
+    }
+});
+
+$('.positionddl').change(function(e){
+    if ($(e.currentTarget).val() == ""){
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("Consultant position cannot be blank.");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
+    }else{
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
+    }
+});
+
+$('.extdeliverableddl').change(function(e){
+    if ($(e.currentTarget).val() == ""){
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("External deliverable cannot be blank.");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
+    }else{
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
+    }
+});
+
+$('.frequencyinput').blur(function(e){
+    if ($(e.currentTarget).val() == ""){
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("Frequency cannot be blank.");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
+    }else{
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
+    }
+});
+
+$('.codeinput').blur(function(e){
+    if ($(e.currentTarget).val() == ""){
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("Number cannot be blank.");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
+    }else{
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
+    }
+});
+
+$('.descriptioninput').blur(function(e){
+    if ($(e.currentTarget).val() == ""){
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("Deliverable name cannot be blank.");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
+    }else{
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
+    }
+});
+
+$('.duedateinput').blur(function(e){
+    if ($(e.currentTarget).val() == ""){
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("Due date cannot be blank.");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
+    }else{
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
+    }
+});
+
+$('.rateinput').blur(function(e){
+    if ($(e.currentTarget).val() == ""){
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("Rate cannot be blank.");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
+    }else{
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
+    }
+});
+
+
+$('.duedateinput').change(function(e){
+    if ($(e.currentTarget).val() == ""){
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("Due date cannot be blank.");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
+    }else{
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
+    }
+});
+
+function CalculateRate(freq, rateid){
+    if (freq == "" || rateid == ""){
+        return "";
+    }
+
+    var rate = 0;
+
+    $.ajax({
+        url: "<?= yii\helpers\URL::toRoute('int-agreement/rate')?>?rateid="+rateid,
+        async: false,
+        success: function(data){
+            rate = freq * data;
+        }
+    });    
+
+    return rate;
+}
+</script>

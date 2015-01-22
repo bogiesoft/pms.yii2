@@ -49,7 +49,7 @@ class IntAgreement extends \yii\db\ActiveRecord
             [['userin', 'userup'], 'string', 'max' => 50],
             [['startdate','enddate'], 'string', 'max' => 250],        
             [['file'],'safe'],
-            [['file'], 'file', 'skipOnEmpty' => false],
+            [['file'], 'file', 'skipOnEmpty' => false, 'on' => 'insert'],
             //[['file'], 'file', 'extensions' => 'doc, docx', 'mimeTypes' => 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',],
         ];
     }
@@ -61,17 +61,18 @@ class IntAgreement extends \yii\db\ActiveRecord
     {
         return [
             'intagreementid' => 'Intagreementid',
-            'extagreementid' => 'Extagreementid',
-            'consultantid' => 'Consultantid',
-            'departmentid' => 'Departmentid',
+            'extagreementid' => 'External Agreement',
+            'consultantid' => 'Consultant',
+            'departmentid' => 'Department',
             'description' => 'Description',
-            'startdate' => 'Startdate',
-            'enddate' => 'Enddate',
+            'startdate' => 'Start Date',
+            'enddate' => 'End Date',
             'filename' => 'Filename',
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',
             'userup' => 'Userup',
+            'extagreement'=>'External Agreement'
         ];
     }
 

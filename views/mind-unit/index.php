@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\MindUnitSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Mind Units';
+$this->title = 'Rate Units';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="mind-unit-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Mind Unit', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Rate Unit', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([

@@ -34,7 +34,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'description',
             'startdate',
             'enddate',
-            'filename',
+            [
+                'attribute' => 'filename',
+                'format' => 'html',
+                'value' => 'FileURL',
+            ],
 
             [
                 'class' => 'yii\grid\ActionColumn',
@@ -57,3 +61,10 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
 </div>
+<?php
+
+$this->registerJs('
+    $(".download").attr("download", "");
+');
+
+?>

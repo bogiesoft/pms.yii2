@@ -53,7 +53,7 @@ use kartik\date\DatePicker;
         ]);
     ?>
 
-    <?= Html::activeTextInput($model, 'filename') ?> 
+    <?= Html::activeHiddenInput($model, 'filename') ?> 
 
     <?= $form->field($model, 'file')->fileInput() ?> 
 

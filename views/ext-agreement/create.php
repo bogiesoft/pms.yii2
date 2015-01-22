@@ -6,8 +6,9 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\ExtAgreement */
 
-$this->title = 'Create Ext Agreement';
-$this->params['breadcrumbs'][] = ['label' => 'Ext Agreements', 'url' => ['index']];
+$this->title = 'Create External Agreement';
+$this->params['breadcrumbs'][] = ['label' => 'External Agreement: Select Project', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'External Agreements', 'url' => ['index', 'projectid'=>Yii::$app->request->get('projectid')]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="ext-agreement-create">

@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute'=>'mindunit',
                 'value'=>$model->mindunit->name,
-                'label'=>'Mind Unit'
+                'label'=>'Rate Unit'
             ],
             [
                 'attribute'=>'rate',

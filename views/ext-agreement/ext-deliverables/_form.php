@@ -8,6 +8,7 @@ use kartik\daterange\DateRangePicker;
 use kartik\datecontrol\Module;
 use kartik\datecontrol\DateControl;
 use kartik\date\DatePicker;
+use kartik\money\MaskMoney;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\ExtDeliverables */
@@ -83,12 +84,24 @@ use kartik\date\DatePicker;
         }
     ?>
     <?php
-        echo Html::activeTextInput($model, '[' . $index . ']rate', [
-            'maxlength' => 11, 'placeholder'=>'Enter investment..',
-            'class'=>'form-control rateinput',
-            'style'=>'width:100%;',
-            'data-mask'=>'000.000.000.000.000',
-            'data-mask-reverse'=>'true',
+
+        echo MaskMoney::widget([
+            'model'=>$model,
+            'attribute'=> '['.$index.']rate',
+            'options'=>[
+                'maxlength' => 11,
+                'title'=>'Enter investment..',
+                'style'=>'width:100%;',
+                'class'=>'form-control rateinput'
+            ],
+            'pluginOptions' => [
+                'prefix' => '',
+                'suffix' => '',
+                'allowNegative' => false,
+                'thousands' => ',',
+                'precision' => 2,
+                'allowZero' => true,
+            ]
         ]);
         echo Html::error($model, 'rate', ['class'=>'help-block']);
     ?>    
@@ -121,7 +134,3 @@ use kartik\date\DatePicker;
     </div>
 
 </div>
-<?php
-$this->registerJsFile(yii\helpers\BaseUrl::base()."/plugin/igorescobar/jquery-2.1.1.min.js", [\yii\web\View::POS_END]);
-$this->registerJsFile(yii\helpers\BaseUrl::base()."/plugin/igorescobar/jquery.mask.js", [\yii\web\View::POS_END]);
-?>

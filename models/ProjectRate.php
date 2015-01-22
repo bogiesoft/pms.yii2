@@ -53,7 +53,7 @@ class ProjectRate extends \yii\db\ActiveRecord
         return [
             'rateid' => 'ID',
             'role' => 'Role',
-            'mindunitid' => 'Mind unit',
+            'mindunitid' => 'Rate Unit',
             'rate' => 'Rate',
             'description' => 'Description',
             'datein' => 'Datein',

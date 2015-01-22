@@ -7,7 +7,8 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\IntAgreementSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Int Agreements';
+$this->title = 'Internal Agreements';
+$this->params['breadcrumbs'][] = ['label' => 'Internal Agreement: Select Project', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="int-agreement-index">
@@ -42,7 +43,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'enddate',
             'filename',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn'
+            ],
         ],
     ]); ?>
 

@@ -111,7 +111,8 @@ class ExtAgreementController extends Controller
 
             $flag = true;
 
-            if ($model->file == null && $model->file == ""){
+            $file1 = UploadedFile::getInstance($model, 'file');
+            if ($file1 == null){
                 $flag = false;
             }
 
@@ -134,7 +135,7 @@ class ExtAgreementController extends Controller
                         $modelExtDev->description = $extDev["description"];   
                     }
                     if (isset($extDev["rate"]) && $extDev["rate"] != ""){
-                        $modelExtDev->rate = $extDev["rate"];   
+                        $modelExtDev->rate = str_replace('.', '', $extDev["rate"]);
                     }
                     if (isset($extDev["duedate"]) && $extDev["duedate"] != ""){
                         $modelExtDev->duedate = $extDev["duedate"];   
@@ -155,14 +156,12 @@ class ExtAgreementController extends Controller
                     'model_extdeliverables'=> $model_extdeliverables,
                 ]);
             }
-
-            $file1 = UploadedFile::getInstance($model, 'file');
             
             date_default_timezone_set('Asia/Jakarta');
             
             $model->filename = str_replace('/', '.', $model->project->code).'_'.date('d.M.Y').'_'.date('His').'_'.'ExtAgreement'. '.' . $file1->extension;
             $model->filename = strtoupper($model->filename);
-            $model->file = $file1;            
+            $model->file = $file1;
 
             $connection = \Yii::$app->db;
             $transaction = $connection->beginTransaction(); 
@@ -247,10 +246,12 @@ class ExtAgreementController extends Controller
         $model_extdeliverables = null;
 
         if ($model->load(Yii::$app->request->post())) {
-            
+            $arrDeliverableId = null;
             $flag = true;
 
-            if ($model->file == null && $model->file == "" && $model->filename == ""){
+            $file1 = UploadedFile::getInstance($model, 'file');
+
+            if ($file1 == null && $model->filename == ""){
                 $flag = false;
             }
 
@@ -268,6 +269,7 @@ class ExtAgreementController extends Controller
                     
                     if (isset($extDev["extdeliverableid"]) && $extDev["extdeliverableid"] != ""){
                         $modelExtDev->extdeliverableid = $extDev["extdeliverableid"];   
+                        $arrDeliverableId[] = $modelExtDev->extdeliverableid;
                     }
                     if (isset($extDev["code"]) && $extDev["code"] != ""){
                         $modelExtDev->code = $extDev["code"];   
@@ -299,7 +301,13 @@ class ExtAgreementController extends Controller
                 ]);
             }
 
-            $file1 = UploadedFile::getInstance($model, 'file');            
+            $deleteDeliverable = ExtDeliverables::find()->where('extagreementid = :1', [':1'=>$model->extagreementid])->all();
+            foreach($deleteDeliverable as $deliverable){
+                if (!in_array($deliverable->extdeliverableid, $arrDeliverableId)){
+                    ExtDeliverables::deleteAll('extdeliverableid = :1', [':1'=>$deliverable->extdeliverableid]);
+                }
+            }
+
             date_default_timezone_set('Asia/Jakarta');
 
             if ($file1 != null)
@@ -400,15 +408,23 @@ class ExtAgreementController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $connection = \Yii::$app->db;
+        $transaction = $connection->beginTransaction(); 
+
+        $model = $this->findModel($id);
+        $projectid = $model->projectid;
+
+        ExtDeliverables::deleteAll('extagreementid = :1', [':1'=>$model->extagreementid]);
+
+        $model->delete();
 
         $model_project = new Project();
         $model_project = Project::findOne($projectid);                
+        $model_project->setProjectStatus();
 
-        $model_project->statusid = 5;
-        $model_project->save();
+        $transaction->commit();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['index', 'projectid'=>$projectid]);
     }
 
     /**

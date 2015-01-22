@@ -6,10 +6,12 @@ use yii\helpers\ArrayHelper;
 use app\models\ExtAgreement;
 use app\models\Consultant;
 use app\models\Department;
-//use yii\jui\DatePicker;
+
+use kartik\daterange\DateRangePicker;
 use kartik\datecontrol\Module;
 use kartik\datecontrol\DateControl;
 use kartik\date\DatePicker;
+
 
 use kartik\select2\Select2;
 
@@ -17,17 +19,24 @@ use kartik\select2\Select2;
 /* @var $model app\models\IntAgreement */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
+<style>
+    .form-horizontal .form-group{
+        margin-bottom: 0px;
+        vertical-align: top !important;
+    }
+</style>
 <div class="int-agreement-form">
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?php 
-        $dataCategory = [];
-        $dataCategory += ArrayHelper::map(ExtAgreement::find()->where(['extagreementid'=> Yii::$app->request->get('extagreementid')])->asArray()->all(), 'extagreementid', 'description');        
+
+        $data = [];
+        $sql = "select extagreementid, concat(agreementno, ' - ', description) as descr from ps_extagreement where extagreementid = :1";
+        $data += ArrayHelper::map(ExtAgreement::findBySql($sql, [':1' => Yii::$app->request->get('extagreementid')])->asArray()->all(), 'extagreementid', 'descr');
 
         echo $form->field($model, 'extagreementid')->widget(Select2::classname(), [
-            'data' =>$dataCategory,
+            'data' =>$data,
             'options' => ['placeholder' => 'Select External Agreement ...'],
             'pluginOptions' => [
                 'allowClear' => true
@@ -61,40 +70,46 @@ use kartik\select2\Select2;
         ]);
     ?>
 
-    <?= $form->field($model, 'description')->textInput(['maxlength' => 250]) ?>
+    <?= $form->field($model, 'description')->textArea(['maxlength' => 250, 'style' => 'height:120px']) ?>
 
     <?php
-        echo DatePicker::widget([
-                'model' => $model,
-                'attribute' => 'startdate',
-                'attribute2' => 'enddate',
-                'options' => ['placeholder'=>'Start Date'],
-                'options2' => ['placeholder'=>'End Date'],
-                'type' => DatePicker::TYPE_RANGE,
-                'form' => $form,
-                'pluginOptions' => [
-                    'format' => 'dd-M-yyyy',
-                    'autoclose' => true,
-                ]
-            ]);
+
+        echo $form->field($model, 'startdate')->widget(DateRangePicker::classname(),
+        [
+            'convertFormat'=>true,
+            'useWithAddon'=>true,
+            'hideInput'=>1, 
+            'pluginOptions'=>[
+                'format'=>'d.M.Y',
+                'separator'=>' - '
+            ],        
+
+        ]);
     ?>
 
     <?= $form->field($model, 'file')->fileInput() ?> 
 
-    <div id="int-deliverables">
-        <a id='addIntDeliverable' >Add New Internal Deliverables</a>
-        <?php
-            $index = 0;
-    
-            foreach($model_intdeliverables as $i => $intdeliverables){
-                echo $this->render('int-deliverables/_form', [
-                    'model' => $intdeliverables,
-                    'index' => $i,
-                ]);
-                $index = $i;                
-            }
-        ?>
+<label class="control-label">Internal Deliverables</label>
+<div class="panel panel-default">
+<div class="panel-body">
+    <div>
+        <div id="int-deliverables">
+            <?php
+                $index = 1;
+                if (isset($model_intdeliverables) && $model_intdeliverables != null){
+                    foreach($model_intdeliverables as $deliverable){
+                        echo $this->render('int-deliverables/_form',  [
+                            'model' => $deliverable, 
+                            'index' => $index,
+                            'extagreementid'=>Yii::$app->request->get('extagreementid')
+                        ]);
+                        $index++;
+                    }
+                }
+            ?>
+        </div>
     </div>
+</div></div>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
@@ -106,20 +121,208 @@ use kartik\select2\Select2;
 
 
 <?php    
-    $this->registerJs('
-        index = "'.++$index.'";
-        $("#addIntDeliverable").click(function(e){            
-            $.ajax({
-                url: "'.yii\helpers\URL::toRoute('int-agreement/add').'?index="+index+"&extagreementid='.Yii::$app->request->get('extagreementid').'",
-                dataType: "html",
-                success: function(data){
-                    $intDeliverables = $(data).clone();
-                    $("#int-deliverables").append($intDeliverables);
-                }
-            });    
-            index++;
+    
+$this->registerJs('
+var _index = ' . $index . ';
+
+function addDeliverable(){
+    var _url = "' . yii\helpers\Url::toRoute('int-agreement/add') . '?index="+_index+"&extagreementid='. Yii::$app->request->get('extagreementid') .'";
+    $.ajax({
+        url: _url,
+        async: false,
+        dataType: "html",
+        success:function(response){
+            $("#int-deliverables").append(response);
+            $("#int-deliverables .crow").last().animate({
+                opacity : 1, 
+                left: "+50", 
+                height: "toggle"
+            });
+
+            $(".btnAddDeliverable").click(function (elm){
+                $(".btnAddDeliverable").unbind( "click" );
+                elm.stopImmediatePropagation();
+                addDeliverable();
+            });
+
+            $(".btnDeleteDeliverable").click(function (elm){ 
+                if ($(".ext-deliverables-form").length >1){
+                    element=$(elm.currentTarget).closest(".ext-deliverables-form");
+                    /* animate div */
+                    $(element).animate(
+                    {
+                        opacity: 0.25,
+                        left: "+=50",
+                        height: "toggle"
+                    }, 400,
+                    function() {
+                        /* remove div */
+                        $(element).remove();
+                        if ($("#int-deliverables").find("div.has-error").length < 1){
+                            $("#int-deliverables").find("label").css("color", "");
+                        }
+                    });
+                    
+
+                }else{
+                    alert("Required at least one internal deliverable.");
+                    elm.stopImmediatePropagation();
+                }                
+            });
+
+        }
+    });
+
+    _index++;
+}
+
+if ($("#int-deliverables").find(".ext-deliverables-form").length == 0){
+    addDeliverable();
+}
+
+$(".btnAddDeliverable").click(function (elm){
+    $(".btnAddDeliverable").unbind( "click" );
+    elm.stopImmediatePropagation();
+    addDeliverable();
+});
+
+$(".btnDeleteDeliverable").click(function (elm){ 
+    if ($(".ext-deliverables-form").length >1){
+        element=$(elm.currentTarget).closest(".ext-deliverables-form");
+        /* animate div */
+        $(element).animate(
+        {
+            opacity: 0.25,
+            left: "+=50",
+            height: "toggle"
+        }, 400,
+        function() {
+            /* remove div */
+            $(element).remove();
+            if ($("#int-deliverables").find("div.has-error").length < 1){
+                $("#int-deliverables").find("label").css("color", "");
+            }
         });
-    ')
+        
+
+    }else{
+        alert("Required at least one internal deliverable.");
+        elm.stopImmediatePropagation();
+    }                
+});
+
+//////////////////////////////////////////////////////Form Submit/////////////////////////////////////////////////
+$("#w0").submit(function(e){
+    var flag = true;
+console.log(1);
+    $("select.rateddl").each(function(e){
+        if ($(this).val() == ""){
+            $(this).closest(".form-group").attr("class", "form-group required has-error");
+            $(this).closest(".form-group").find(".help-block").text("Rate unit cannot be blank.");
+            $(this).closest(".divphone").find("label").css("color", "#a94442");
+            flag = false;
+        }else{
+            $(this).closest(".form-group").attr("class", "form-group required has-success");
+            $(this).closest(".form-group").find(".help-block").text("");
+            $(this).closest(".divphone").find("label").css("color", "#3c763d");
+        }
+    });
+
+    $("select.positionddl").each(function(e){
+        if ($(this).val() == ""){
+            $(this).closest(".form-group").attr("class", "form-group required has-error");
+            $(this).closest(".form-group").find(".help-block").text("Consultant position cannot be blank.");
+            $(this).closest(".divphone").find("label").css("color", "#a94442");
+            flag = false;
+        }else{
+            $(this).closest(".form-group").attr("class", "form-group required has-success");
+            $(this).closest(".form-group").find(".help-block").text("");
+            $(this).closest(".divphone").find("label").css("color", "#3c763d");
+        }
+    });
+
+    $("select.positionddl").each(function(e){
+        if ($(this).val() == ""){
+            $(this).closest(".form-group").attr("class", "form-group required has-error");
+            $(this).closest(".form-group").find(".help-block").text("Consultant position cannot be blank.");
+            $(this).closest(".divphone").find("label").css("color", "#a94442");
+            flag = false;
+        }else{
+            $(this).closest(".form-group").attr("class", "form-group required has-success");
+            $(this).closest(".form-group").find(".help-block").text("");
+            $(this).closest(".divphone").find("label").css("color", "#3c763d");
+        }
+    });
+
+    $("select.extdeliverableddl").each(function(e){
+        if ($(this).val() == ""){
+            $(this).closest(".form-group").attr("class", "form-group required has-error");
+            $(this).closest(".form-group").find(".help-block").text("External deliverable cannot be blank.");
+            $(this).closest(".divphone").find("label").css("color", "#a94442");
+            flag = false;
+        }else{
+            $(this).closest(".form-group").attr("class", "form-group required has-success");
+            $(this).closest(".form-group").find(".help-block").text("");
+            $(this).closest(".divphone").find("label").css("color", "#3c763d");
+        }
+    });
+
+    $(".frequencyinput").each(function(e){
+        if ($(this).val() == ""){
+            $(this).closest(".form-group").attr("class", "form-group required has-error");
+            $(this).closest(".form-group").find(".help-block").text("Frequency cannot be blank.");
+            $(this).closest(".divphone").find("label").css("color", "#a94442");
+            flag = false;
+        }else{
+            $(this).closest(".form-group").attr("class", "form-group required has-success");
+            $(this).closest(".form-group").find(".help-block").text("");
+            $(this).closest(".divphone").find("label").css("color", "#3c763d");
+        }
+    });
+
+    $(".codeinput").each(function(e){
+        if ($(this).val() == ""){
+            $(this).closest(".form-group").attr("class", "form-group required has-error");
+            $(this).closest(".form-group").find(".help-block").text("Number cannot be blank.");
+            $(this).closest(".divphone").find("label").css("color", "#a94442");
+            flag = false;
+        }else{
+            $(this).closest(".form-group").attr("class", "form-group required has-success");
+            $(this).closest(".form-group").find(".help-block").text("");
+            $(this).closest(".divphone").find("label").css("color", "#3c763d");
+        }
+    });
+
+    $(".descriptioninput").each(function(e){
+        if ($(this).val() == ""){
+            $(this).closest(".form-group").attr("class", "form-group required has-error");
+            $(this).closest(".form-group").find(".help-block").text("Deliverable name cannot be blank.");
+            $(this).closest(".divphone").find("label").css("color", "#a94442");
+            flag = false;
+        }else{
+            $(this).closest(".form-group").attr("class", "form-group required has-success");
+            $(this).closest(".form-group").find(".help-block").text("");
+            $(this).closest(".divphone").find("label").css("color", "#3c763d");
+        }
+    });
+
+    $(".duedateinput").each(function(e){
+        if ($(this).val() == ""){
+            $(this).closest(".form-group").attr("class", "form-group required has-error");
+            $(this).closest(".form-group").find(".help-block").text("Due date cannot be blank.");
+            $(this).closest(".divphone").find("label").css("color", "#a94442");
+            flag = false;
+        }else{
+            $(this).closest(".form-group").attr("class", "form-group required has-success");
+            $(this).closest(".form-group").find(".help-block").text("");
+            $(this).closest(".divphone").find("label").css("color", "#3c763d");
+        }
+    });
+
+    return flag;
+});
+
+')
 
 ?>
 

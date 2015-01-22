@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\IntAgreement;
+use app\models\Project;
 use app\models\IntAgreementSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -101,85 +102,130 @@ class IntAgreementController extends Controller
     {
         $model = new IntAgreement();
         $model->extagreementid = $extagreementid;
+        $model->setscenario('insert');
 
         //initial user change & date
-        $model->userin = 'sun';
+        $model->userin = Yii::$app->user->identity->username;
         $model->datein = new \yii\db\Expression('NOW()');
+        $model_intdeliverables = null;
 
         if ($model->load(Yii::$app->request->post())) {
 
+            $flag = true;
+
             $file1 = UploadedFile::getInstance($model, 'file');
+            if ($file1 == null){
+                $flag = false;
+            }
+
+            $date = explode(' - ',$model->startdate);
+            if (isset($date[0])){
+                $model->startdate = date("Y-m-d", strtotime($date[0]));   
+            }
+            if (isset($date[1])){
+                $model->enddate = date("Y-m-d", strtotime($date[1]));   
+            }
+
+            if (isset($_POST["IntDeliverables"])){
+                foreach($_POST["IntDeliverables"] as $deliverable){
+                    $model_deliverable = new IntDeliverables();
+                    
+                    if (isset($deliverable["extdeliverableid"]) && $deliverable["extdeliverableid"] != ""){
+                        $model_deliverable->extdeliverableid = $deliverable["extdeliverableid"];   
+                    }
+                    if (isset($deliverable["code"]) && $deliverable["code"] != ""){
+                        $model_deliverable->code = $deliverable["code"];   
+                    }
+                    if (isset($deliverable["positionid"]) && $deliverable["positionid"] != ""){
+                        $model_deliverable->positionid = $deliverable["positionid"];   
+                    }
+                    if (isset($deliverable["description"]) && $deliverable["description"] != ""){
+                        $model_deliverable->description = $deliverable["description"];   
+                    }
+                    if (isset($deliverable["frequency"]) && $deliverable["frequency"] != ""){
+                        $model_deliverable->frequency = $deliverable["frequency"];   
+                    }
+                    if (isset($deliverable["rateid"]) && $deliverable["rateid"] != ""){
+                        $model_deliverable->rateid = $deliverable["rateid"];   
+                    }
+                    if (isset($deliverable["duedate"]) && $deliverable["duedate"] != ""){
+                        $model_deliverable->duedate = $deliverable["duedate"];   
+                    }
+                    $model_intdeliverables[] = $model_deliverable;
+                }
+            }else{
+                $deliverable = new IntDeliverables();
+                $deliverable->rate = 0;
+                $deliverable->validate();
+                $model_intdeliverables[] = $deliverable;
+                $flag = false;
+            }
+
+            if (!$flag){
+                $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));           
+                return $this->render('create', [
+                    'model' => $model,
+                    'model_intdeliverables'=> $model_intdeliverables,
+                ]);
+            }
             
             date_default_timezone_set('Asia/Jakarta');
             
-            $model->filename = $model->extagreement->project->code.'_'.date('dMY').'_'.date('His').'_'.'IntAgreement'. '.' . $file1->extension;
+            $model->filename = str_replace('/', '.', $model->extagreement->project->code).'_'.date('d.M.Y').'_'.date('His').'_'.'IntAgreement'. '.' . $file1->extension;
+            $model->filename = strtoupper($model->filename);
             $model->file = $file1;
-            
-            $model->startdate = date("Y-m-d", strtotime($model->startdate));
-            $model->enddate = date("Y-m-d", strtotime($model->enddate));
 
-            $transaction = Yii::$app->db->beginTransaction();
-            $flag = $model->save();
+            $connection = \Yii::$app->db;
+            $transaction = $connection->beginTransaction(); 
 
-            if($flag){
-                $model->file->saveAs('uploads/' . $model->filename); 
+            if (!$model->save()){
+                $transaction->rollBack();
+                $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));           
+                return $this->render('create', [
+                    'model' => $model,
+                    'model_intdeliverables'=> $model_intdeliverables,
+                ]); 
+            }
 
-                $post_intdeliverables = Yii::$app->request->post('IntDeliverables');
-                
-                foreach($post_intdeliverables as $i => $intdeliverables) {
-                    $intdeliverables1 = new IntDeliverables();
-                    $intdeliverables1->setAttributes($intdeliverables);                                
-                    $intdeliverables1->intagreementid = $model->intagreementid;
+            foreach($model_intdeliverables as $deliverable){
+                $deliverable->intagreementid = $model->intagreementid;
+                $deliverable->rate = $deliverable->projectrate->rate * $deliverable->frequency;
+                $deliverable->userin = Yii::$app->user->identity->username;
+                $deliverable->datein = new \yii\db\Expression('NOW()');
+                $deliverable->duedate = date("Y-m-d", strtotime($deliverable->duedate));
 
-                    $model_intdeliverables[] = $intdeliverables1;                
-                }
+                if (!$deliverable->save()){
+                    $deliverable->duedate = date("d.M.Y", strtotime($deliverable->duedate));
 
-                if(ExtDeliverables::validateMultiple($model_intdeliverables)){             
-
-                    try{
-                        foreach($model_intdeliverables as $intdeliverables){
-
-                            //initial user change & date
-                            $intdeliverables->userin = 'sun';                            
-                            $intdeliverables->datein = new \yii\db\Expression('NOW()');
-                            
-                            $flag = $intdeliverables->save();
-
-                            if(!$flag){
-                                $transaction->rollBack();
-                                break;
-                            }
-                        }
-                        if($flag){
-                            $transaction->commit();
-                            return $this->redirect(['view', 'id' => $model->intagreementid]);
-                        }
-                    }
-                    catch (Exception $ex) {
-                        $transaction->rollBack();
-                    }
-                }
-                else {
                     $transaction->rollBack();
+                    $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));           
+                    return $this->render('create', [
+                        'model' => $model,
+                        'model_intdeliverables'=> $model_intdeliverables,
+                    ]);  
                 }
-            }         
-        }
-        
-        return $this->render('create', [
-            'model' => $model,
-            'model_intdeliverables' => (empty($model_intdeliverables)) ? [new IntDeliverables()] :$model_intdeliverables,
-        ]);
-        
 
-        /*
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->intagreementid]);
-        } else {
+                $deliverable->duedate = date("d.M.Y", strtotime($deliverable->duedate));
+            }
+
+            $model->file->saveAs('uploads/' . $model->filename); 
+
+            $model_project = new Project();
+            $model_project = Project::findOne($model->extagreement->project->projectid);                
+            $model_project->setProjectStatus();
+
+            $model->file->saveAs('uploads/' . $model->filename); 
+
+            $transaction->commit();
+
+            return $this->redirect(['view', 'id' => $model->extagreementid]);
+             
+        } else{
             return $this->render('create', [
                 'model' => $model,
+                'model_intdeliverables' => $model_intdeliverables,
             ]);
         }
-        */
     }
 
     /**
@@ -302,12 +348,22 @@ class IntAgreementController extends Controller
         }
     }
 
-    public function actionAdd($index){
+    public function actionAdd($index, $extagreementid){
         $model = new IntDeliverables();
 
         return $this->renderAjax('int-deliverables/_form', [
                 'model'=>$model,
                 'index'=>$index,
+                'extagreementid'=>$extagreementid
             ]);
+    }
+
+    public function actionRate($rateid){
+        $rate = \app\models\ProjectRate::find()->where(['rateid'=>$rateid])->one();
+        if (isset($rate->rate)){
+            return $rate->rate;
+        }
+
+        return 0;
     }
 }

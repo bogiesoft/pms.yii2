@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\MindUnit */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Mind Units', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Rate Units', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="mind-unit-view">

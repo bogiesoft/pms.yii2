@@ -63,8 +63,8 @@ class ExtAgreement extends \yii\db\ActiveRecord
             'projectid' => 'Project',
             'agreementno' => 'Agreement No',
             'description' => 'Description',
-            'startdate' => 'Date',
-            'enddate' => 'Date',
+            'startdate' => 'Start Date',
+            'enddate' => 'End Date',
             'filename' => 'Filename',
             'datein' => 'Datein',
             'userin' => 'Userin',
@@ -103,5 +103,9 @@ class ExtAgreement extends \yii\db\ActiveRecord
     public function getProjectDescr()
     {
         return $this->project->code . ' - ' . $this->project->name;
+    }
+
+    public function getFileURL(){
+        return '<a class="download" href="'. \Yii::$app->request->BaseUrl .'/uploads/'. $this->filename .'">'.$this->filename .'</a>';
     }
 }
