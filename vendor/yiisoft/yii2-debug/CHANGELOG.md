@@ -1,10 +1,18 @@
 Yii Framework 2 debug extension Change Log
 ==========================================
 
-2.0.2 under development
+2.0.3 under development
 -----------------------
 
-- no changes in this release.
+- Bug #6903: Fixed display issue with phpinfo() table (kalayda, cebe)
+- Enh #6890: Added ability to filter by query type (pana1990)
+
+
+2.0.2 January 11, 2015
+----------------------
+
+- Bug #4820: Fixed reading incomplete debug index data in case of high request concurrency (martingeorg, samdark)
+- Chg #6572: Allow panels to stay even if they do not receive any debug data (qiangxue)
 
 
 2.0.1 December 07, 2014

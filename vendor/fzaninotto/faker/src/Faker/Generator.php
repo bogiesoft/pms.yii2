@@ -34,6 +34,7 @@ namespace Faker;
  * @property string $creditCardDetails
  * @property string $bankAccountNumber
  * @property string $swiftBicNumber
+ * @property string $vat
  *
  * @property string $word
  * @method string words()
@@ -104,6 +105,8 @@ namespace Faker;
  * @method string toUpper()
  * @method mixed optional()
  * @method UniqueGenerator unique()
+ *
+ * @method integer biasedNumberBetween()
  *
  * @property string $userAgent
  * @property string $chrome

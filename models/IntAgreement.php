@@ -64,7 +64,7 @@ class IntAgreement extends \yii\db\ActiveRecord
             'extagreementid' => 'External Agreement',
             'consultantid' => 'Consultant',
             'departmentid' => 'Department',
-            'description' => 'Description',
+            'description' => 'Comment',
             'startdate' => 'Start Date',
             'enddate' => 'End Date',
             'filename' => 'Filename',
@@ -106,6 +106,10 @@ class IntAgreement extends \yii\db\ActiveRecord
     public function getIntdeliverables()
     {
         return $this->hasMany(IntDeliverables::className(), ['intagreementid' => 'intagreementid']);
+    }
+
+    public function getUrlFile(){
+        return yii\helpers\Html::a($this->filename, \Yii::$app->request->BaseUrl.'/uploads/'.$this->filename, ['class'=>'download']);
     }
     
 }

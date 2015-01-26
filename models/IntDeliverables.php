@@ -17,6 +17,7 @@ use Yii;
  * @property integer $rateid
  * @property integer $rate
  * @property string $duedate 
+ * @property string $deliverdate
  * @property string $datein
  * @property string $userin
  * @property string $dateup
@@ -45,7 +46,7 @@ class IntDeliverables extends \yii\db\ActiveRecord
         return [
             [['intagreementid', 'extdeliverableid', 'code', 'positionid', 'frequency', 'rateid', 'rate', 'description', 'duedate'], 'required'],
             [['intagreementid', 'extdeliverableid', 'positionid', 'frequency', 'rateid', 'rate'], 'integer'],
-            [['datein', 'dateup', 'duedate'], 'safe'],
+            [['datein', 'dateup', 'duedate', 'deliverdate'], 'safe'],
             [['code'], 'string', 'max' => 5],
             [['description'], 'string', 'max' => 250],
             [['userin', 'userup'], 'string', 'max' => 50],
@@ -69,6 +70,7 @@ class IntDeliverables extends \yii\db\ActiveRecord
             'rateid' => 'Rate Unit',
             'rate' => 'Rate',
             'duedate' => 'Due Date', 
+            'deliverdate' => 'Deliverable Date',
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',
@@ -106,5 +108,40 @@ class IntDeliverables extends \yii\db\ActiveRecord
     public function getProjectrate()
     {
         return $this->hasOne(ProjectRate::className(), ['rateid' => 'rateid']);
+    }
+
+    public function getIntagreementpayments()
+    {
+        return $this->hasOne(IntAgreementPayment::className(), ['intdeliverableid' => 'intdeliverableid']);
+    }
+
+    public function getDeliverablenamewithcode(){
+        return $this->code . ' - ' . $this->description;
+    }
+
+    public function getDuedateformat(){
+        return date('d-M-Y', strtotime($this->duedate));
+    }
+
+    public function getRateUnitDescr(){
+        return $this->projectrate->role . ' (' . $this->projectrate->mindunit->name . ')';
+    }
+
+    public function getRateNumberFormat(){
+        return number_format($this->rate);
+    }
+
+    public function getDeliverdateformat(){
+        if ($this->deliverdate != null && $this->deliverdate != ""){
+            return date('d-M-Y', strtotime($this->deliverdate));   
+        }
+        return null;
+    }
+
+    public function getPaymentdateformat(){
+        if (isset($this->intagreementpayments->date) && $this->intagreementpayments->date != null && $this->intagreementpayments->date != ""){
+            return date('d-M-Y', strtotime($this->intagreementpayments->date));   
+        }
+        return null;
     }
 }

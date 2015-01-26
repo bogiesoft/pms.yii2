@@ -12,6 +12,8 @@ use Yii;
  * @property string $code
  * @property string $description
  * @property integer $rate
+ * @property string $duedate 
+ * @property string $deliverdate 
  * @property string $datein
  * @property string $userin
  * @property string $dateup
@@ -38,7 +40,7 @@ class ExtDeliverables extends \yii\db\ActiveRecord
         return [
             [['extagreementid', 'code', 'description', 'rate', 'duedate'], 'required'],
             [['extagreementid', 'rate'], 'integer'],
-            [['datein', 'dateup', 'duedate'], 'safe'],
+            [['duedate', 'deliverdate', 'datein', 'dateup'], 'safe'],
             [['code'], 'string', 'max' => 5],
             [['description'], 'string', 'max' => 250],
             [['userin', 'userup'], 'string', 'max' => 50],
@@ -57,7 +59,8 @@ class ExtDeliverables extends \yii\db\ActiveRecord
             'code' => 'Number',
             'description' => 'Deliverable Name',
             'rate' => 'Invesment',
-            'duedate' => 'Due date',
+            'duedate' => 'Due Date',            
+            'deliverdate' => 'Deliverable Date',
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',
@@ -76,8 +79,28 @@ class ExtDeliverables extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsIntdeliverables()
+    public function getIntdeliverables()
     {
         return $this->hasMany(IntDeliverables::className(), ['extdeliverableid' => 'extdeliverableid']);
+    }
+
+    public function getDeliverableformat(){
+        return $this->code . ' - ' . $this->description;
+    }
+
+    public function getDuedateformat(){
+        return date('d-M-Y', strtotime($this->duedate));
+    }
+
+    public function getExtagreementpayments()
+    {
+        return $this->hasOne(ExtAgreementPayment::className(), ['extdeliverableid' => 'extdeliverableid']);
+    }
+
+    public function getDeliverdateformat(){
+        if ($this->deliverdate != null && $this->deliverdate != ""){
+            return date('d-M-Y', strtotime($this->deliverdate));   
+        }
+        return null;
     }
 }

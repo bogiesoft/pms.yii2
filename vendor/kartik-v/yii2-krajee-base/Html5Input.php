@@ -1,9 +1,10 @@
 <?php
 
 /**
+ * @package   yii2-krajee-base
+ * @author    Kartik Visweswaran <kartikv2@gmail.com>
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014
- * @package yii2-krajee-base
- * @version 1.5.0
+ * @version   1.7.3
  */
 
 namespace kartik\base;
@@ -22,46 +23,45 @@ use yii\helpers\ArrayHelper;
 class Html5Input extends InputWidget
 {
     /**
+     * @var array the special inputs which need captions
+     */
+    private static $_specialInputs = [
+        'color',
+        'range'
+    ];
+    /**
      * @var string the HTML 5 input type
      */
     public $type;
-
     /**
      * @var string the width in 'px' or '%' of the HTML5 input container
      */
     public $width;
-
     /**
      * @var array the HTML attributes for the widget container
      */
     public $containerOptions = [];
-
     /**
      * @var array the HTML attributes for the HTML-5 input.
      */
     public $html5Options = [];
-
     /**
      * @var array the HTML attributes for the HTML-5 input container
      */
     public $html5Container = [];
-
     /**
-     * @var string/boolean the message shown for unsupported browser. If set to false
+     * @var string|boolean the message shown for unsupported browser. If set to false
      * will not be displayed
      */
-    public $noSupport = 'Its recommended you use an upgraded browser to display the {type} control properly.';
-
+    public $noSupport;
     /**
      * @var string array the HTML attributes for container displaying unsupported browser message
      */
     public $noSupportOptions = [];
-
     /**
      * @var string one of the SIZE modifiers 'lg', 'md', 'sm', 'xs'
      */
     public $size;
-
     /**
      * @var array the addon content
      * - prepend: array/string the prepend addon content. If set as an array, the
@@ -80,14 +80,6 @@ class Html5Input extends InputWidget
      *   - asButton: boolean whether the addon is a button
      *   - options: array the HTML attributes for the append addon     */
     public $addon = [];
-
-    /**
-     * @var array the special inputs which need captions
-     */
-    private static $_specialInputs = [
-        'color',
-        'range'
-    ];
 
     /**
      * Runs the widget
@@ -115,15 +107,17 @@ class Html5Input extends InputWidget
     }
 
     /**
-     * Gets the HTML5 input
-     * return string
+     * Registers the needed assets
      */
-    protected function getHtml5Input()
+    public function registerAssets()
     {
-        if ($this->hasModel()) {
-            return Html::activeInput($this->type, $this->model, $this->attribute, $this->options);
-        }
-        return Html::input($this->type, $this->name, $this->value, $this->options);
+        $view = $this->getView();
+        Html5InputAsset::register($view);
+        $caption = 'jQuery("#' . $this->options['id'] . '")';
+        $input = 'jQuery("#' . $this->html5Options['id'] . '")';
+        $js = "{$caption}.change(function(){ {$input}.val(this.value)} );\n" .
+            "{$input}.change(function(){ {$caption}.val(this.value); {$caption}.trigger('change');} );";
+        $view->registerJs($js);
     }
 
     /**
@@ -140,7 +134,7 @@ class Html5Input extends InputWidget
         }
         Html::addCssClass($this->html5Container, 'input-group-addon addon-' . $this->type);
         $caption = $this->getInput('textInput');
-        $value = $this->hasModel() ? $this->model[Html::getAttributeName($this->attribute)] : $this->value;
+        $value = $this->hasModel() ? Html::getAttributeValue($this->model, $this->attribute) : $this->value;
         $input = Html::input($this->type, $this->html5Options['id'], $value, $this->html5Options);
         $prepend = static::getAddonContent(ArrayHelper::getValue($this->addon, 'prepend', ''));
         $append = static::getAddonContent(ArrayHelper::getValue($this->addon, 'append', ''));
@@ -148,11 +142,13 @@ class Html5Input extends InputWidget
         $prepend .= Html::tag('span', $input, $this->html5Container);
         $content = Html::tag('div', $prepend . $preCaption . $caption . $append, $this->containerOptions);
         Html::addCssClass($this->noSupportOptions, 'alert alert-warning');
-        if ($this->noSupport == false) {
+        if ($this->noSupport === false) {
             $message = '';
         } else {
-            $message = "\n<br>" . Html::tag('div', Yii::t('app', $this->noSupport, ['type' => $this->type]),
-                    $this->noSupportOptions);
+            $noSupport = !empty($this->noSupport) ? $this->noSupport :
+                Yii::t('app', 'It is recommended you use an upgraded browser to display the {type} control properly.',
+                    ['type' => $this->type]);
+            $message = "\n<br>" . Html::tag('div', $noSupport, $this->noSupportOptions);
         }
         return "<!--[if lt IE 10]>\n{$caption}{$message}\n<![endif]--><![if gt IE 9]>\n{$content}\n<![endif]>";
     }
@@ -161,6 +157,7 @@ class Html5Input extends InputWidget
      * Parses and returns addon content
      *
      * @param string /array $addon the addon parameter
+     *
      * @return string
      */
     protected static function getAddonContent($addon)
@@ -180,16 +177,14 @@ class Html5Input extends InputWidget
     }
 
     /**
-     * Registers the needed assets
+     * Gets the HTML5 input
+     * return string
      */
-    public function registerAssets()
+    protected function getHtml5Input()
     {
-        $view = $this->getView();
-        Html5InputAsset::register($view);
-        $caption = 'jQuery("#' . $this->options['id'] . '")';
-        $input = 'jQuery("#' . $this->html5Options['id'] . '")';
-        $js = "{$caption}.change(function(){{$input}.val(this.value)});\n" .
-            "{$input}.change(function(){{$caption}.val(this.value); {$caption}.trigger('change');});";
-        $view->registerJs($js);
+        if ($this->hasModel()) {
+            return Html::activeInput($this->type, $this->model, $this->attribute, $this->options);
+        }
+        return Html::input($this->type, $this->name, $this->value, $this->options);
     }
 }

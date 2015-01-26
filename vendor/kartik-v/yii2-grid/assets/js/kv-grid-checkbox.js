@@ -1,6 +1,8 @@
 /*!
+ * @package   yii2-grid
+ * @author    Kartik Visweswaran <kartikv2@gmail.com>
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014
- * @version 2.7.0
+ * @version   3.0.0
  *
  * Client actions for yii2-grid CheckboxColumn
  * 
@@ -10,7 +12,7 @@
  * For more Yii related demos visit http://demos.krajee.com
  */
 (function ($) {
-    kvSelectRow = function(gridId, css) {
+    kvSelectRow = function (gridId, css) {
         var $grid = jQuery('#' + gridId);
         $grid.find(".kv-row-select input").on('change', function () {
             var $el = $(this);

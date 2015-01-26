@@ -41,12 +41,35 @@ $this->params['breadcrumbs'][] = $this->title;
             'description',
             'startdate',
             'enddate',
-            'filename',
+            [
+                'attribute' => 'filename',
+                'value'=>'urlFile',
+                'format' => 'html'
+            ],
 
             [
-                'class' => 'yii\grid\ActionColumn'
+                'class' => 'yii\grid\ActionColumn',
+                'buttons' => [
+                    'view' => function($url, $model, $key){                    
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', \yii\helpers\Url::toRoute(['int-agreement/view','extagreementid'=>$model->extagreementid, 'id'=>$model->intagreementid],false), [
+                            'title' => Yii::t('yii', 'View'),
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                    'update' => function($url, $model, $key){                    
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', \yii\helpers\Url::toRoute(['int-agreement/update','extagreementid'=>$model->extagreementid, 'id'=>$model->intagreementid],false), [
+                            'title' => Yii::t('yii', 'Update'),
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                ]
             ],
         ],
     ]); ?>
 
 </div>
+<?php
+$this->registerJs('
+    $(".download").attr("download", "");
+');
+?>

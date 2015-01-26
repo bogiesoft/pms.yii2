@@ -35,8 +35,7 @@ use kartik\money\MaskMoney;
         $data += ArrayHelper::map(ExtDeliverables::findBySql($sql, [':1' => $extagreementid])
             ->asArray()->all(), 'extdeliverableid', 'descr');
 
-        
-        //echo Html::activeHiddenInput($model, '[' . $index . ']extdeliverableid');
+        echo Html::activeHiddenInput($model, '[' . $index . ']intdeliverableid');
         echo Html::activeLabel($model, '[' . $index . ']extdeliverableid', ['class'=>'col-sm-2 control-label']);
         echo '<div class="col-sm-10">';
         echo Select2::widget([

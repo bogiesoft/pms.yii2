@@ -1,3 +1,37 @@
+Version 3.0.0
+=============
+**Date:** 18-Jan-2015
+
+1. (bug #178): Enhance CheckboxColumn to allow contentOptions to be set as Closure.
+2. (enh #178): New validation of contentOptions for all the extended grid Columns.
+3. Code formatting updates as per Yii2 coding style.
+4. (bug #180): Fix namespaces of classes.
+5. Revamp to use new Krajee base Module and TranslationTrait.
+6. (bug #183): Implement alignment validation for content within ActionColumn.
+7. (bug #184): Correct the dependency on kartik\mpdf\Pdf for export.
+8. (bug #185): Set right jQuery selector for grid table export.
+9. (enh #186): New feature - Allow resizing of columns like a spreadsheet.
+10. (enh #188): Eliminate filter row and all form inputs from export.
+11. (enh #189): Various performance enhancements to client script and plugin registrations.
+12. (bug #190): Allow editable beforeInput in EditableColumn to be passed as Closure.
+13. (bug #191): Correct Closure namespace for `value` validation in GridView.
+13. (bug #192): Correct value callback in `FormulaColumn`.
+
+Version 2.9.0
+=============
+**Date:** 26-Dec-2014
+
+1. (bug #172): Ability to configure export form submission target.
+2. (bug #173): Ability to configure display of confirmation alert dialog before export.
+
+Version 2.8.0
+=============
+**Date:** 16-Dec-2014
+
+1. (bug #167): Fix Yii message parsing for Html5Input '$this->noSupport'.
+2. (enh #168): Prevent user to rapidly toggle and break the expand row before expansion or collapse.
+3. (enh #169): Enable itemsBefore and itemsAfter to be added for export dropdown menu.
+
 Version 2.7.0
 =============
 **Date:** 02-Dec-2014
@@ -48,7 +82,6 @@ Version 2.5.0
 
 1. (bug #135): Upgrade to latest release of floatTHeader plugin.
 2. (bug #136): Fix IE specific errors in floatHeader when columns are hidden.
-
 
 Version 2.4.0
 =============

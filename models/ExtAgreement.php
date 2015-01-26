@@ -62,7 +62,7 @@ class ExtAgreement extends \yii\db\ActiveRecord
             'extagreementid' => 'Extagreementid',
             'projectid' => 'Project',
             'agreementno' => 'Agreement No',
-            'description' => 'Description',
+            'description' => 'Comment',
             'startdate' => 'Start Date',
             'enddate' => 'End Date',
             'filename' => 'Filename',

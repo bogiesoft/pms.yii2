@@ -1,3 +1,12 @@
+version 1.4.0
+=============
+**Date:** 14-Jan-2015
+
+- (enh #19): Add new `showHints` property to ActiveField configuration.
+- (enh #20): Ability to add markup before and after ActiveField Input.
+- (enh #21): Prevent display of error and hint blocks for static input.
+- (enh #22): Enhance active field template for controlling labels, hints, & errors.
+
 version 1.3.0
 =============
 **Date:** 04-Dec-2014
