@@ -84,7 +84,7 @@ class ExtAgreementPaymentSearch extends ExtDeliverables
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['like', 'ps_customer.name', $this->customer])
+        $query->andFilterWhere(['like', 'ps_customer.company', $this->customer])
             ->andFilterWhere(['like', 'concat(ps_extdeliverables.code, \' - \', ps_extdeliverables.description)', $this->deliverable])
             ->andFilterWhere(['like', 'DATE_FORMAT(duedate, \'%d-%b-%Y\')', $this->duedate])
             ->andFilterWhere(['like', 'DATE_FORMAT(deliverdate, \'%d-%b-%Y\')', $this->deliverdate])

@@ -5,9 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\ExtAgreementPayment */
 
-$this->title = 'Update Ext Agreement Payment: ' . ' ' . $model->extagreementpaymentid;
-$this->params['breadcrumbs'][] = ['label' => 'Ext Agreement Payments', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->extagreementpaymentid, 'url' => ['view', 'id' => $model->extagreementpaymentid]];
+$this->title = 'Update Payment';
+$this->params['breadcrumbs'][] = ['label' => 'Monitoring External Agreement: Select Project', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Monitoring External Agreements', 'url' => ['index', 'projectid'=>Yii::$app->request->get('projectid')]];
+$this->params['breadcrumbs'][] = ['label' => 'External Deliverable', 'url' => ['view', 'id'=>Yii::$app->request->get('id'), 'projectid'=>Yii::$app->request->get('projectid')]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="ext-agreement-payment-update">

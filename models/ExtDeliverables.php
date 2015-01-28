@@ -99,7 +99,14 @@ class ExtDeliverables extends \yii\db\ActiveRecord
 
     public function getDeliverdateformat(){
         if ($this->deliverdate != null && $this->deliverdate != ""){
-            return date('d-M-Y', strtotime($this->deliverdate));   
+            return date('d-M-Y', strtotime($this->deliverdate));
+        }
+        return null;
+    }
+
+    public function getPaymentdateformat(){
+        if (isset($this->extagreementpayments) && $this->extagreementpayments->date != null && $this->extagreementpayments->date != ""){
+            return date('d-M-Y', strtotime($this->extagreementpayments->date));
         }
         return null;
     }

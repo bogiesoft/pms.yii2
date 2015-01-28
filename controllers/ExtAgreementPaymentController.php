@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\ExtDeliverables;
 use app\models\ExtAgreementPayment;
+use app\models\Project;
 use app\models\ExtAgreementPaymentSearch;
 use app\models\ProjectSearch;
 use yii\web\Controller;
@@ -18,9 +19,27 @@ use yii\filters\AccessControl;
  */
 class ExtAgreementPaymentController extends Controller
 {
+    private $accessid = "MONITOR-EAGREEMENT";
+
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        //'actions' => ['login', 'error'], // Define specific actions
+                        'allow' => true, // Has access
+                        'matchCallback' => function ($rule, $action) {
+                            return \app\models\User::getIsAccessMenu($this->accessid);
+                        }
+                    ],
+                    [
+                        'allow' => false, // Do not have access
+                        'roles'=>['?'], // Guests '?'
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -111,6 +130,10 @@ class ExtAgreementPaymentController extends Controller
                 ]);
             }
 
+            $model_project = new Project();
+            $model_project = Project::findOne($projectid);                
+            $model_project->setProjectStatus();
+
             return $this->redirect(['view', 'id' => $model->extdeliverableid, 'projectid' => $projectid]);
         } else {
             return $this->render('create', [
@@ -141,6 +164,10 @@ class ExtAgreementPaymentController extends Controller
                 ]);
             }
 
+            $model_project = new Project();
+            $model_project = Project::findOne($projectid);                
+            $model_project->setProjectStatus();
+
             return $this->redirect(['view', 'id' => $model->extdeliverableid, 'projectid' => $projectid]);
         } else {
             $model->date = date('d-M-Y', strtotime($model->date));
@@ -148,19 +175,6 @@ class ExtAgreementPaymentController extends Controller
                 'model' => $model,
             ]);
         }
-    }
-
-    /**
-     * Deletes an existing ExtAgreementPayment model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
     }
 
     /**
@@ -197,5 +211,17 @@ class ExtAgreementPaymentController extends Controller
 
         $model->save();
         return $this->redirect(['view', 'id'=>$id, 'projectid'=>$projectid]);
+    }
+
+    public function actionCancelPayment($id, $projectid)
+    {
+        $model = $this->findPayment($id);
+        $model->delete();
+        
+        $model_project = new Project();
+        $model_project = Project::findOne($projectid);                
+        $model_project->setProjectStatus();
+
+        return $this->redirect(['view', 'id'=>$model->extdeliverableid, 'projectid'=>$projectid]);
     }
 }

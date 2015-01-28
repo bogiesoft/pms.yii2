@@ -37,13 +37,15 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'duedate',
                 'value' => 'duedateformat',
-
             ],
-            'deliverdate',
             [
-                'attribute' => 'deliverable',
+                'attribute' => 'deliverdate',
+                'value' => 'deliverdateformat',
+            ],
+            [
+                'attribute' => 'payment',
                 'label' => 'Payment Date',
-                'value' => 'extagreementpayments.date',
+                'value' => 'paymentdateformat',
 
             ],
             //'datein',

@@ -63,7 +63,7 @@ class Project extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'projectid' => 'ID',
+            'projectid' => 'Project',
             'unitid' => 'Unit',
             'code' => 'Code',
             'name' => 'Name',
@@ -197,9 +197,50 @@ class Project extends \yii\db\ActiveRecord
             return true;
         }
 
-        $status = \app\models\Status::find()->where("name like '%in%progress%'")->one();
+        $count_ext_payment = 0;
+        foreach($this->extagreements as $agreement){
+            foreach($agreement->extdeliverables as $deliverable){
+                if (!isset($deliverable->extagreementpayments) || $deliverable->extagreementpayments->date == null ||
+                    $deliverable->extagreementpayments->date == ""){
+                    
+                    $count_ext_payment++;
+                }
+            }
+        }
+
+        if ($count_ext_payment > 0){
+            $status = \app\models\Status::find()->where("name like '%in%progress%'")->one();
+            $this->statusid = isset($status->statusid) ? $status->statusid : 0;
+            $this->save();
+            return true;   
+        }
+
+        $status = \app\models\Status::find()->where("name like '%finalization%'")->one();
         $this->statusid = isset($status->statusid) ? $status->statusid : 0;
         $this->save();
         return true;
+    }
+
+    public function getInitiationyearformat(){
+        if (isset($this->initiationyear) && $this->initiationyear != null && $this->initiationyear != ""){
+            return date('d-M-Y', strtotime($this->initiationyear));
+        }
+        return null;
+    }
+
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getSharingvaluedepartments()
+    {
+        return $this->hasMany(SharingValueDepartment::className(), ['projectid' => 'projectid']);
+    }
+
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getSharingvalueunits()
+    {
+        return $this->hasMany(SharingValueUnit::className(), ['projectid' => 'projectid']);
     }
 }

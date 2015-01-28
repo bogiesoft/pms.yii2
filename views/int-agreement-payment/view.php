@@ -84,6 +84,7 @@ if (isset($model->intagreementpayments->date) && $model->intagreementpayments->d
     <table class="table table-striped table-bordered detail-view">
         <tbody>
         
+        <tr><th>Project</th>  <td><?= $model->intagreement->extagreement->project->name ?></td></tr>
         <tr><th>Consultant</th>  <td><?= $model->intagreement->consultant->name ?></td></tr>
         <tr><th><?= $model->getAttributeLabel('code') ?></th> <td><?= $model->code ?></td></tr>
         <tr><th><?= $model->getAttributeLabel('description') ?></th>  <td><?= $model->description ?></td></tr>
