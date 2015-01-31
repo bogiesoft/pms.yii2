@@ -63,6 +63,9 @@ class ExtAgreementSearch extends ExtAgreement
             'query' => $query,
         ]);
 
+        $user = \app\models\User::find()->where(['userid' => Yii::$app->user->identity->userid])->one();
+        $query->andFilterWhere(['in','ps_project.unitid',$user->accessUnit]);
+
         $dataProvider->sort->attributes['unit'] = [
             'asc'=>['concat(ps_unit.code," - ",ps_unit.Name)'=>SORT_ASC],
             'desc'=>['concat(ps_unit.code," - ",ps_unit.Name)'=>SORT_DESC],            

@@ -69,6 +69,8 @@ class ExtAgreementController extends Controller
             ]);
         }
         else {
+            $this->validateProject($projectid);
+            
             $searchModel = new ExtAgreementSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $projectid);
 
@@ -84,10 +86,12 @@ class ExtAgreementController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionView($id, $projectid)
     {
+        $this->validateProject($projectid);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $this->findModel($id, $projectid),
         ]);
     }
 
@@ -100,6 +104,7 @@ class ExtAgreementController extends Controller
     {
         $model = new ExtAgreement();
         $model->projectid = $projectid;
+        $this->validateProject($projectid);
         $model->setscenario('insert');
 
         //initial user change & date
@@ -116,6 +121,7 @@ class ExtAgreementController extends Controller
                 $flag = false;
             }
 
+            $model->signdate = date("Y-m-d", strtotime($model->signdate));
             $date = explode(' - ',$model->startdate);
             if (isset($date[0])){
                 $model->startdate = date("Y-m-d", strtotime($date[0]));   
@@ -151,6 +157,7 @@ class ExtAgreementController extends Controller
 
             if (!$flag){
                 $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));           
+                $model->signdate = date("d.M.Y", strtotime($model->signdate));
                 return $this->render('create', [
                     'model' => $model,
                     'model_extdeliverables'=> $model_extdeliverables,
@@ -169,6 +176,8 @@ class ExtAgreementController extends Controller
             if (!$model->save()){
                 $transaction->rollBack();
                 $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));           
+                $model->signdate = date("d.M.Y", strtotime($model->signdate));
+
                 return $this->render('create', [
                     'model' => $model,
                     'model_extdeliverables'=> $model_extdeliverables,
@@ -185,7 +194,9 @@ class ExtAgreementController extends Controller
                     $extDev->duedate = date("d.M.Y", strtotime($extDev->duedate));
 
                     $transaction->rollBack();
-                    $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));           
+                    $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));
+                    $model->signdate = date("d.M.Y", strtotime($model->signdate));
+                               
                     return $this->render('create', [
                         'model' => $model,
                         'model_extdeliverables'=> $model_extdeliverables,
@@ -232,12 +243,14 @@ class ExtAgreementController extends Controller
      */
     public function actionUpdate($projectid, $id)
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel($id, $projectid);
         //$model->setscenario('update'); 
 
         if ($model->projectid != $projectid){
             return $this->redirect(['index', 'projectid' => $projectid]);
         }
+
+        $this->validateProject($projectid);
 
         //initial user change & date
         $model->userup = Yii::$app->user->identity->username;
@@ -255,6 +268,7 @@ class ExtAgreementController extends Controller
                 $flag = false;
             }
 
+            $model->signdate = date("Y-m-d", strtotime($model->signdate));
             $date = explode(' - ',$model->startdate);
             if (isset($date[0])){
                 $model->startdate = date("Y-m-d", strtotime($date[0]));   
@@ -294,7 +308,8 @@ class ExtAgreementController extends Controller
             }
 
             if (!$flag){
-                $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));           
+                $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));
+                $model->signdate = date("d.M.Y", strtotime($model->signdate));
                 return $this->render('update', [
                     'model' => $model,
                     'model_extdeliverables'=> $model_extdeliverables,
@@ -322,7 +337,8 @@ class ExtAgreementController extends Controller
 
             if (!$model->save()){
                 $transaction->rollBack();
-                $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));           
+                $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));
+                $model->signdate = date("d.M.Y", strtotime($model->signdate));
                 return $this->render('update', [
                     'model' => $model,
                     'model_extdeliverables'=> $model_extdeliverables,
@@ -343,7 +359,9 @@ class ExtAgreementController extends Controller
 
                     if (!$model_dev->save()){
                         $transaction->rollBack();
-                        $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));           
+                        $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));
+                        $model->signdate = date("d.M.Y", strtotime($model->signdate));
+
                         return $this->render('update', [
                             'model' => $model,
                             'model_extdeliverables'=> $model_extdeliverables,
@@ -360,7 +378,9 @@ class ExtAgreementController extends Controller
                         $extDev->duedate = date("d.M.Y", strtotime($extDev->duedate));
 
                         $transaction->rollBack();
-                        $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));           
+                        $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));
+                        $model->signdate = date("d.M.Y", strtotime($model->signdate));
+
                         return $this->render('update', [
                             'model' => $model,
                             'model_extdeliverables'=> $model_extdeliverables,
@@ -386,6 +406,7 @@ class ExtAgreementController extends Controller
 
         } else {
             $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));
+            $model->signdate = date("d.M.Y", strtotime($model->signdate));
 
             $modelExtDev = ExtDeliverables::find()->where('extagreementid = :1', [':1'=>$model->extagreementid])->all();
             foreach($modelExtDev as $extDev){                
@@ -408,11 +429,13 @@ class ExtAgreementController extends Controller
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id, $projectid);
+        $projectid = $model->projectid;
+
+        $this->validateProject($projectid);
+
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction(); 
-
-        $model = $this->findModel($id);
-        $projectid = $model->projectid;
 
         ExtDeliverables::deleteAll('extagreementid = :1', [':1'=>$model->extagreementid]);
 
@@ -434,9 +457,9 @@ class ExtAgreementController extends Controller
      * @return ExtAgreement the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel($id, $projectid)
     {
-        if (($model = ExtAgreement::findOne($id)) !== null) {
+        if (($model = ExtAgreement::findOne($id)) !== null && $model->project->projectid == $projectid) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -450,5 +473,19 @@ class ExtAgreementController extends Controller
                 'model'=>$model,
                 'index'=>$index,
             ]);
+    }
+
+    protected function validateProject($projectid){
+        $user = \app\models\User::find()->where(['userid' => Yii::$app->user->identity->userid])->one();
+
+        $model_project = Project::find()->where(['in', 'unitid', $user->accessUnit])
+                ->andWhere(['projectid'=>$projectid])
+                ->one();
+
+        if ($model_project !== null) {
+            return $model_project;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 }

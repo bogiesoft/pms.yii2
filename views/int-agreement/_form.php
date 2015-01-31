@@ -24,6 +24,10 @@ use kartik\select2\Select2;
         margin-bottom: 0px;
         vertical-align: top !important;
     }
+    .tag{
+        font-size:11px;
+        vertical-align:middle;
+    }
 </style>
 <div class="int-agreement-form">
 
@@ -87,7 +91,22 @@ use kartik\select2\Select2;
         ]);
     ?>
 
-    <?= $form->field($model, 'file')->fileInput() ?> 
+    <?php
+
+        echo $form->field($model, 'signdate')->widget(DatePicker::classname(),
+        [
+            'options' => ['placeholder' => 'Enter sign date ...'],
+            'pluginOptions' => [
+                'autoclose'=>true,
+                'format' => 'd.M.yyyy'
+            ]       
+
+        ]);
+    ?>
+
+    <?= $form->field($model, 'file', ['template' => 
+        '<label class="control-label" for="intagreement-file">File <i class="tag">(upload the signed document)</i></label>{input}{hint}{error}'
+    ])->fileInput() ?> 
 
 <label class="control-label">Internal Deliverables</label>
 <div class="panel panel-default">
@@ -279,20 +298,7 @@ console.log(1);
             $(this).closest(".divphone").find("label").css("color", "#3c763d");
         }
     });
-
-    $(".codeinput").each(function(e){
-        if ($(this).val() == ""){
-            $(this).closest(".form-group").attr("class", "form-group required has-error");
-            $(this).closest(".form-group").find(".help-block").text("Number cannot be blank.");
-            $(this).closest(".divphone").find("label").css("color", "#a94442");
-            flag = false;
-        }else{
-            $(this).closest(".form-group").attr("class", "form-group required has-success");
-            $(this).closest(".form-group").find(".help-block").text("");
-            $(this).closest(".divphone").find("label").css("color", "#3c763d");
-        }
-    });
-
+    
     $(".descriptioninput").each(function(e){
         if ($(this).val() == ""){
             $(this).closest(".form-group").attr("class", "form-group required has-error");

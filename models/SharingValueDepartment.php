@@ -50,7 +50,7 @@ class SharingValueDepartment extends \yii\db\ActiveRecord
         return [
             'sharingvaluedepartmentid' => 'Sharingvaluedepartmentid',
             'projectid' => 'Projectid',
-            'departmentid' => 'Departmentid',
+            'departmentid' => 'Department',
             'value' => 'Value',
             'datein' => 'Datein',
             'userin' => 'Userin',

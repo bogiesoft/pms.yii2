@@ -72,8 +72,8 @@ class IntAgreementPaymentSearch extends IntDeliverables
         ];
 
         $dataProvider->sort->attributes['deliverable'] = [
-            'asc'=>['concat(ps_intdeliverables.code, \' - \', ps_intdeliverables.description)'=>SORT_ASC],
-            'desc'=>['concat(ps_intdeliverables.code, \' - \', ps_intdeliverables.description)'=>SORT_DESC],            
+            'asc'=>['ps_intdeliverables.description'=>SORT_ASC],
+            'desc'=>['ps_intdeliverables.description'=>SORT_DESC],            
         ];
 
         if (!($this->load($params) && $this->validate())) {
@@ -81,7 +81,7 @@ class IntAgreementPaymentSearch extends IntDeliverables
         }
 
         $query->andFilterWhere(['like', 'ps_consultant.name', $this->consultant])
-            ->andFilterWhere(['like', 'concat(ps_intdeliverables.code, \' - \', ps_intdeliverables.description)', $this->deliverable])
+            ->andFilterWhere(['like', 'ps_intdeliverables.description', $this->deliverable])
             ->andFilterWhere(['like', 'DATE_FORMAT(duedate, \'%d-%b-%Y\')', $this->duedate])
             ->andFilterWhere(['like', 'DATE_FORMAT(deliverdate, \'%d-%b-%Y\')', $this->deliverdate])
             ->andFilterWhere(['like', 'DATE_FORMAT(ps_intagreementpayment.date, \'%d-%b-%Y\')', $this->payment])

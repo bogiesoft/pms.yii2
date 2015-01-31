@@ -89,7 +89,7 @@ use kartik\money\MaskMoney;
             'model'=>$model,
             'attribute'=> '['.$index.']rate',
             'options'=>[
-                'maxlength' => 11,
+                'maxlength' => 16,
                 'title'=>'Enter investment..',
                 'style'=>'width:100%;',
                 'class'=>'form-control rateinput'

@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->proposalid, 'projectid'=>Yii::$app->request->get('projectid')], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->proposalid], [
+        <?= Html::a('Delete', ['delete', 'id' => $model->proposalid, 'projectid' => $model->project->projectid], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',

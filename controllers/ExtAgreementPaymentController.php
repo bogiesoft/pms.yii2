@@ -64,6 +64,8 @@ class ExtAgreementPaymentController extends Controller
                 'dataProvider' => $dataProvider,
             ]);
         }else{
+            $this->validateProject($projectid);
+            
             $searchModel = new ExtAgreementPaymentSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $projectid);
 
@@ -81,11 +83,13 @@ class ExtAgreementPaymentController extends Controller
      */
     public function actionView($id, $projectid)
     {
+        $this->validateProject($projectid);
+
         if (Yii::$app->request->post('hasEditable')){
             $out = Json::encode(['output'=>'', 'message'=>'']);
             if (isset($_POST["ExtDeliverables"]["extdeliverableid"])){
                 $id = $_POST["ExtDeliverables"]["extdeliverableid"];
-                $model = $this->findModel($id);
+                $model = $this->findModel($id, $projectid);
                 $model->userup = Yii::$app->user->identity->username;
                 $model->dateup = new \yii\db\Expression('NOW()');
 
@@ -106,7 +110,7 @@ class ExtAgreementPaymentController extends Controller
             echo $out;
         }else{
             return $this->render('view', [
-                'model' => $this->findModel($id),
+                'model' => $this->findModel($id, $projectid),
             ]);   
         }
     }
@@ -120,6 +124,7 @@ class ExtAgreementPaymentController extends Controller
     {
         $model = new ExtAgreementPayment();
         $model->extdeliverableid = $id;
+        $this->validateProject($projectid);
 
         if ($model->load(Yii::$app->request->post())) {
             $model->date = date('Y-m-d', strtotime($model->date));
@@ -150,7 +155,9 @@ class ExtAgreementPaymentController extends Controller
      */
     public function actionUpdate($id, $projectid, $paymentid)
     {
-        $model = $this->findPayment($paymentid);
+        $model = $this->findPayment($paymentid, $projectid);
+        $this->validateProject($projectid);
+
         if ($id != $model->extdeliverableid){
             return $this->redirect(['index', 'id' => $model->extdeliverableid, 'projectid' => $projectid]);
         }
@@ -184,18 +191,20 @@ class ExtAgreementPaymentController extends Controller
      * @return ExtAgreementPayment the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel($id, $projectid)
     {
-        if (($model = ExtDeliverables::findOne($id)) !== null) {
+        if (($model = ExtDeliverables::findOne($id)) !== null &&
+            $model->extagreement->projectid == $projectid) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
 
-    protected function findPayment($id)
+    protected function findPayment($id, $projectid)
     {
-        if (($model = ExtAgreementPayment::findOne($id)) !== null) {
+        if (($model = ExtAgreementPayment::findOne($id)) !== null &&
+            $model->extdeliverable->extagreement->projectid) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -204,7 +213,8 @@ class ExtAgreementPaymentController extends Controller
 
     public function actionCancelDeliver($id, $projectid)
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel($id, $projectid);
+        $this->validateProject($projectid);
         $model->deliverdate = null;
         $model->userup = Yii::$app->user->identity->username;
         $model->dateup = new \yii\db\Expression('NOW()');
@@ -215,7 +225,8 @@ class ExtAgreementPaymentController extends Controller
 
     public function actionCancelPayment($id, $projectid)
     {
-        $model = $this->findPayment($id);
+        $model = $this->findPayment($id, $projectid);
+        $this->validateProject($projectid);
         $model->delete();
         
         $model_project = new Project();
@@ -223,5 +234,19 @@ class ExtAgreementPaymentController extends Controller
         $model_project->setProjectStatus();
 
         return $this->redirect(['view', 'id'=>$model->extdeliverableid, 'projectid'=>$projectid]);
+    }
+
+    protected function validateProject($projectid){
+        $user = \app\models\User::find()->where(['userid' => Yii::$app->user->identity->userid])->one();
+
+        $model_project = Project::find()->where(['in', 'unitid', $user->accessUnit])
+                ->andWhere(['projectid'=>$projectid])
+                ->one();
+
+        if ($model_project !== null) {
+            return $model_project;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 }

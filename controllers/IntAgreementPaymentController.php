@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\IntAgreementPayment;
+use app\models\Project;
 use app\models\IntAgreementPaymentSearch;
 use app\models\ProjectSearch;
 use yii\web\Controller;
@@ -61,7 +62,9 @@ class IntAgreementPaymentController extends Controller
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
             ]);
-        }else{
+        }else{            
+            $this->validateProject($projectid);
+
             $searchModel = new IntAgreementPaymentSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $projectid);
 
@@ -79,11 +82,13 @@ class IntAgreementPaymentController extends Controller
      */
     public function actionView($id, $projectid)
     {
+        $this->validateProject($projectid);
+
         if (Yii::$app->request->post('hasEditable')){
             $out = Json::encode(['output'=>'', 'message'=>'']);
             if (isset($_POST["IntDeliverables"]["intdeliverableid"])){
                 $id = $_POST["IntDeliverables"]["intdeliverableid"];
-                $model = $this->findModel($id);
+                $model = $this->findModel($id, $projectid);
                 $model->userup = Yii::$app->user->identity->username;
                 $model->dateup = new \yii\db\Expression('NOW()');
 
@@ -104,7 +109,7 @@ class IntAgreementPaymentController extends Controller
             echo $out;
         }else{
             return $this->render('view', [
-                'model' => $this->findModel($id),
+                'model' => $this->findModel($id, $projectid),
             ]);   
         }
     }
@@ -118,6 +123,7 @@ class IntAgreementPaymentController extends Controller
     {
         $model = new IntAgreementPayment();
         $model->intdeliverableid = $id;
+        $this->validateProject($projectid);
 
         if ($model->load(Yii::$app->request->post())) {
             $model->date = date('Y-m-d', strtotime($model->date));
@@ -144,7 +150,9 @@ class IntAgreementPaymentController extends Controller
      */
     public function actionUpdate($id, $projectid, $paymentid)
     {
-        $model = $this->findPayment($paymentid);
+        $model = $this->findPayment($paymentid, $projectid);
+        $this->validateProject($projectid);
+
         if ($id != $model->intdeliverableid){
             return $this->redirect(['index', 'id' => $id, 'projectid' => $projectid]);
         }
@@ -169,7 +177,9 @@ class IntAgreementPaymentController extends Controller
 
     public function actionCancelDeliver($id, $projectid)
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel($id, $projectid);
+        $this->validateProject($projectid);
+
         $model->deliverdate = null;
         $model->userup = Yii::$app->user->identity->username;
         $model->dateup = new \yii\db\Expression('NOW()');
@@ -180,7 +190,9 @@ class IntAgreementPaymentController extends Controller
 
     public function actionCancelPayment($id, $projectid)
     {
-        $model = $this->findPayment($id);
+        $model = $this->findPayment($id, $projectid);
+        $this->validateProject($projectid);
+
         $model->delete();
         return $this->redirect(['view', 'id'=>$model->intdeliverableid, 'projectid'=>$projectid]);
     }
@@ -192,19 +204,35 @@ class IntAgreementPaymentController extends Controller
      * @return IntAgreementPayment the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel($id, $projectid)
     {
-        if (($model = \app\models\IntDeliverables::findOne($id)) !== null) {
+        if (($model = \app\models\IntDeliverables::findOne($id)) !== null && 
+            $model->intagreement->extagreement->projectid == $projectid) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
 
-    protected function findPayment($id)
+    protected function findPayment($id, $projectid)
     {
-        if (($model = \app\models\IntAgreementPayment::findOne($id)) !== null) {
+        if (($model = \app\models\IntAgreementPayment::findOne($id)) !== null &&
+            $model->intdeliverable->intagreement->extagreement->projectid == $projectid) {
             return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    protected function validateProject($projectid){
+        $user = \app\models\User::find()->where(['userid' => Yii::$app->user->identity->userid])->one();
+
+        $model_project = Project::find()->where(['in', 'unitid', $user->accessUnit])
+                ->andWhere(['projectid'=>$projectid])
+                ->one();
+
+        if ($model_project !== null) {
+            return $model_project;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }

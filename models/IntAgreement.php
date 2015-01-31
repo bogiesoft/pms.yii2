@@ -14,6 +14,7 @@ use Yii;
  * @property string $description
  * @property string $startdate
  * @property string $enddate
+ * @property string $signdate 
  * @property string $filename
  * @property string $datein
  * @property string $userin
@@ -42,9 +43,9 @@ class IntAgreement extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['extagreementid', 'consultantid', 'departmentid', 'startdate', 'enddate', 'filename'], 'required'],
+            [['extagreementid', 'consultantid', 'departmentid', 'startdate', 'enddate', 'filename', 'signdate'], 'required'],
             [['extagreementid', 'consultantid', 'departmentid'], 'integer'],
-            [['startdate', 'enddate', 'datein', 'dateup'], 'safe'],
+            [['startdate', 'enddate', 'datein', 'dateup', 'signdate'], 'safe'],
             [['description', 'filename'], 'string', 'max' => 250],
             [['userin', 'userup'], 'string', 'max' => 50],
             [['startdate','enddate'], 'string', 'max' => 250],        
@@ -65,8 +66,9 @@ class IntAgreement extends \yii\db\ActiveRecord
             'consultantid' => 'Consultant',
             'departmentid' => 'Department',
             'description' => 'Comment',
-            'startdate' => 'Start Date',
+            'startdate' => 'Agreement Period',
             'enddate' => 'End Date',
+            'signdate' => 'Sign Date',
             'filename' => 'Filename',
             'datein' => 'Datein',
             'userin' => 'Userin',

@@ -31,7 +31,7 @@ use kartik\money\MaskMoney;
     <?php
         
         $data = [];
-        $sql = "select extdeliverableid, concat(code, ' - ', description) as descr from ps_extdeliverables where extagreementid = 7";
+        $sql = "select extdeliverableid, concat(code, ' - ', description) as descr from ps_extdeliverables where extagreementid = :1";
         $data += ArrayHelper::map(ExtDeliverables::findBySql($sql, [':1' => $extagreementid])
             ->asArray()->all(), 'extdeliverableid', 'descr');
 
@@ -53,28 +53,6 @@ use kartik\money\MaskMoney;
         echo Html::error($model, 'extdeliverableid', ['class'=>'help-block']);
         echo '</div>';
     ?>    
-    </div>
-
-    <?php
-        if ($model->hasErrors('code')){
-            echo '<div class="form-group required has-error">';
-        }else{
-            echo '<div class="form-group">';
-        }
-    ?>
-    <?php 
-        
-        echo Html::activeLabel($model, '[' . $index . ']code', ['class'=>'col-sm-2 control-label']);
-        echo '<div class="col-sm-10">';
-        echo Html::activeTextInput($model, '[' . $index . ']code', [
-            'maxlength' => 5, 'placeholder'=>'Enter number..',
-            'class'=>'form-control codeinput',
-            'style'=>'width:100%;',
-        ]);
-        echo Html::error($model, 'code', ['class'=>'help-block']);
-        echo '</div>';
-
-    ?>
     </div>
 
     <?php
@@ -255,8 +233,8 @@ $('.rateddl').change(function(e){
     var freq = $form.find('.frequencyinput').val();
     var rateid = $form.find('select.rateddl').val();
 
-    $form.find('.rateinput').val(CalculateRate(freq, rateid));
-    $form.find('.rateinput').focus().blur();
+    $form.find('.rateinput[id*="disp"]').val(CalculateRate(freq, rateid));
+    $form.find('.rateinput[id*="disp"]').focus().blur();
 });
 
 $('.frequencyinput').keyup(function(e){
@@ -264,8 +242,8 @@ $('.frequencyinput').keyup(function(e){
     var freq = $form.find('.frequencyinput').val();
     var rateid = $form.find('select.rateddl').val();
 
-    $form.find('.rateinput').val(CalculateRate(freq, rateid));
-    $form.find('.rateinput').focus().blur();
+    $form.find('.rateinput[id*="disp"]').val(CalculateRate(freq, rateid));
+    $form.find('.rateinput[id*="disp"]').focus().blur();
     $(this).focus();
 });
 
@@ -309,18 +287,6 @@ $('.frequencyinput').blur(function(e){
     if ($(e.currentTarget).val() == ""){
         $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
         $(e.currentTarget).closest(".form-group").find(".help-block").text("Frequency cannot be blank.");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
-    }else{
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
-    }
-});
-
-$('.codeinput').blur(function(e){
-    if ($(e.currentTarget).val() == ""){
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("Number cannot be blank.");
         $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
     }else{
         $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
@@ -393,6 +359,6 @@ function CalculateRate(freq, rateid){
         }
     });    
 
-    return rate;
+    return rate.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
 }
 </script>

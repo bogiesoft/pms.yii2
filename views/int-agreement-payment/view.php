@@ -86,7 +86,6 @@ if (isset($model->intagreementpayments->date) && $model->intagreementpayments->d
         
         <tr><th>Project</th>  <td><?= $model->intagreement->extagreement->project->name ?></td></tr>
         <tr><th>Consultant</th>  <td><?= $model->intagreement->consultant->name ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('code') ?></th> <td><?= $model->code ?></td></tr>
         <tr><th><?= $model->getAttributeLabel('description') ?></th>  <td><?= $model->description ?></td></tr>
         <tr><th>Consultant Position</th>  <td><?= $model->consultantposition->name ?></td></tr>
         <tr><th>Rate Unit</th>  <td><?= $model->rateUnitDescr ?></td></tr>

@@ -64,6 +64,6 @@ class ExtAgreementPayment extends \yii\db\ActiveRecord
      */
     public function getExtdeliverable()
     {
-        return $this->hasOne(PsExtdeliverables::className(), ['extdeliverableid' => 'extdeliverableid']);
+        return $this->hasOne(ExtDeliverables::className(), ['extdeliverableid' => 'extdeliverableid']);
     }
 }

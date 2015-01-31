@@ -15,7 +15,12 @@ use kartik\date\DatePicker;
 /* @var $model app\models\ExtAgreement */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
+<style>
+.tag{
+    font-size:11px;
+    vertical-align:middle;
+}
+</style>
 <div class="ext-agreement-form">
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
@@ -48,14 +53,29 @@ use kartik\date\DatePicker;
             'pluginOptions'=>[
                 'format'=>'d.M.Y',
                 'separator'=>' - '
-            ],        
+            ],
+
+        ]);
+    ?>
+
+    <?php
+
+        echo $form->field($model, 'signdate')->widget(DatePicker::classname(),
+        [
+            'options' => ['placeholder' => 'Enter sign date ...'],
+            'pluginOptions' => [
+                'autoclose'=>true,
+                'format' => 'd.M.yyyy'
+            ]       
 
         ]);
     ?>
 
     <?= Html::activeHiddenInput($model, 'filename') ?> 
 
-    <?= $form->field($model, 'file')->fileInput() ?> 
+    <?= $form->field($model, 'file', ['template' => 
+        '<label class="control-label" for="extagreement-file">File <i class="tag">(upload the signed document)</i></label>{input}{hint}{error}'
+    ])->fileInput() ?> 
 
     <div>
         <label class="control-label">External Deliverables</label>

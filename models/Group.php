@@ -74,9 +74,9 @@ class Group extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsGroupaccessdatas()
+    public function getGroupaccessdatas()
     {
-        return $this->hasMany(PsGroupaccessdata::className(), ['groupid' => 'groupid']);
+        return $this->hasMany(GroupAccessData::className(), ['groupid' => 'groupid']);
     }
 
     /**

@@ -50,6 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <tr><th><?= $model->getAttributeLabel('employeeid') ?></th> <td><?= $model->employeeid ?></td></tr>
             <tr><th><?= $model->getAttributeLabel('name') ?></th>       <td><?= $model->name ?></td></tr>
             <tr><th><?= $model->getAttributeLabel('residentid') ?></th> <td><?= $model->residentid ?></td></tr>
+            <tr><th><?= $model->getAttributeLabel('npwp') ?></th> <td><?= $model->npwp ?></td></tr>
             <tr><th><?= $model->getAttributeLabel('categoryid') ?></th> <td><?= $model->category->category ?></td></tr>
 
             <tr><th>Consultant Phones</th><td style="padding: 0px;">

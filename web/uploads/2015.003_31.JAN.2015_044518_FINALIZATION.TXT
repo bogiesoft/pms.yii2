@@ -1,0 +1,34 @@
+sharing value -> Sharing Value & Finalization --ok
+
+finalization : - upload file
+		- lesson learned: 250
+		- internal survey score : 1 - 6	(textbox)
+		- external survey score : 1 - 6	(textbox)
+
+diisi semua baru done
+
+cancel project di project definition, lesson learned, ganti status jadi cancel
+
+consultant: npwp -- ok
+
+Upload file
+if there is more than one file, please upload as zip/rar file. --ok
+
+External Agreement: Agreement Period
+Agreement : +sign date
+Agreement : File -> (upload the signed document)
+Int Agreement : Total Rate di view
+
+Number di internal dibuang -- ok
+
+
+<style>
+.tag{
+    font-size:11px;
+    vertical-align:middle;
+}
+</style>
+
+['template' => 
+        '<label class="control-label" for="proposal-file">File <i class="tag">(upload the signed document)</i></label>{input}{hint}{error}'
+    ]

@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Project;
+use app\models\FinalizationProject;
 use app\models\ProjectSearch;
 use app\models\SharingValueUnit;
 use app\models\SharingValueDepartment;
@@ -12,6 +13,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\web\UploadedFile;
 
 /**
  * SharingValueController implements the CRUD actions for SharingValueDepartment model.
@@ -83,6 +85,7 @@ class SharingValueController extends Controller
     public function actionCreate($projectid)
     {
         $model = Project::find()->where(['projectid'=>$projectid])->one();
+        $model_finalization = new FinalizationProject();
         $units = null;
         $departments = null;
 
@@ -103,7 +106,6 @@ class SharingValueController extends Controller
                         $model_unit->value = $sharing_unit["value"];   
                     }
                     $units[] = $model_unit;
-
                     if (in_array($model_unit->unitid, $arrDuplicate)){
                         $model_unit->addError('unitid', 'Duplicate unit on sharing value unit');
                         $flag = false;
@@ -117,6 +119,8 @@ class SharingValueController extends Controller
                 $units[] = $sharing_unit;
                 $flag = false;
             }
+
+            $arrDuplicate = [];
 
             if (isset($_POST["SharingValueDepartment"])){
                 foreach($_POST["SharingValueDepartment"] as $sharing_department){
@@ -145,11 +149,38 @@ class SharingValueController extends Controller
                 $flag = false;
             }
 
+        if (isset($_POST["FinalizationProject"])){
+            if (isset($_POST["FinalizationProject"]["finalizationprojectid"]) && $_POST["FinalizationProject"]["finalizationprojectid"] != ""){
+                $model_finalization = FinalizationProject::findOne($_POST["FinalizationProject"]["finalizationprojectid"]);
+            }
+            if (isset($_POST["FinalizationProject"]["remark"]) && $_POST["FinalizationProject"]["remark"] != ""){
+                $model_finalization->remark = $_POST["FinalizationProject"]["remark"];   
+            }else{
+                $model_finalization->remark = null;
+            }
+            if (isset($_POST["FinalizationProject"]["intsurveyscore"]) && $_POST["FinalizationProject"]["intsurveyscore"] != ""){
+                $model_finalization->intsurveyscore = $_POST["FinalizationProject"]["intsurveyscore"];   
+            }else{
+                $model_finalization->intsurveyscore = null;
+            }
+            if (isset($_POST["FinalizationProject"]["extsurveyscore"]) && $_POST["FinalizationProject"]["extsurveyscore"] != ""){
+                $model_finalization->extsurveyscore = $_POST["FinalizationProject"]["extsurveyscore"];   
+            }else{
+                $model_finalization->extsurveyscore = null;
+            }
+            if (isset($_POST["FinalizationProject"]["file"]) && $_POST["FinalizationProject"]["file"] != ""){
+                $model_finalization->file = $_POST["FinalizationProject"]["file"];   
+            }else{
+                $model_finalization->file = null;
+            }       
+        }
+
             if (!$flag){
                 return $this->render('create', [
                     'model' => $model,
                     'units' => $units,
                     'departments' => $departments,
+                    'model_finalization' => $model_finalization,
                 ]);
             }
 
@@ -168,6 +199,7 @@ class SharingValueController extends Controller
                         'model' => $model,
                         'units' => $units,
                         'departments' => $departments,
+                        'model_finalization' => $model_finalization,
                     ]);
                 }
             }
@@ -184,9 +216,38 @@ class SharingValueController extends Controller
                         'model' => $model,
                         'units' => $units,
                         'departments' => $departments,
+                        'model_finalization' => $model_finalization,
                     ]);
                 }
             }
+            
+            $file1 = UploadedFile::getInstance($model_finalization, 'file');
+
+            if ($file1 != null){
+                $model_finalization->filename = str_replace('/', '.', $model->code).'_'.date('d.M.Y').'_'.date('His').'_'.'Finalization'. '.' . $file1->extension;
+                $model_finalization->filename = strtoupper($model_finalization->filename);
+                $model_finalization->file = $file1;
+            }
+
+            $model_finalization->projectid = $model->projectid;
+
+            if (!$model_finalization->save()){
+                $transaction->rollBack();
+                                                   
+                return $this->render('update', [
+                    'model' => $model,
+                    'units' => $units,
+                    'departments' => $departments,
+                    'model_finalization' => $model_finalization,
+                ]);
+            }
+
+            if ($model_finalization->file != null && $model_finalization->file != "")
+            {
+                $model_finalization->file->saveAs('uploads/' . $model_finalization->filename); 
+            }     
+
+            $model->setProjectStatus();
 
             $transaction->commit();
 
@@ -198,7 +259,7 @@ class SharingValueController extends Controller
             $model_unit->value = 0;
             $units[] = $model_unit;
 
-            $sql = "select ps_intagreement.* from ps_project
+            $sql = "select distinct ps_intagreement.* from ps_project
                     left join ps_extagreement on ps_project.projectid = ps_extagreement.projectid
                     left join ps_intagreement on ps_extagreement.extagreementid = ps_intagreement.extagreementid
                     where ps_project.projectid = :1";
@@ -215,6 +276,7 @@ class SharingValueController extends Controller
                 'model' => $model,
                 'units' => $units,
                 'departments' => $departments,
+                'model_finalization' => $model_finalization,
             ]);
         }
     }
@@ -228,6 +290,7 @@ class SharingValueController extends Controller
     public function actionUpdate($projectid)
     {
         $model = $this->findModel($projectid);
+        $model_finalization = new FinalizationProject();
         $units = null;
         $departments = null;
 
@@ -301,11 +364,38 @@ class SharingValueController extends Controller
                 $flag = false;
             }
 
+        if (isset($_POST["FinalizationProject"])){
+            if (isset($_POST["FinalizationProject"]["finalizationprojectid"]) && $_POST["FinalizationProject"]["finalizationprojectid"] != ""){
+                $model_finalization = FinalizationProject::findOne($_POST["FinalizationProject"]["finalizationprojectid"]);
+            }
+            if (isset($_POST["FinalizationProject"]["remark"]) && $_POST["FinalizationProject"]["remark"] != ""){
+                $model_finalization->remark = $_POST["FinalizationProject"]["remark"];   
+            }else{
+                $model_finalization->remark = null;
+            }
+            if (isset($_POST["FinalizationProject"]["intsurveyscore"]) && $_POST["FinalizationProject"]["intsurveyscore"] != ""){
+                $model_finalization->intsurveyscore = $_POST["FinalizationProject"]["intsurveyscore"];   
+            }else{
+                $model_finalization->intsurveyscore = null;
+            }
+            if (isset($_POST["FinalizationProject"]["extsurveyscore"]) && $_POST["FinalizationProject"]["extsurveyscore"] != ""){
+                $model_finalization->extsurveyscore = $_POST["FinalizationProject"]["extsurveyscore"];   
+            }else{
+                $model_finalization->extsurveyscore = null;
+            }
+            if (isset($_POST["FinalizationProject"]["file"]) && $_POST["FinalizationProject"]["file"] != ""){
+                $model_finalization->file = $_POST["FinalizationProject"]["file"];   
+            }else{
+                $model_finalization->file = null;
+            }       
+        }
+
             if (!$flag){
                 return $this->render('update', [
                     'model' => $model,
                     'units' => $units,
                     'departments' => $departments,
+                    'model_finalization' => $model_finalization,
                 ]);
             }
 
@@ -345,6 +435,7 @@ class SharingValueController extends Controller
                             'model' => $model,
                             'units' => $units,
                             'departments' => $departments,
+                            'model_finalization' => $model_finalization,
                         ]);
                     }
                 }else {
@@ -359,6 +450,7 @@ class SharingValueController extends Controller
                             'model' => $model,
                             'units' => $units,
                             'departments' => $departments,
+                            'model_finalization' => $model_finalization,
                         ]);
                     }
                 }
@@ -383,6 +475,7 @@ class SharingValueController extends Controller
                             'model' => $model,
                             'units' => $units,
                             'departments' => $departments,
+                            'model_finalization' => $model_finalization,
                         ]);
                     }
                 }else {
@@ -397,10 +490,39 @@ class SharingValueController extends Controller
                             'model' => $model,
                             'units' => $units,
                             'departments' => $departments,
+                            'model_finalization' => $model_finalization,
                         ]);
                     }
                 }
             }
+
+            $file1 = UploadedFile::getInstance($model_finalization, 'file');
+
+            if ($file1 != null){
+                $model_finalization->filename = str_replace('/', '.', $model->code).'_'.date('d.M.Y').'_'.date('His').'_'.'Finalization'. '.' . $file1->extension;
+                $model_finalization->filename = strtoupper($model_finalization->filename);
+                $model_finalization->file = $file1;
+            }
+
+            $model_finalization->projectid = $model->projectid;
+
+            if (!$model_finalization->save()){
+                $transaction->rollBack();
+                                                   
+                return $this->render('update', [
+                    'model' => $model,
+                    'units' => $units,
+                    'departments' => $departments,
+                    'model_finalization' => $model_finalization,
+                ]);
+            }
+
+            if ($model_finalization->file != null && $model_finalization->file != "")
+            {
+                $model_finalization->file->saveAs('uploads/' . $model_finalization->filename); 
+            }            
+
+            $model->setProjectStatus();
 
             $transaction->commit();
 
@@ -418,10 +540,15 @@ class SharingValueController extends Controller
                 }
             }
 
+            if ($model->finalizationprojects != null){
+                $model_finalization = $model->finalizationprojects;
+            }
+
             return $this->render('update', [
                 'model' => $model,
                 'units' => $units,
                 'departments' => $departments,
+                'model_finalization' => $model_finalization,
             ]);
         }
     }

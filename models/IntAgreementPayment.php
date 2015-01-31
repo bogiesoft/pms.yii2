@@ -64,6 +64,6 @@ class IntAgreementPayment extends \yii\db\ActiveRecord
      */
     public function getIntdeliverable()
     {
-        return $this->hasOne(PsIntdeliverables::className(), ['intdeliverableid' => 'intdeliverableid']);
+        return $this->hasOne(IntDeliverables::className(), ['intdeliverableid' => 'intdeliverableid']);
     }
 }

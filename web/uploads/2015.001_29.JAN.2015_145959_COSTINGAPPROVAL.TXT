@@ -1,0 +1,66 @@
+kalimat
+argumentasi
+persuasi
+naratif
+deskripsi
+eksposisi
+
+
+'contentOptions'=>['style'=>'width: 70px;']
+
+$('#serviceitem-rate').attr('value', $('#serviceitem-rate').val());
+
+
+<?= $form->field($model, 'room')->textInput() ?>
+
+    <?= $form->field($model, 'meal')->textInput() ?>
+
+    <?= $form->field($model, 'product')->textInput() ?>
+
+    <?= $form->field($model, 'currency')->textInput(['maxlength' => 5]) ?>
+
+dd-MMM-yyyy
+
+connection = \Yii::$app->db;
+$transaction = $connection->beginTransaction(); 
+
+try {
+                if (!$model->save()){
+
+                    $transaction->rollback();
+		}
+
+		if (isset($_POST["UserAccess"]["menuid"])){
+                    foreach($_POST["UserAccess"]["menuid"] as $menuid){
+                        $userAccess = new \app\models\UserAccess();
+                        $userAccess->useraccessid = $model->useraccessid;
+                        $userAccess->menuid = $menuid;
+                        $userAccess->save();                           
+                    }
+                }
+
+                $transaction->commit();
+            } catch(Exception $e) {
+                $model->addError('name', $e);
+                $transaction->rollback();
+            }
+
+
+<?php 
+        $useraccess = new \app\models\UserAccess();
+        $checkedMenu = [];
+        if (!$model->isNewRecord){
+            $existmenu = $useraccess->find()->where(
+                'userid = :1',[':1'=>$model->userid,])->asArray()->all();
+            foreach($existmenu as $menu){
+                array_push($checkedMenu, $menu["menuid"]);
+            }
+        }
+        
+        $data = [];
+        $data += yii\helpers\ArrayHelper::map(Menu::find()->asArray()->all(), 'menuid', 'name');
+        $useraccess->menuid = $checkedMenu;
+        echo $form->field($useraccess, 'menuid')->checkboxlist($data, [
+            'separator'=>'<br>','style'=>'height:150px; overflow-y:scroll','class'=>'panel panel-body panel-default'
+        ]);
+    ?>

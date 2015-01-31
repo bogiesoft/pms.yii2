@@ -14,6 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="costing-approval-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <h6><em style="color:red">*</em> If there is more than one file, please upload as zip/rar file.</h6>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -49,6 +50,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     'update' => function($url, $model, $key){                    
                         return Html::a('<span class="glyphicon glyphicon-pencil"></span>', \yii\helpers\Url::toRoute(['costing-approval/update','projectid'=>$model->projectid, 'id'=>$model->costingapprovalid],false), [
                             'title' => Yii::t('yii', 'Update'),
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                    'delete' => function($url, $model, $key){                    
+                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', \yii\helpers\Url::toRoute(['costing-approval/delete','projectid'=>$model->projectid, 'id'=>$model->costingapprovalid],false), [
+                            'title' => Yii::t('yii', 'Delete'),
                             'data-pjax' => '0',
                         ]);
                     },

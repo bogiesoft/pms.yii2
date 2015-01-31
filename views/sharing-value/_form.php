@@ -12,9 +12,15 @@ use app\models\SharingValueDepartment;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
+<style>
+.tag{
+    font-size:11px;
+    vertical-align:middle;
+}
+</style>
 <div class="sharing-value-department-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?php
         $data = [];
@@ -66,8 +72,34 @@ use app\models\SharingValueDepartment;
         </div>
     </div>
 
+
+    <hr>
+
+    <?= Html::activeHiddenInput($model_finalization, 'filename') ?> 
+
+    <?= $form->field($model_finalization, 'file', ['template' => 
+        '<label class="control-label" for="finalizationproject-file">File <i class="tag">(upload the signed document)</i></label>{input}{hint}{error}', 'inputOptions'=>['class'=>'inputfile']
+    ])->fileInput() ?> 
+
+    <?= Html::activeHiddenInput($model_finalization, 'finalizationprojectid') ?> 
+
+    <?= 
+        $form->field($model_finalization, 'remark')->textArea(['maxlength' => 500,'style'=>'height:120px']);
+    ?>
+
+    <?=
+        $form->field($model_finalization, 'intsurveyscore')->textInput(['maxlength' => 16]);
+    ?>
+
+    <?=
+        $form->field($model_finalization, 'extsurveyscore')->textInput(['maxlength' => 16]);
+    ?>
+
+
+
+
     <div class="form-group" style="clear:both">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton((count($model->sharingvaluedepartments) == 0 && count($model->sharingvalueunits) == 0) ? 'Create' : 'Update', ['class' => (count($model->sharingvaluedepartments) == 0 && count($model->sharingvalueunits) == 0) ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

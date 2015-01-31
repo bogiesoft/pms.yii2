@@ -113,6 +113,14 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     }
 
     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUseraccessesdata()
+    {
+        return $this->hasMany(UserAccessData::className(), ['userid' => 'userid']);
+    }
+
+    /**
      * Validates password
      *
      * @param  string  $password password to validate
@@ -198,5 +206,24 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         }else{
             return false;
         }
+    }
+
+    /* Return Array */
+    public function getAccessUnit(){
+        $unitAllow = [];
+        foreach($this->useraccessesdata as $unit){
+            $unitAllow[] = $unit->unitid;
+        }
+
+        foreach($this->groupusers as $groupuser){
+            $group = Group::find()->where(['groupid'=>$groupuser->groupid])->one();
+            foreach($group->groupaccessdatas as $unit){
+                if (!in_array($unit->unitid, $unitAllow)){
+                    $unitAllow[] = $unit->unitid;
+                }
+            }
+        }
+        
+        return $unitAllow;
     }
 }

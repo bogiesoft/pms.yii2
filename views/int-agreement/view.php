@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->intagreementid, 'extagreementid' => Yii::$app->request->get('extagreementid')], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->intagreementid], [
+        <?= Html::a('Delete', ['delete', 'id' => $model->intagreementid, 'extagreementid' => $model->extagreementid], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',
@@ -53,15 +53,15 @@ $this->params['breadcrumbs'][] = $this->title;
         <tr><th><?= $model->getAttributeLabel('consultant') ?></th> <td><?= $model->consultant->name ?></td></tr>
         <tr><th><?= $model->getAttributeLabel('department') ?></th> <td><?= $model->department->name ?></td></tr>
         <tr><th><?= $model->getAttributeLabel('description') ?></th>  <td><?= $model->description ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('startdate') ?></th> <td><?= date('d-M-Y', strtotime($model->startdate)) ?></td></tr>
+        <tr><th>Start Date</th> <td><?= date('d-M-Y', strtotime($model->startdate)) ?></td></tr>
         <tr><th><?= $model->getAttributeLabel('enddate') ?></th> <td><?= date('d-M-Y', strtotime($model->enddate)) ?></td></tr>
+        <tr><th><?= $model->getAttributeLabel('signdate') ?></th> <td><?= date('d-M-Y', strtotime($model->signdate)) ?></td></tr>
         <tr><th><?= $model->getAttributeLabel('filename') ?></th> <td><a download href="<?= \Yii::$app->request->BaseUrl ?>/uploads/<?= $model->filename ?>"><?= $model->filename ?></a></td></tr>
 
         <tr><th>Deliverables</th><td style="padding: 0px;">
                 <table class="table table-bordered table-striped inside" style="border: none;margin-bottom:0px">
                     <tr>
                         <th>External Deliverable</th>
-                        <th>Number</th>
                         <th>Consultant Position</th>
                         <th>Deliverable Name</th>
                         <th>Frequency x Rate Unit</th>
@@ -72,7 +72,6 @@ $this->params['breadcrumbs'][] = $this->title;
                    foreach($model->intdeliverables as $deliverable){
                         echo '<tr>';
                         echo '<td>'.$deliverable->extdeliverables->code . ' - ' .$deliverable->extdeliverables->description.'</td>';
-                        echo '<td>'.$deliverable->code.'</td>';
                         echo '<td>'.$deliverable->consultantposition->name.'</td>';
                         echo '<td>'.$deliverable->description.'</td>';
                         echo '<td>'.$deliverable->frequency . ' x ' . $deliverable->projectrate->role . ' ('. $deliverable->projectrate->mindunit->name .')</td>';

@@ -13,6 +13,7 @@ use Yii;
  * @property string $name
  * @property string $residentid
  * @property integer $categoryid
+ * @property string $npwp 
  * @property string $datein
  * @property string $userin
  * @property string $dateup
@@ -49,6 +50,7 @@ class Consultant extends \yii\db\ActiveRecord
             [['employeeid'], 'string', 'max' => 15],
             [['name'], 'string', 'max' => 150],
             [['residentid', 'userin', 'userup'], 'string', 'max' => 50],
+            [['npwp'], 'string', 'max' => 20], 
             [['residentid'], 'unique'],
             [['lectureid'], 'unique'],
             [['employeeid'], 'unique']
@@ -68,6 +70,7 @@ class Consultant extends \yii\db\ActiveRecord
             'residentid' => 'Resident ID',
             'categoryid' => 'Category',
             'varCategory' => 'Category',
+            'npwp' => 'NPWP',
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',

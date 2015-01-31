@@ -71,6 +71,7 @@ class IntAgreementController extends Controller
             ]);
         }
         else {
+            $this->validateProject($extagreementid);
             $searchModel = new IntAgreementSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $extagreementid);
 
@@ -86,10 +87,11 @@ class IntAgreementController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionView($id, $extagreementid)
     {
+        $this->validateProject($extagreementid);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $this->findModel($id, $extagreementid),
         ]);
     }
 
@@ -102,6 +104,7 @@ class IntAgreementController extends Controller
     {
         $model = new IntAgreement();
         $model->extagreementid = $extagreementid;
+        $this->validateProject($extagreementid);
         $model->setscenario('insert');
 
         //initial user change & date
@@ -118,6 +121,7 @@ class IntAgreementController extends Controller
                 $flag = false;
             }
 
+            $model->signdate = date("Y-m-d", strtotime($model->signdate));
             $date = explode(' - ',$model->startdate);
             if (isset($date[0])){
                 $model->startdate = date("Y-m-d", strtotime($date[0]));   
@@ -132,9 +136,6 @@ class IntAgreementController extends Controller
                     
                     if (isset($deliverable["extdeliverableid"]) && $deliverable["extdeliverableid"] != ""){
                         $model_deliverable->extdeliverableid = $deliverable["extdeliverableid"];   
-                    }
-                    if (isset($deliverable["code"]) && $deliverable["code"] != ""){
-                        $model_deliverable->code = $deliverable["code"];   
                     }
                     if (isset($deliverable["positionid"]) && $deliverable["positionid"] != ""){
                         $model_deliverable->positionid = $deliverable["positionid"];   
@@ -163,6 +164,7 @@ class IntAgreementController extends Controller
 
             if (!$flag){
                 $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));           
+                $model->signdate = date("d.M.Y", strtotime($model->signdate));
                 return $this->render('create', [
                     'model' => $model,
                     'model_intdeliverables'=> $model_intdeliverables,
@@ -180,7 +182,8 @@ class IntAgreementController extends Controller
 
             if (!$model->save()){
                 $transaction->rollBack();
-                $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));           
+                $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));
+                $model->signdate = date("d.M.Y", strtotime($model->signdate));
                 return $this->render('create', [
                     'model' => $model,
                     'model_intdeliverables'=> $model_intdeliverables,
@@ -198,7 +201,9 @@ class IntAgreementController extends Controller
                     $deliverable->duedate = date("d.M.Y", strtotime($deliverable->duedate));
 
                     $transaction->rollBack();
-                    $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));           
+                    $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));
+                    $model->signdate = date("d.M.Y", strtotime($model->signdate));
+                               
                     return $this->render('create', [
                         'model' => $model,
                         'model_intdeliverables'=> $model_intdeliverables,
@@ -236,11 +241,13 @@ class IntAgreementController extends Controller
      */
     public function actionUpdate($id, $extagreementid)
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel($id, $extagreementid);
 
         if ($model->extagreementid != $extagreementid){
             return $this->redirect(['index', 'extagreementid' => $extagreementid]);
         }
+
+        $this->validateProject($extagreementid);
 
         //initial user change & date
         $model->userup = Yii::$app->user->identity->username;
@@ -259,6 +266,7 @@ class IntAgreementController extends Controller
                 $flag = false;
             }
             
+            $model->signdate = date("Y-m-d", strtotime($model->signdate));
             $date = explode(' - ',$model->startdate);
             if (isset($date[0])){
                 $model->startdate = date("Y-m-d", strtotime($date[0]));   
@@ -275,9 +283,6 @@ class IntAgreementController extends Controller
                     }
                     if (isset($deliverable["extdeliverableid"]) && $deliverable["extdeliverableid"] != ""){
                         $model_deliverable->extdeliverableid = $deliverable["extdeliverableid"];   
-                    }
-                    if (isset($deliverable["code"]) && $deliverable["code"] != ""){
-                        $model_deliverable->code = $deliverable["code"];   
                     }
                     if (isset($deliverable["positionid"]) && $deliverable["positionid"] != ""){
                         $model_deliverable->positionid = $deliverable["positionid"];   
@@ -306,6 +311,7 @@ class IntAgreementController extends Controller
 
             if (!$flag){
                 $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));           
+                $model->signdate = date("d.M.Y", strtotime($model->signdate));
                 return $this->render('update', [
                     'model' => $model,
                     'model_intdeliverables'=> $model_intdeliverables,
@@ -327,6 +333,7 @@ class IntAgreementController extends Controller
             if (!$model->save()){
                 $transaction->rollBack();
                 $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));           
+                $model->signdate = date("d.M.Y", strtotime($model->signdate));
                 return $this->render('update', [
                     'model' => $model,
                     'model_intdeliverables'=> $model_intdeliverables,
@@ -342,7 +349,6 @@ class IntAgreementController extends Controller
                     $model_deliverable->intagreementid = $model->intagreementid;
 
                     $model_deliverable->extdeliverableid = $deliverable->extdeliverableid;
-                    $model_deliverable->code = $deliverable->code;
                     $model_deliverable->positionid = $deliverable->positionid;
                     $model_deliverable->description = $deliverable->description;
                     $model_deliverable->frequency = $deliverable->frequency;
@@ -353,7 +359,8 @@ class IntAgreementController extends Controller
 
                     if (!$model_deliverable->save()){
                         $transaction->rollBack();
-                        $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));           
+                        $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));
+                        $model->signdate = date("d.M.Y", strtotime($model->signdate));           
                         return $this->render('update', [
                             'model' => $model,
                             'model_extdeliverables'=> $model_extdeliverables,
@@ -371,7 +378,8 @@ class IntAgreementController extends Controller
                         $deliverable->duedate = date("d.M.Y", strtotime($deliverable->duedate));
 
                         $transaction->rollBack();
-                        $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));           
+                        $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));
+                        $model->signdate = date("d.M.Y", strtotime($model->signdate));           
                         return $this->render('update', [
                             'model' => $model,
                             'model_intdeliverables'=> $model_intdeliverables,
@@ -397,6 +405,7 @@ class IntAgreementController extends Controller
 
         } else {
             $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));
+            $model->signdate = date("d.M.Y", strtotime($model->signdate));
 
             $modelDeliverable = IntDeliverables::find()->where('intagreementid = :1', [':1'=>$model->intagreementid])->all();
             foreach($modelDeliverable as $deliverable){                
@@ -427,15 +436,16 @@ class IntAgreementController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public function actionDelete($id, $extagreementid)
     {
-        $connection = \Yii::$app->db;
-        $transaction = $connection->beginTransaction(); 
-
-        $model = $this->findModel($id);
+        $model = $this->findModel($id, $extagreementid);
         $extagreementid = $model->extagreementid;
         $projectid = $model->extagreement->project->projectid;
+        $this->validateProject($extagreementid);
 
+        $connection = \Yii::$app->db;
+        $transaction = $connection->beginTransaction(); 
+        
         IntDeliverables::deleteAll('intagreementid = :1', [':1'=>$model->intagreementid]);
 
         $model->delete();
@@ -456,9 +466,9 @@ class IntAgreementController extends Controller
      * @return IntAgreement the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel($id, $extagreementid)
     {
-        if (($model = IntAgreement::findOne($id)) !== null) {
+        if (($model = IntAgreement::findOne($id)) !== null && $model->extagreementid == $extagreementid) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -482,5 +492,20 @@ class IntAgreementController extends Controller
         }
 
         return 0;
+    }
+
+    protected function validateProject($extagreementid){
+        $user = \app\models\User::find()->where(['userid' => Yii::$app->user->identity->userid])->one();
+        $model = \app\models\ExtAgreement::findOne($extagreementid);
+
+        $model_project = Project::find()->where(['in', 'unitid', $user->accessUnit])
+                ->andWhere(['projectid'=>$model->projectid])
+                ->one();
+
+        if ($model_project !== null) {
+            return $model_project;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 }

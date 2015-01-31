@@ -65,6 +65,8 @@ class BusinessAssuranceController extends Controller
             ]);
         }
         else {
+            $this->validateProject($projectid);
+
             $searchModel = new BusinessAssuranceSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $projectid);
 
@@ -82,8 +84,10 @@ class BusinessAssuranceController extends Controller
      */
     public function actionView($id, $projectid)
     {
+        $this->validateProject($projectid);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $this->findModel($id, $projectid),
         ]);
     }
 
@@ -96,6 +100,8 @@ class BusinessAssuranceController extends Controller
     {
         $model = new BusinessAssurance();
         $model->projectid = $projectid;
+        $this->validateProject($projectid);
+
         //initial user change & date
         $model->userin = Yii::$app->user->identity->username;
         $model->datein = new \yii\db\Expression('NOW()');
@@ -150,7 +156,9 @@ class BusinessAssuranceController extends Controller
      */
     public function actionUpdate($id, $projectid)
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel($id, $projectid);
+
+        $this->validateProject($projectid);
 
         //initial user change & date
         $model->userup = Yii::$app->user->identity->username;
@@ -204,10 +212,13 @@ class BusinessAssuranceController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public function actionDelete($id, $projectid)
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel($id, $projectid);
         $projectid = $model->projectid;
+
+        $this->validateProject($projectid);
+
         $model->delete();
 
         $model_project = new Project();
@@ -224,10 +235,24 @@ class BusinessAssuranceController extends Controller
      * @return BusinessAssurance the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel($id, $projectid)
     {
-        if (($model = BusinessAssurance::findOne($id)) !== null) {
+        if (($model = BusinessAssurance::findOne($id)) !== null && $model->project->projectid == $projectid) {
             return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    protected function validateProject($projectid){
+        $user = \app\models\User::find()->where(['userid' => Yii::$app->user->identity->userid])->one();
+
+        $model_project = Project::find()->where(['in', 'unitid', $user->accessUnit])
+                ->andWhere(['projectid'=>$projectid])
+                ->one();
+
+        if ($model_project !== null) {
+            return $model_project;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }

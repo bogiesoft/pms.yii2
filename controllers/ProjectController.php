@@ -267,7 +267,13 @@ class ProjectController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Project::findOne($id)) !== null) {
+        $user = \app\models\User::find()->where(['userid' => Yii::$app->user->identity->userid])->one();
+
+        $model = Project::find()->where(['in', 'unitid', $user->accessUnit])
+                ->andWhere(['projectid'=>$id])
+                ->one();
+
+        if ($model !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

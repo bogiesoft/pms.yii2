@@ -56,7 +56,6 @@ class ProposalController extends Controller
      */
     public function actionIndex($projectid = 0)
     {        
-
         if($projectid == 0){
             $searchModel = new ProjectSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -67,6 +66,8 @@ class ProposalController extends Controller
             ]);
         }
         else{            
+            $this->validateProject($projectid);
+
             $searchModel = new ProposalSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $projectid);
 
@@ -84,8 +85,10 @@ class ProposalController extends Controller
      */
     public function actionView($projectid, $id)
     {
+        $this->validateProject($projectid);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $this->findModel($id, $projectid),
         ]);
     }
 
@@ -98,8 +101,10 @@ class ProposalController extends Controller
     {
         $model = new Proposal();
         $model->projectid = $projectid;
+        $this->validateProject($projectid);
+
         //initial user change & date
-        $model->userin = 'sun';
+        $model->userin = Yii::$app->user->identity->username;
         $model->datein = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
@@ -152,10 +157,11 @@ class ProposalController extends Controller
      */
     public function actionUpdate($projectid, $id)
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel($id, $projectid);
+        $this->validateProject($projectid);
 
         //initial user change & date
-        $model->userup = 'sun';
+        $model->userup = Yii::$app->user->identity->username;
         $model->dateup = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
@@ -205,10 +211,13 @@ class ProposalController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public function actionDelete($id, $projectid)
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel($id, $projectid);
         $projectid = $model->projectid;
+
+        $this->validateProject($projectid);
+
         $model->delete();
 
         $model_project = new Project();
@@ -225,10 +234,24 @@ class ProposalController extends Controller
      * @return Proposal the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
-        if (($model = Proposal::findOne($id)) !== null) {
+    protected function findModel($id, $projectid)
+    { 
+        if (($model = Proposal::findOne($id)) !== null && $model->project->projectid == $projectid) {
             return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    protected function validateProject($projectid){
+        $user = \app\models\User::find()->where(['userid' => Yii::$app->user->identity->userid])->one();
+
+        $model_project = Project::find()->where(['in', 'unitid', $user->accessUnit])
+                ->andWhere(['projectid'=>$projectid])
+                ->one();
+
+        if ($model_project !== null) {
+            return $model_project;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }

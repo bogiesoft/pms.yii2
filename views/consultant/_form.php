@@ -61,6 +61,13 @@ use yii\helpers\ArrayHelper;
             'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
         ])->textInput(['maxlength' => 50]) ?>
     
+    <?= $form->field($model, 'npwp',[
+                'labelOptions' => [
+                'class' => 'col-sm-2 control-label'
+            ],
+            'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
+        ])->textInput(['maxlength' => 20]) ?>
+    
     <?php
 
         $data = [];

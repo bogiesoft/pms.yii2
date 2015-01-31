@@ -215,7 +215,25 @@ class Project extends \yii\db\ActiveRecord
             return true;   
         }
 
-        $status = \app\models\Status::find()->where("name like '%finalization%'")->one();
+        if (!isset($this->finalizationprojects) ||
+            $this->finalizationprojects->filename == null || 
+            $this->finalizationprojects->filename == "" || 
+            $this->finalizationprojects->remark == null || 
+            $this->finalizationprojects->remark == "" || 
+            $this->finalizationprojects->intsurveyscore == null || 
+            $this->finalizationprojects->intsurveyscore == "" || 
+            $this->finalizationprojects->extsurveyscore == null || 
+            $this->finalizationprojects->extsurveyscore == "" ||
+            count($this->sharingvaluedepartments) < 1 || 
+            count($this->sharingvalueunits) < 1
+        ){
+            $status = \app\models\Status::find()->where("name like '%finalization%'")->one();
+            $this->statusid = isset($status->statusid) ? $status->statusid : 0;
+            $this->save();
+            return true;   
+        }
+
+        $status = \app\models\Status::find()->where("name like '%done%'")->one();
         $this->statusid = isset($status->statusid) ? $status->statusid : 0;
         $this->save();
         return true;
@@ -242,5 +260,13 @@ class Project extends \yii\db\ActiveRecord
     public function getSharingvalueunits()
     {
         return $this->hasMany(SharingValueUnit::className(), ['projectid' => 'projectid']);
+    }
+
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getFinalizationprojects()
+    {
+        return $this->hasOne(FinalizationProject::className(), ['projectid' => 'projectid']);
     }
 }

@@ -14,10 +14,11 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="ext-agreement-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <h6><em style="color:red">*</em> If there is more than one file, please upload as zip/rar file.</h6>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Ext Agreement', ['create', 'projectid' => Yii::$app->request->get('projectid')], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create External Agreement', ['create', 'projectid' => Yii::$app->request->get('projectid')], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -52,6 +53,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     'update' => function($url, $model, $key){                    
                         return Html::a('<span class="glyphicon glyphicon-pencil"></span>', \yii\helpers\Url::toRoute(['ext-agreement/update','projectid'=>$model->projectid, 'id'=>$model->extagreementid],false), [
                             'title' => Yii::t('yii', 'Update'),
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                    'delete' => function($url, $model, $key){                    
+                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', \yii\helpers\Url::toRoute(['ext-agreement/delete','projectid'=>$model->projectid, 'id'=>$model->extagreementid],false), [
+                            'title' => Yii::t('yii', 'Delete'),
                             'data-pjax' => '0',
                         ]);
                     },
