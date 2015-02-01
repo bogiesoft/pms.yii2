@@ -20,7 +20,7 @@ class ProposalSearch extends Proposal
     {
         return [
             [['proposalid', 'projectid'], 'integer'],            
-            [['date', 'remark', 'filename', 'datein', 'userin', 'dateup', 'userup'], 'safe'],
+            [['date', 'remark', 'filename'], 'safe'],
             [['project'],'safe'],
         ];
     }
@@ -67,17 +67,12 @@ class ProposalSearch extends Proposal
         $query->andFilterWhere([
             'proposalid' => $this->proposalid,
             'projectid' => $this->projectid,
-            'date' => $this->date,
-            'datein' => $this->datein,
-            'dateup' => $this->dateup,
         ]);
 
         $query->andFilterWhere(['like', 'remark', $this->remark])            
             ->andFilterWhere(['like', 'filename', $this->filename])
-            ->andFilterWhere(['like', 'concat(ps_project.code," - ",ps_project.name)', $this->project])
-            ->andFilterWhere(['like', 'userin', $this->userin])
-            ->andFilterWhere(['like', 'userup', $this->userup]);
-
+            ->andFilterWhere(['like', 'date_format(date, \'%d-%b-%Y\')', $this->date])
+            ->andFilterWhere(['like', 'concat(ps_project.code," - ",ps_project.name)', $this->project]);
         return $dataProvider;
     }
 }

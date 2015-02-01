@@ -383,4 +383,12 @@ class Project extends \yii\db\ActiveRecord
 
         return $filename;
     }
+
+    public function getInitiationdateformat(){
+        if ($this->initiationyear != null && $this->initiationyear != ""){
+            return date('d-M-Y', strtotime($this->initiationyear));
+        }
+
+        return null;
+    }
 }

@@ -40,9 +40,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'description',
             [
                 'attribute'=>'startdate',
-                'label'=>'Start Date'
+                'label'=>'Start Date',
+                'value'=>'startdateformat'
             ],
-            'enddate',
+            [
+                'attribute'=>'enddate',
+                'value'=>'enddateformat'
+            ],
             [
                 'attribute' => 'filename',
                 'format' => 'html',

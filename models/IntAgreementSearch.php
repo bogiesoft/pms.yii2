@@ -22,7 +22,7 @@ class IntAgreementSearch extends IntAgreement
     {
         return [
             [['intagreementid', 'extagreementid', 'consultantid', 'departmentid'], 'integer'],
-            [['description', 'startdate', 'enddate', 'filename', 'datein', 'userin', 'dateup', 'userup'], 'safe'],
+            [['description', 'startdate', 'enddate', 'filename'], 'safe'],
             [['extagreement','consultant','department'],'safe'],
         ];
     }
@@ -77,19 +77,15 @@ class IntAgreementSearch extends IntAgreement
             'extagreementid' => $this->extagreementid,
             'consultantid' => $this->consultantid,
             'departmentid' => $this->departmentid,
-            'startdate' => $this->startdate,
-            'enddate' => $this->enddate,
-            'datein' => $this->datein,
-            'dateup' => $this->dateup,
         ]);
 
         $query->andFilterWhere(['like', 'ps_intagreement.description', $this->description])
             ->andFilterWhere(['like', 'ps_intagreement.filename', $this->filename])
-            ->andFilterWhere(['like', 'ps_extagreement.description', $this->extagreement])
+            ->andFilterWhere(['like', 'concat(ps_extagreement.agreementno, \' - \', ps_extagreement.description)', $this->extagreement])
             ->andFilterWhere(['like', 'ps_consultant.name', $this->consultant])
             ->andFilterWhere(['like', 'ps_department.name', $this->department])
-            ->andFilterWhere(['like', 'userin', $this->userin])
-            ->andFilterWhere(['like', 'userup', $this->userup]);
+            ->andFilterWhere(['like', 'date_format(ps_intagreement.startdate, \'%d-%b-%Y\')', $this->startdate])
+            ->andFilterWhere(['like', 'date_format(ps_intagreement.enddate, \'%d-%b-%Y\')', $this->enddate]);
 
         return $dataProvider;
     }

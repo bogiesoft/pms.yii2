@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
         $extagreement = \app\models\ExtAgreement::findOne(Yii::$app->request->get('extagreementid'));
         if (!(strpos(strtolower($extagreement->project->status->name), 'cancel') !== false)){
             echo Html::a('Update', ['update', 'id' => $model->intagreementid, 'extagreementid' => Yii::$app->request->get('extagreementid')], ['class' => 'btn btn-primary']);
-            echo Html::a('Delete', ['delete', 'id' => $model->intagreementid, 'extagreementid' => $model->extagreementid], [
+            echo ' ' . Html::a('Delete', ['delete', 'id' => $model->intagreementid, 'extagreementid' => $model->extagreementid], [
                 'class' => 'btn btn-danger',
                 'data' => [
                     'confirm' => 'Are you sure you want to delete this item?',

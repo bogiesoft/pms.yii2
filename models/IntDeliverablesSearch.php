@@ -23,7 +23,7 @@ class IntDeliverablesSearch extends IntDeliverables
     {
         return [
             [['intdeliverableid', 'intagreementid', 'extdeliverableid', 'positionid', 'frequency', 'rateid', 'rate'], 'integer'],
-            [['code', 'description', 'datein', 'userin', 'dateup', 'userup'], 'safe'],
+            [['description', 'datein', 'userin', 'dateup', 'userup'], 'safe'],
             [['intagreement','extdeliverables','consultantposition','projectrate'],'safe'],
         ];
     }
@@ -85,18 +85,13 @@ class IntDeliverablesSearch extends IntDeliverables
             'frequency' => $this->frequency,
             'rateid' => $this->rateid,
             'rate' => $this->rate,
-            'datein' => $this->datein,
-            'dateup' => $this->dateup,
         ]);
 
-        $query->andFilterWhere(['like', 'code', $this->code])
-            ->andFilterWhere(['like', 'ps_intdeliverables.description', $this->description])
+        $query->andFilterWhere(['like', 'ps_intdeliverables.description', $this->description])
             ->andFilterWhere(['like', 'ps_intagreement.description', $this->intagreement])
             ->andFilterWhere(['like', 'ps_extdeliverables.description', $this->extdeliverables])
             ->andFilterWhere(['like', 'ps_consultantposition.name', $this->consultantposition])
-            ->andFilterWhere(['like', 'ps_projectrate.role', $this->projectrate])
-            ->andFilterWhere(['like', 'userin', $this->userin])
-            ->andFilterWhere(['like', 'userup', $this->userup]);
+            ->andFilterWhere(['like', 'ps_projectrate.role', $this->projectrate]);
 
         return $dataProvider;
     }

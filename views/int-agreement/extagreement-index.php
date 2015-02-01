@@ -41,7 +41,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'initiationyear',
-                'value' => 'project.initiationyear',
+                'value' => 'project.initiationdateformat',
+                'label'=>'Initiation Date',
             ],
             [
                 'attribute'=>'status',

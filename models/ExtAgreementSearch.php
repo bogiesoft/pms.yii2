@@ -25,7 +25,7 @@ class ExtAgreementSearch extends ExtAgreement
     {
         return [
             [['extagreementid', 'projectid'], 'integer'],
-            [['agreementno', 'description', 'startdate', 'enddate', 'filename', 'datein', 'userin', 'dateup', 'userup'], 'safe'],
+            [['agreementno', 'description', 'startdate', 'enddate', 'filename'], 'safe'],
             [['project','unit','customer','producttype','status','initiationyear'],'safe'],
         ];
     }
@@ -103,18 +103,19 @@ class ExtAgreementSearch extends ExtAgreement
         $query->andFilterWhere([
             'extagreementid' => $this->extagreementid,
             'projectid' => $this->projectid,
-            'startdate' => $this->startdate,
-            'enddate' => $this->enddate,
-            'datein' => $this->datein,
-            'dateup' => $this->dateup,
         ]);
 
         $query->andFilterWhere(['like', 'agreementno', $this->agreementno])
-            ->andFilterWhere(['like', 'description', $this->description])
+            ->andFilterWhere(['like', 'ps_extagreement.description', $this->description])
+            ->andFilterWhere(['like', 'ps_customer.company', $this->customer])
+            ->andFilterWhere(['like', 'ps_producttype.name', $this->producttype])
+            ->andFilterWhere(['like', 'ps_status.name', $this->status])
+            ->andFilterWhere(['like', 'concat(ps_unit.code, \' - \', ps_unit.name)', $this->unit])
             ->andFilterWhere(['like', 'filename', $this->filename])
-            ->andFilterWhere(['like', 'concat(ps_project.code," - ",ps_project.name)', $this->project])
-            ->andFilterWhere(['like', 'userin', $this->userin])
-            ->andFilterWhere(['like', 'userup', $this->userup]);
+            ->andFilterWhere(['like', 'date_format(startdate, \'%d-%b-%Y\')', $this->startdate])
+            ->andFilterWhere(['like', 'date_format(enddate, \'%d-%b-%Y\')', $this->enddate])
+            ->andFilterWhere(['like', 'date_format(ps_project.initiationyear, \'%d-%b-%Y\')', $this->initiationyear])
+            ->andFilterWhere(['like', 'concat(ps_project.code," - ",ps_project.name)', $this->project]);
 
         return $dataProvider;
     }

@@ -110,4 +110,16 @@ class ExtAgreement extends \yii\db\ActiveRecord
     public function getFileURL(){
         return '<a class="download" href="'. \Yii::$app->request->BaseUrl .'/uploads/'. $this->filename .'">'.$this->filename .'</a>';
     }
+
+    public function getStartdateformat(){
+        return date('d-M-Y', strtotime($this->startdate));
+    }
+
+    public function getEnddateformat(){
+        return date('d-M-Y', strtotime($this->enddate));
+    }
+
+    public function getExternalagreementformat(){
+        return $this->agreementno . ' - ' . $this->description;
+    }
 }

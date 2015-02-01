@@ -37,7 +37,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value'=>'ProductTypeDescr',
                 'label'=>'Product Type',
             ],
-            'initiationyear',
+            [
+                'attribute' => 'initiationyear',
+                'value' => 'initiationdateformat'
+            ],
             [
                 'attribute'=>'status',
                 'value'=>'status.name',

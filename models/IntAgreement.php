@@ -113,5 +113,13 @@ class IntAgreement extends \yii\db\ActiveRecord
     public function getUrlFile(){
         return yii\helpers\Html::a($this->filename, \Yii::$app->request->BaseUrl.'/uploads/'.$this->filename, ['class'=>'download']);
     }
+
+    public function getStartdateformat(){
+        return date('d-M-Y', strtotime($this->startdate));
+    }
+
+    public function getEnddateformat(){
+        return date('d-M-Y', strtotime($this->enddate));
+    }
     
 }

@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
         if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
             echo Html::a('Update', ['update', 'id' => $model->costingapprovalid, 'projectid' => Yii::$app->request->get('projectid')], ['class' => 'btn btn-primary']);
 
-            echo Html::a('Delete', ['delete', 'id' => $model->costingapprovalid, 'projectid' => $model->project->projectid], [
+            echo ' ' . Html::a('Delete', ['delete', 'id' => $model->costingapprovalid, 'projectid' => $model->project->projectid], [
                 'class' => 'btn btn-danger',
                 'data' => [
                     'confirm' => 'Are you sure you want to delete this item?',
@@ -40,7 +40,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'project',
                 'value'=>$model->project->code. ' - ' .$model->project->name,                
             ],
-            'date',
+            [
+                'attribute'=>'date',
+                'value'=>$model->dateFormat
+            ],
             'remark',
             [
                 'attribute' => 'filename',

@@ -36,7 +36,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'project',
                 'value'=>'ProjectDescr',
             ],
-            'date',
+            [
+                'attribute'=>'date',
+                'value'=>'dateFormat'
+            ],
             'remark',
             [
                 'attribute' => 'filename',

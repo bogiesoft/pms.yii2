@@ -85,4 +85,8 @@ class BusinessAssurance extends \yii\db\ActiveRecord
     public function getUrlFile(){
         return yii\helpers\Html::a($this->filename, \Yii::$app->request->BaseUrl.'/uploads/'.$this->filename);
     }
+
+    public function getDateFormat(){
+        return date('d-M-Y H:i:s', strtotime($this->date));
+    }
 }

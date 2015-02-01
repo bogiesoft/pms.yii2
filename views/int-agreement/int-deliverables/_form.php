@@ -134,7 +134,8 @@ use kartik\money\MaskMoney;
     ?>
     <?php 
         $data3 = [];
-        $sql = "select ps_projectrate.rateid, concat(ps_projectrate.role, ' (', ps_mindunit.name, ')') as descr
+        $sql = "select ps_projectrate.rateid, concat(ps_projectrate.role, ' (', ps_mindunit.name, ') @', 
+            CAST(format(ps_projectrate.rate, 2) as char character set utf8)) as descr
                 from ps_projectrate
                 left join ps_mindunit on ps_projectrate.mindunitid = ps_mindunit.mindunitid";
         $data3 += ArrayHelper::map(ProjectRate::findBySql($sql)->asArray()->all(), 'rateid', 'descr');         

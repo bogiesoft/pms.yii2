@@ -83,12 +83,12 @@ class IntAgreementPaymentController extends Controller
     public function actionView($id, $projectid)
     {
         $this->validateProject($projectid);
+        $model = $this->findModel($id, $projectid);
 
         if (Yii::$app->request->post('hasEditable')){
             $out = Json::encode(['output'=>'', 'message'=>'']);
             if (isset($_POST["IntDeliverables"]["intdeliverableid"])){
                 $id = $_POST["IntDeliverables"]["intdeliverableid"];
-                $model = $this->findModel($id, $projectid);
                 $model->userup = Yii::$app->user->identity->username;
                 $model->dateup = new \yii\db\Expression('NOW()');
 
@@ -106,74 +106,53 @@ class IntAgreementPaymentController extends Controller
                     }
                 }
             }
+
+            if (isset($_POST["IntAgreementPayment"])){
+                $remark = null;
+                $date = null;
+                if (isset($_POST["IntAgreementPayment"]["date"])){
+                    $date = $_POST["IntAgreementPayment"]["date"];
+                    $date = date('Y-m-d', strtotime($date));
+                }
+                if (isset($_POST["IntAgreementPayment"]["remark"])){
+                    $remark = $_POST["IntAgreementPayment"]["remark"];
+                }
+
+                $model_payment = IntAgreementPayment::find()->where('intdeliverableid = :1', [':1'=>$id])->one();
+                if ($model_payment == null){
+                    $model_payment = new IntAgreementPayment();
+                    $model_payment->date = $date;
+                    $model_payment->remark = $remark;
+                    $model_payment->intdeliverableid = $model->intdeliverableid;
+                    $model_payment->userin = Yii::$app->user->identity->username;
+                    $model_payment->datein = new \yii\db\Expression('NOW()');
+                }else{
+                    $model_payment->date = $date;
+                    $model_payment->remark = $remark;
+                    $model_payment->userup = Yii::$app->user->identity->username;
+                    $model_payment->dateup = new \yii\db\Expression('NOW()');
+                }
+
+                if ($model_payment->save()){
+                    $output = date('d-M-Y', strtotime($model_payment->date));
+                    $out = Json::encode(['output'=>$output, 'message'=>'']);
+                }else{
+                    $out = Json::encode(['output'=>'', 'message'=>'An error occurred while saving.']);
+                }
+
+            }
             echo $out;
         }else{
+            $model_payment = $model->intagreementpayments;
+            if ($model_payment == null){
+                $model_payment = new IntAgreementPayment();
+            }else{
+                $model_payment->date = date('d-M-Y', strtotime($model_payment->date));
+            }
             return $this->render('view', [
-                'model' => $this->findModel($id, $projectid),
+                'model' => $model,
+                'model_payment' => $model_payment,
             ]);   
-        }
-    }
-
-    /**
-     * Creates a new IntAgreementPayment model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate($id, $projectid)
-    {
-        $model = new IntAgreementPayment();
-        $model->intdeliverableid = $id;
-        $this->validateProject($projectid);
-        $this->validateCancelProject($projectid);
-
-        if ($model->load(Yii::$app->request->post())) {
-            $model->date = date('Y-m-d', strtotime($model->date));
-            if (!$model->save()){
-                $model->date = date('d-M-Y', strtotime($model->date));
-                return $this->render('create', [
-                    'model' => $model,
-                ]);
-            }
-
-            return $this->redirect(['view', 'id' => $model->intdeliverableid, 'projectid' => $projectid]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Updates an existing IntAgreementPayment model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id, $projectid, $paymentid)
-    {
-        $model = $this->findPayment($paymentid, $projectid);
-        $this->validateProject($projectid);
-        $this->validateCancelProject($projectid);
-
-        if ($id != $model->intdeliverableid){
-            return $this->redirect(['index', 'id' => $id, 'projectid' => $projectid]);
-        }
-
-        if ($model->load(Yii::$app->request->post())) {
-            $model->date = date('Y-m-d', strtotime($model->date));
-            if (!$model->save()){
-                $model->date = date('d-M-Y', strtotime($model->date));
-                return $this->render('update', [
-                    'model' => $model,
-                ]);
-            }
-
-            return $this->redirect(['view', 'id' => $model->intdeliverableid, 'projectid' => $projectid]);
-        } else {
-            $model->date = date('d-M-Y', strtotime($model->date));
-            return $this->render('update', [
-                'model' => $model,
-            ]);
         }
     }
 

@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             
             [
                 'attribute' => 'extagreement',
-                'value' => 'extagreement.description'
+                'value' => 'extagreement.externalagreementformat'
             ],
             [
                 'attribute' => 'consultant',
@@ -45,8 +45,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => 'department.name'
             ],
             'description',
-            'startdate',
-            'enddate',
+            [
+                'attribute' => 'startdate',
+                'value' => 'startdateformat',
+                'label' => 'Start Date',
+            ],
+            [
+                'attribute' => 'enddate',
+                'value' => 'enddateformat',
+            ],
             [
                 'attribute' => 'filename',
                 'value'=>'urlFile',

@@ -55,30 +55,16 @@ if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
         ]);
     }
     if (isset($model->intagreementpayments->date) && $model->intagreementpayments->date != null && $model->intagreementpayments->date != ""){
-        echo Html::a('<i class="fa fa-undo"></i> Cancel Payment', ['cancel-payment', 'id' => $model->intagreementpayments->intagreementpaymentid, 'projectid'=>Yii::$app->request->get('projectid')], [
+        echo ' ' . Html::a('<i class="fa fa-undo"></i> Cancel Payment', ['cancel-payment', 'id' => $model->intagreementpayments->intagreementpaymentid, 'projectid'=>Yii::$app->request->get('projectid')], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to cancel payment this item?',
                 'method' => 'post',
             ],
         ]);
-
-        echo ' ' . Html::a('<i class="glyphicon glyphicon-pencil"></i> Update Payment', ['update', 'paymentid' => $model->intagreementpayments->intagreementpaymentid, 'projectid'=>Yii::$app->request->get('projectid'), 'id'=>Yii::$app->request->get('id')], [
-            'class' => 'btn btn-primary',
-        ]);
-    }else{
-        echo Html::a('Create Payment', ['create', 'id' => $model->intdeliverableid, 'projectid' => Yii::$app->request->get('projectid')], [
-            'class' => 'btn btn-success',
-        ]);
     }
 }
 
-$date = null;
-if (isset($model->intagreementpayments->date) && $model->intagreementpayments->date != null && $model->intagreementpayments->date != ""){
-    $date = date('d-M-Y', strtotime($model->intagreementpayments->date));
-}else{
-    $date = '<span class="not-set">(not set)</span>';
-}
 ?>
 
     </p>
@@ -131,7 +117,35 @@ if (isset($model->intagreementpayments->date) && $model->intagreementpayments->d
         ?>
     </td>
 </tr>
-        <tr><th>Payment Date</th>  <td><?= $date ?></td></tr>
+        <tr><th>Payment Date</th>  <td>
+
+        <?php
+    
+    $editable = Editable::begin([
+        'model'=>$model_payment, 
+        'attribute' => 'date',
+        'type'=>'primary',
+        'displayValue' => $model->paymentdateformat,
+        'size'=>'md',
+        'inputType' => Editable::INPUT_DATE,
+        'options'=>[
+            'options' => ['placeholder' => 'Enter payment date..'],
+            'pluginOptions' => [
+                    'autoclose'=>true,
+                    'format' => 'd-M-yyyy'
+                ]
+            
+        ],
+        'pluginEvents'=>[
+            'editableSuccess'=>"function(event, val) { location.reload(); }",
+        ]
+    ]);   
+
+    $form = $editable->getForm();
+    $editable->afterInput = $form->field($model_payment, 'remark', ['template'=>'{input}{error}'])->textArea(['maxlength' => 250, 'placeholder'=>'Enter remark..', 'style'=>'height:80px']) . ' ';
+    Editable::end();
+?>
+</td></tr>
         
         </tbody>
     </table>
