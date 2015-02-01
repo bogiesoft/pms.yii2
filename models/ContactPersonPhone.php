@@ -33,7 +33,7 @@ class ContactPersonPhone extends \yii\db\ActiveRecord
         return [
             [['contactpersonid', 'phonetypeid', 'phone'], 'required'],
             [['contactpersonid', 'phonetypeid'], 'integer'],
-            [['phone'], 'string', 'max' => 15]
+            [['phone'], 'string', 'max' => 25]
         ];
     }
 

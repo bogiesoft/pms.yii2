@@ -105,6 +105,7 @@ class IntAgreementController extends Controller
         $model = new IntAgreement();
         $model->extagreementid = $extagreementid;
         $this->validateProject($extagreementid);
+        $this->validateCancelProject($extagreementid);
         $model->setscenario('insert');
 
         //initial user change & date
@@ -248,6 +249,7 @@ class IntAgreementController extends Controller
         }
 
         $this->validateProject($extagreementid);
+        $this->validateCancelProject($extagreementid);
 
         //initial user change & date
         $model->userup = Yii::$app->user->identity->username;
@@ -442,6 +444,7 @@ class IntAgreementController extends Controller
         $extagreementid = $model->extagreementid;
         $projectid = $model->extagreement->project->projectid;
         $this->validateProject($extagreementid);
+        $this->validateCancelProject($extagreementid);
 
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction(); 
@@ -505,6 +508,13 @@ class IntAgreementController extends Controller
         if ($model_project !== null) {
             return $model_project;
         } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    public function validateCancelProject($extagreementid){
+        $extagreement = \app\models\ExtAgreement::findOne($extagreementid);
+        if (strpos(strtolower($extagreement->project->status->name), 'cancel') !== false){
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }

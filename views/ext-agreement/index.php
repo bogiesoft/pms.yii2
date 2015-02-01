@@ -18,7 +18,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create External Agreement', ['create', 'projectid' => Yii::$app->request->get('projectid')], ['class' => 'btn btn-success']) ?>
+    <?php
+        $project = \app\models\Project::findOne(Yii::$app->request->get('projectid'));
+        if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
+            echo Html::a('Create External Agreement', ['create', 'projectid' => Yii::$app->request->get('projectid')], ['class' => 'btn btn-success']);
+        }
+    ?>
     </p>
 
     <?= GridView::widget([
@@ -33,7 +38,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'agreementno',
             'description',
-            'startdate',
+            [
+                'attribute'=>'startdate',
+                'label'=>'Start Date'
+            ],
             'enddate',
             [
                 'attribute' => 'filename',
@@ -51,16 +59,22 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]);
                     },
                     'update' => function($url, $model, $key){                    
-                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', \yii\helpers\Url::toRoute(['ext-agreement/update','projectid'=>$model->projectid, 'id'=>$model->extagreementid],false), [
-                            'title' => Yii::t('yii', 'Update'),
-                            'data-pjax' => '0',
-                        ]);
+                        $project = \app\models\Project::findOne(Yii::$app->request->get('projectid'));
+                        if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
+                            return Html::a('<span class="glyphicon glyphicon-pencil"></span>', \yii\helpers\Url::toRoute(['ext-agreement/update','projectid'=>$model->projectid, 'id'=>$model->extagreementid],false), [
+                                'title' => Yii::t('yii', 'Update'),
+                                'data-pjax' => '0',
+                            ]);
+                        }
                     },
                     'delete' => function($url, $model, $key){                    
-                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', \yii\helpers\Url::toRoute(['ext-agreement/delete','projectid'=>$model->projectid, 'id'=>$model->extagreementid],false), [
-                            'title' => Yii::t('yii', 'Delete'),
-                            'data-pjax' => '0',
-                        ]);
+                        $project = \app\models\Project::findOne(Yii::$app->request->get('projectid'));
+                        if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
+                            return Html::a('<span class="glyphicon glyphicon-trash"></span>', \yii\helpers\Url::toRoute(['ext-agreement/delete','projectid'=>$model->projectid, 'id'=>$model->extagreementid],false), [
+                                'title' => Yii::t('yii', 'Delete'),
+                                'data-pjax' => '0',
+                            ]);
+                        }
                     },
                 ]
             ],

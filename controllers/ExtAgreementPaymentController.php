@@ -125,6 +125,7 @@ class ExtAgreementPaymentController extends Controller
         $model = new ExtAgreementPayment();
         $model->extdeliverableid = $id;
         $this->validateProject($projectid);
+        $this->validateCancelProject($projectid);
 
         if ($model->load(Yii::$app->request->post())) {
             $model->date = date('Y-m-d', strtotime($model->date));
@@ -157,6 +158,7 @@ class ExtAgreementPaymentController extends Controller
     {
         $model = $this->findPayment($paymentid, $projectid);
         $this->validateProject($projectid);
+        $this->validateCancelProject($projectid);
 
         if ($id != $model->extdeliverableid){
             return $this->redirect(['index', 'id' => $model->extdeliverableid, 'projectid' => $projectid]);
@@ -215,6 +217,7 @@ class ExtAgreementPaymentController extends Controller
     {
         $model = $this->findModel($id, $projectid);
         $this->validateProject($projectid);
+        $this->validateCancelProject($projectid);
         $model->deliverdate = null;
         $model->userup = Yii::$app->user->identity->username;
         $model->dateup = new \yii\db\Expression('NOW()');
@@ -227,6 +230,7 @@ class ExtAgreementPaymentController extends Controller
     {
         $model = $this->findPayment($id, $projectid);
         $this->validateProject($projectid);
+        $this->validateCancelProject($projectid);
         $model->delete();
         
         $model_project = new Project();
@@ -246,6 +250,13 @@ class ExtAgreementPaymentController extends Controller
         if ($model_project !== null) {
             return $model_project;
         } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    public function validateCancelProject($projectid){
+        $project = \app\models\Project::findOne($projectid);
+        if (strpos(strtolower($project->status->name), 'cancel') !== false){
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }

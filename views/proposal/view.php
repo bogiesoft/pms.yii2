@@ -15,14 +15,20 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->proposalid, 'projectid'=>Yii::$app->request->get('projectid')], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->proposalid, 'projectid' => $model->project->projectid], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
+    <?php
+        $project = \app\models\Project::findOne(Yii::$app->request->get('projectid'));
+        if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
+            echo Html::a('Update', ['update', 'id' => $model->proposalid, 'projectid'=>Yii::$app->request->get('projectid')], ['class' => 'btn btn-primary']);
+
+            echo Html::a('Delete', ['delete', 'id' => $model->proposalid, 'projectid' => $model->project->projectid], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => 'Are you sure you want to delete this item?',
+                    'method' => 'post',
+                ],
+            ]);
+        }
+    ?>
     </p>
 
     <?= DetailView::widget([

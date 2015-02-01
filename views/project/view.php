@@ -23,36 +23,52 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+
+        <?php
+        if (!(strpos(strtolower($model->status->name), 'cancel') !== false)){
+            echo Html::a('Cancel Project', ['cancel-project', 'id' => $model->projectid], [
+            'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => 'Are you sure you want to cancel this project?',
+                    'method' => 'post',
+                ],
+            ]);
+        }else{
+            echo Html::a('Undo Cancel Project', ['undo-cancel-project', 'id' => $model->projectid], [
+            'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => 'Are you sure you want to undo cancel this project?',
+                    'method' => 'post',
+                ],
+            ]);
+        }
+        ?>
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [            
-            [
-                'attribute'=>'unit',
-                'value'=>$model->unit->code.' - '.$model->unit->Name,
-                'label'=>'Unit',
-            ],
-            'code',
-            'name',
-            [
-                'attribute'=>'customer',
-                'value'=>$model->customer->company,
-                'label'=>'Customer',
-            ],
-            'description',
-            [
-                'attribute'=>'producttype',
-                'value'=>$model->producttype->code.' - '.$model->producttype->name,
-                'label'=>'Product Type'
-            ],
-            'initiationyear',
-            [
-                'attribute'=>'status',
-                'value'=>$model->status->name,
-                'label'=>'Status'
-            ],
-        ],
-    ]) ?>
+    <table class="table table-striped table-bordered detail-view">
+        <tbody>
+        <tr><th><?= $model->getAttributeLabel('unit') ?></th> <td><?= $model->unit->code.' - '.$model->unit->Name ?></td></tr>
+        <tr><th><?= $model->getAttributeLabel('initiationyear') ?></th><td><?= date('d-M-Y', strtotime($model->initiationyear)) ?></td></tr>
+        <tr><th><?= $model->getAttributeLabel('code') ?></th> <td><?= $model->code ?></td></tr>
+        <tr><th><?= $model->getAttributeLabel('name') ?></th>  <td><?= $model->name ?></td></tr>
+        <tr><th><?= $model->getAttributeLabel('customer') ?></th>  <td><?= $model->customer->company ?></td></tr>
+        <tr><th><?= $model->getAttributeLabel('description') ?></th>  <td><?= $model->description ?></td></tr>
+        <tr><th>Product Type</th>  <td><?= $model->producttype->code.' - '.$model->producttype->name ?></td></tr>
+        <tr><th>Status</th>  <td><?= $model->status->name ?></td></tr>
+        <tr><th>Project File</th>  <td>
+
+        <a download href=""></a>
+        <?php
+            echo Html::a('<i class="fa fa-download"></i> Download Project Files', ['download-project', 'id' => $model->projectid], [
+                'data' => [
+                    'method' => 'post',
+                ],
+            ]);
+        ?>
+
+        </td></tr>
+
+        </tbody>
+    </table>
 
 </div>

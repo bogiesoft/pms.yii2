@@ -1,0 +1,34 @@
+internal agreement
+filter: project, agreement no
+
+klik to do list, ngarahin ke project
+
+todolist: tgl - nama project - deliverable
+
+summary perkerjaan: by business unit, user login
+
+
+Monitoring:
+Filter by status
+Project Name 	Status	Last Update	Last Detail	Last Payment Date
+
+Tiap project ada tgl(bisa diganti) & info(kterangan)
+
+Add info if change status 
+
+Cancel project
+
+Lock by Id:
+Agrement
+Deliverable
+
+Widget = 3;
+
+1. financial achivement
+	- revenue
+	- cash in
+	- margin
+2. to do list
+3. project summary
+
+Revenue dari deliverable

@@ -1,0 +1,33 @@
+master rate ada:
+role(freetext), satuan, rate menentukan jumlah dibayar
+
+look up tabel satuan.
+
+tambahkan posistion untuk consultant
+
+partner type customer
+
+Partner type: coorporate, goverment, education > customer
+
+To do list -> case konsultan ttd tp agreement ext blm
+	-> potential
+
+Minggu depan:
+- Exclude monitoring & dashboard
+
+
+Finalization
+Done
+
+
+Widget:
+1. todo list proses
+2. todo list deliverable & payment
+3. financial achivement
+	- revenue : total dari ext agreement
+	- cash in : total yang sudah di bayar, ext
+	- margin : ambil dari sharing value, cost
+
+Programmer - harian
+
+Code Position Detail Ext.Deliverable Role Rate/Satuan Frq Total

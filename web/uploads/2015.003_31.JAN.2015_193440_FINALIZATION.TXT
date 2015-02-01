@@ -1,0 +1,49 @@
+sharing value -> Sharing Value & Finalization --ok
+
+finalization : - upload file
+		- lesson learned: 250
+		- internal survey score : 1 - 6	(textbox)
+		- external survey score : 1 - 6	(textbox)
+--ok
+diisi semua baru done --ok
+
+cancel project di project definition, lesson learned, ganti status jadi cancel
+
+consultant: npwp -- ok
+
+Upload file
+if there is more than one file, please upload as zip/rar file. --ok
+
+External Agreement: Agreement Period --ok
+Agreement : +sign date --ok
+Agreement : File -> (upload the signed document) --ok
+Int Agreement : Total Rate di view
+
+Number di internal dibuang -- ok
+
+
+<style>
+.tag{
+    font-size:11px;
+    vertical-align:middle;
+}
+</style>
+
+['template' => 
+        '<label class="control-label" for="proposal-file">File <i class="tag">(upload the signed document)</i></label>{input}{hint}{error}'
+
+
+$project = \app\models\Project::findOne(Yii::$app->request->get('projectid'));
+        if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
+
+
+
+
+public function validateCancelProject($projectid){
+        $project = \app\models\Project::findOne($projectid);
+        if (strpos(strtolower($project->status->name), 'cancel') !== false){
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+$this->validateCancelProject($projectid);

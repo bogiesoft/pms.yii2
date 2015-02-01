@@ -37,25 +37,27 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
 <?php
 if ($model->projectid != null && $model->projectid != ""){
-    if (isset($model->sharingvalueunits) && isset($model->sharingvaluedepartments) && (
+    $project = \app\models\Project::findOne($model->projectid);
+    if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
+        if (isset($model->sharingvalueunits) && isset($model->sharingvaluedepartments) && (
             count($model->sharingvalueunits) > 0 || count($model->sharingvaluedepartments) > 0)
         ){
-        
-        echo Html::a('Update Sharing Value', ['update', 'projectid' => $model->projectid], [
-            'class' => 'btn btn-primary',
-        ]);
+            echo Html::a('Update Sharing Value', ['update', 'projectid' => $model->projectid], [
+                'class' => 'btn btn-primary',
+            ]);
 
-        echo ' ' . Html::a('Delete Sharing Value', ['delete-sharing', 'projectid'=>$model->projectid], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete sharing value of this item?',
-                'method' => 'post',
-            ],
-        ]);
-    } else{
-        echo Html::a('Create Sharing Value', ['create', 'projectid' => $model->projectid], [
-            'class' => 'btn btn-success',
-        ]);
+            echo ' ' . Html::a('Delete Sharing Value', ['delete-sharing', 'projectid'=>$model->projectid], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => 'Are you sure you want to delete sharing value of this item?',
+                    'method' => 'post',
+                ],
+            ]);
+        } else{
+            echo Html::a('Create Sharing Value', ['create', 'projectid' => $model->projectid], [
+                'class' => 'btn btn-success',
+            ]);
+        }
     }
 }
 

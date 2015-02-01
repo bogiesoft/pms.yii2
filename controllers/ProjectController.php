@@ -43,6 +43,7 @@ class ProjectController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                    'download-project' => ['post'],
                 ],
             ],
         ];
@@ -287,5 +288,43 @@ class ProjectController extends Controller
                 'model'=>$model,
                 'index'=>$index,
             ]);
+    }
+
+    public function actionCancelProject($id)
+    {
+        $model = $this->findModel($id);
+
+        $status = \app\models\Status::find()->where("name like '%cancel%'")->one();
+        $model->userup = Yii::$app->user->identity->username;
+        $model->dateup = new \yii\db\Expression('NOW()');
+        $model->statusid = isset($status->statusid) ? $status->statusid : 0;
+        $model->save();
+
+        return $this->redirect(['index']);
+    }
+
+    public function actionUndoCancelProject($id)
+    {
+        $model = $this->findModel($id);
+
+        $model->setProjectStatus();
+
+        return $this->redirect(['index']);
+    }
+
+    public function actionDownloadProject($id){
+        $model = $this->findModel($id);
+        $path = $model->getDownloadFile();
+
+        ob_get_clean();
+        header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Cache-Control: private", false);
+        header("Content-Type: application/zip");
+        header("Content-Disposition: attachment; filename=" . basename($path) . ";" );
+        header("Content-Transfer-Encoding: binary");
+        header("Content-Length: " . filesize($path));
+        readfile($path);
     }
 }

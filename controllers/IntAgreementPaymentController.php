@@ -124,6 +124,7 @@ class IntAgreementPaymentController extends Controller
         $model = new IntAgreementPayment();
         $model->intdeliverableid = $id;
         $this->validateProject($projectid);
+        $this->validateCancelProject($projectid);
 
         if ($model->load(Yii::$app->request->post())) {
             $model->date = date('Y-m-d', strtotime($model->date));
@@ -152,6 +153,7 @@ class IntAgreementPaymentController extends Controller
     {
         $model = $this->findPayment($paymentid, $projectid);
         $this->validateProject($projectid);
+        $this->validateCancelProject($projectid);
 
         if ($id != $model->intdeliverableid){
             return $this->redirect(['index', 'id' => $id, 'projectid' => $projectid]);
@@ -179,6 +181,7 @@ class IntAgreementPaymentController extends Controller
     {
         $model = $this->findModel($id, $projectid);
         $this->validateProject($projectid);
+        $this->validateCancelProject($projectid);
 
         $model->deliverdate = null;
         $model->userup = Yii::$app->user->identity->username;
@@ -192,6 +195,7 @@ class IntAgreementPaymentController extends Controller
     {
         $model = $this->findPayment($id, $projectid);
         $this->validateProject($projectid);
+        $this->validateCancelProject($projectid);
 
         $model->delete();
         return $this->redirect(['view', 'id'=>$model->intdeliverableid, 'projectid'=>$projectid]);
@@ -234,6 +238,13 @@ class IntAgreementPaymentController extends Controller
         if ($model_project !== null) {
             return $model_project;
         } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    public function validateCancelProject($projectid){
+        $project = \app\models\Project::findOne($projectid);
+        if (strpos(strtolower($project->status->name), 'cancel') !== false){
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }

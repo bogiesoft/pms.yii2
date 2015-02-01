@@ -24,6 +24,10 @@ use yii\widgets\ActiveForm;
     $data = [];
     $data += yii\helpers\ArrayHelper::map(\app\models\PhoneType::find()->asArray()->orderBy('name')->all(), 
         'phonetypeid', 'name');
+    $mobile = \app\models\PhoneType::find()->where(['like','name','mobile'])->one();
+    if ($mobile != null && ($model->phonetypeid == null || $model->phonetypeid == "")){
+        $model->phonetypeid = $mobile->phonetypeid;   
+    }
 
     echo Html::activeDropDownList($model, '[' . $index . ']phonetypeid', $data, [
         'style'=>'width:100%;min-width:250px;',
@@ -44,7 +48,7 @@ use yii\widgets\ActiveForm;
     ?>
     <?php
         echo Html::activeTextInput($model, '[' . $index . ']phone', [
-            'maxlength' => 15, 
+            'maxlength' => 25, 
             'class'=>'form-control phoneinput',
             'style'=>'margin-right:50px;min-width:300px;',
             'name'=>'ContactPerson['.$target.'][ContactPersonPhone][' . $index . '][phone]'

@@ -18,7 +18,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Internal Agreement', ['create', 'extagreementid' => Yii::$app->request->get('extagreementid')], ['class' => 'btn btn-success']) ?>
+    <?php
+        $extagreement = \app\models\ExtAgreement::findOne(Yii::$app->request->get('extagreementid'));
+        if (!(strpos(strtolower($extagreement->project->status->name), 'cancel') !== false)){
+            echo Html::a('Create Internal Agreement', ['create', 'extagreementid' => Yii::$app->request->get('extagreementid')], ['class' => 'btn btn-success']);
+        }
+    ?>
     </p>
 
     <?= GridView::widget([
@@ -58,16 +63,22 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]);
                     },
                     'update' => function($url, $model, $key){                    
-                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', \yii\helpers\Url::toRoute(['int-agreement/update','extagreementid'=>$model->extagreementid, 'id'=>$model->intagreementid],false), [
-                            'title' => Yii::t('yii', 'Update'),
-                            'data-pjax' => '0',
-                        ]);
+                        $extagreement = \app\models\ExtAgreement::findOne(Yii::$app->request->get('extagreementid'));
+                        if (!(strpos(strtolower($extagreement->project->status->name), 'cancel') !== false)){
+                            return Html::a('<span class="glyphicon glyphicon-pencil"></span>', \yii\helpers\Url::toRoute(['int-agreement/update','extagreementid'=>$model->extagreementid, 'id'=>$model->intagreementid],false), [
+                                'title' => Yii::t('yii', 'Update'),
+                                'data-pjax' => '0',
+                            ]);
+                        }
                     },
                     'delete' => function($url, $model, $key){                    
-                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', \yii\helpers\Url::toRoute(['int-agreement/delete','extagreementid'=>$model->extagreementid, 'id'=>$model->intagreementid],false), [
-                            'title' => Yii::t('yii', 'Delete'),
-                            'data-pjax' => '0',
-                        ]);
+                        $extagreement = \app\models\ExtAgreement::findOne(Yii::$app->request->get('extagreementid'));
+                        if (!(strpos(strtolower($extagreement->project->status->name), 'cancel') !== false)){
+                            return Html::a('<span class="glyphicon glyphicon-trash"></span>', \yii\helpers\Url::toRoute(['int-agreement/delete','extagreementid'=>$model->extagreementid, 'id'=>$model->intagreementid],false), [
+                                'title' => Yii::t('yii', 'Delete'),
+                                'data-pjax' => '0',
+                            ]);
+                        }
                     },
                 ]
             ],

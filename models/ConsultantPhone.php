@@ -38,7 +38,7 @@ class ConsultantPhone extends \yii\db\ActiveRecord
             [['consultantid', 'phonetypeid', 'phone'], 'required'],
             [['consultantid', 'phonetypeid'], 'integer'],
             [['datein', 'dateup'], 'safe'],
-            [['phone'], 'string', 'max' => 15],
+            [['phone'], 'string', 'max' => 25],
             [['userin', 'userup'], 'string', 'max' => 50]
         ];
     }

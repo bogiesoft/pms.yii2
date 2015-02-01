@@ -1,0 +1,41 @@
+1. role consultant in project & brp lama & payment & kepuasan
+2. pembayaran customer & history
+3. folder file revision
+
+PartnerType
+->
+Business Unit
+Creates, BAS, BMP, BinusTV
+
+User management -> limit data
+
+dashboard: payment
+
+1 project : minimal 1 external agreement, minimal 1 internal agreement
+	1 external agreement -> n deliverable
+
+
+
+project potential, tgl -> proposal
+
+menu proposal
+project +proposal
+
+costing
+
+administrasi --> deliverable
+Potential
+Proposal
+Revisi Proposal
+Costing Approval
+Finance Approval
+Legal Approval Ext
+Legal Approval Int
+
+In progress
+
+deliverable
+	task list
+	payment
+
+Finalization

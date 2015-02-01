@@ -72,6 +72,7 @@ class SharingValueController extends Controller
      */
     public function actionView($projectid)
     {
+        $this->validateProject($projectid);
         return $this->render('view', [
             'model' => $this->findModel($projectid),
         ]);
@@ -84,7 +85,10 @@ class SharingValueController extends Controller
      */
     public function actionCreate($projectid)
     {
-        $model = Project::find()->where(['projectid'=>$projectid])->one();
+        $model = Project::findOne($projectid);
+        $this->validateProject($projectid);
+        $this->validateCancelProject($projectid);
+
         $model_finalization = new FinalizationProject();
         $units = null;
         $departments = null;
@@ -224,6 +228,7 @@ class SharingValueController extends Controller
             $file1 = UploadedFile::getInstance($model_finalization, 'file');
 
             if ($file1 != null){
+                date_default_timezone_set('Asia/Jakarta');
                 $model_finalization->filename = str_replace('/', '.', $model->code).'_'.date('d.M.Y').'_'.date('His').'_'.'Finalization'. '.' . $file1->extension;
                 $model_finalization->filename = strtoupper($model_finalization->filename);
                 $model_finalization->file = $file1;
@@ -290,6 +295,9 @@ class SharingValueController extends Controller
     public function actionUpdate($projectid)
     {
         $model = $this->findModel($projectid);
+        $this->validateProject($projectid);
+        $this->validateCancelProject($projectid);
+
         $model_finalization = new FinalizationProject();
         $units = null;
         $departments = null;
@@ -499,6 +507,7 @@ class SharingValueController extends Controller
             $file1 = UploadedFile::getInstance($model_finalization, 'file');
 
             if ($file1 != null){
+                date_default_timezone_set('Asia/Jakarta');
                 $model_finalization->filename = str_replace('/', '.', $model->code).'_'.date('d.M.Y').'_'.date('His').'_'.'Finalization'. '.' . $file1->extension;
                 $model_finalization->filename = strtoupper($model_finalization->filename);
                 $model_finalization->file = $file1;
@@ -562,6 +571,8 @@ class SharingValueController extends Controller
     public function actionDeleteSharing($projectid)
     {
         $project = $this->findModel($projectid);
+        $this->validateProject($projectid);
+        $this->validateCancelProject($projectid);
 
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction(); 
@@ -611,5 +622,26 @@ class SharingValueController extends Controller
                 'model'=>$model,
                 'index'=>$index,                
             ]);
+    }
+
+    public function validateCancelProject($projectid){
+        $project = \app\models\Project::findOne($projectid);
+        if (strpos(strtolower($project->status->name), 'cancel') !== false){
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    protected function validateProject($projectid){
+        $user = \app\models\User::find()->where(['userid' => Yii::$app->user->identity->userid])->one();
+
+        $model_project = Project::find()->where(['in', 'unitid', $user->accessUnit])
+                ->andWhere(['projectid'=>$projectid])
+                ->one();
+
+        if ($model_project !== null) {
+            return $model_project;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 }

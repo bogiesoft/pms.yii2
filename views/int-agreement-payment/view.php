@@ -42,39 +42,42 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
 
 <?php
-if ($model->deliverdate != null && $model->deliverdate != ""){
-    $model->deliverdate = date('d-M-Y', strtotime($model->deliverdate));   
-    echo Html::a('<i class="fa fa-undo"></i> Cancel Submission', ['cancel-deliver', 'id' => $model->intdeliverableid, 'projectid'=>Yii::$app->request->get('projectid')], [
-        'class' => 'btn btn-danger',
-        'data' => [
-            'confirm' => 'Are you sure you want to cancel deliver this item?',
-            'method' => 'post',
-        ],
-    ]);
-}
-?>
+$project = \app\models\Project::findOne(Yii::$app->request->get('projectid'));
+if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
+    if ($model->deliverdate != null && $model->deliverdate != ""){
+        $model->deliverdate = date('d-M-Y', strtotime($model->deliverdate));   
+        echo Html::a('<i class="fa fa-undo"></i> Cancel Submission', ['cancel-deliver', 'id' => $model->intdeliverableid, 'projectid'=>Yii::$app->request->get('projectid')], [
+            'class' => 'btn btn-danger',
+            'data' => [
+                'confirm' => 'Are you sure you want to cancel deliver this item?',
+                'method' => 'post',
+            ],
+        ]);
+    }
+    if (isset($model->intagreementpayments->date) && $model->intagreementpayments->date != null && $model->intagreementpayments->date != ""){
+        echo Html::a('<i class="fa fa-undo"></i> Cancel Payment', ['cancel-payment', 'id' => $model->intagreementpayments->intagreementpaymentid, 'projectid'=>Yii::$app->request->get('projectid')], [
+            'class' => 'btn btn-danger',
+            'data' => [
+                'confirm' => 'Are you sure you want to cancel payment this item?',
+                'method' => 'post',
+            ],
+        ]);
 
-<?php
+        echo ' ' . Html::a('<i class="glyphicon glyphicon-pencil"></i> Update Payment', ['update', 'paymentid' => $model->intagreementpayments->intagreementpaymentid, 'projectid'=>Yii::$app->request->get('projectid'), 'id'=>Yii::$app->request->get('id')], [
+            'class' => 'btn btn-primary',
+        ]);
+    }else{
+        echo Html::a('Create Payment', ['create', 'id' => $model->intdeliverableid, 'projectid' => Yii::$app->request->get('projectid')], [
+            'class' => 'btn btn-success',
+        ]);
+    }
+}
+
 $date = null;
 if (isset($model->intagreementpayments->date) && $model->intagreementpayments->date != null && $model->intagreementpayments->date != ""){
     $date = date('d-M-Y', strtotime($model->intagreementpayments->date));
-
-    echo Html::a('<i class="fa fa-undo"></i> Cancel Payment', ['cancel-payment', 'id' => $model->intagreementpayments->intagreementpaymentid, 'projectid'=>Yii::$app->request->get('projectid')], [
-        'class' => 'btn btn-danger',
-        'data' => [
-            'confirm' => 'Are you sure you want to cancel payment this item?',
-            'method' => 'post',
-        ],
-    ]);
-
-    echo ' ' . Html::a('<i class="glyphicon glyphicon-pencil"></i> Update Payment', ['update', 'paymentid' => $model->intagreementpayments->intagreementpaymentid, 'projectid'=>Yii::$app->request->get('projectid'), 'id'=>Yii::$app->request->get('id')], [
-        'class' => 'btn btn-primary',
-    ]);
 }else{
     $date = '<span class="not-set">(not set)</span>';
-    echo Html::a('Create Payment', ['create', 'id' => $model->intdeliverableid, 'projectid' => Yii::$app->request->get('projectid')], [
-        'class' => 'btn btn-success',
-    ]);
 }
 ?>
 
@@ -95,6 +98,7 @@ if (isset($model->intagreementpayments->date) && $model->intagreementpayments->d
 <tr><th><?= $model->getAttributeLabel('deliverdate') ?></th>  
     <td>
         <?php
+        if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
             echo Editable::widget([
                 'model'=>$model, 
                 'attribute' => 'deliverdate',
@@ -117,6 +121,13 @@ if (isset($model->intagreementpayments->date) && $model->intagreementpayments->d
                     'editableSuccess'=>"function(event, val) { location.reload(); }",
                 ]
             ]);
+        }else{
+            if ($model->deliverdateformat != null){
+                echo $model->deliverdateformat;   
+            }else{
+                echo '<span class="not-set">(not set)</span>';
+            }
+        }
         ?>
     </td>
 </tr>

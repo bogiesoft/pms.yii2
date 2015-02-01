@@ -35,14 +35,19 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->intagreementid, 'extagreementid' => Yii::$app->request->get('extagreementid')], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->intagreementid, 'extagreementid' => $model->extagreementid], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
+    <?php
+        $extagreement = \app\models\ExtAgreement::findOne(Yii::$app->request->get('extagreementid'));
+        if (!(strpos(strtolower($extagreement->project->status->name), 'cancel') !== false)){
+            echo Html::a('Update', ['update', 'id' => $model->intagreementid, 'extagreementid' => Yii::$app->request->get('extagreementid')], ['class' => 'btn btn-primary']);
+            echo Html::a('Delete', ['delete', 'id' => $model->intagreementid, 'extagreementid' => $model->extagreementid], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => 'Are you sure you want to delete this item?',
+                    'method' => 'post',
+                ],
+            ]);
+        }
+    ?>
     </p>
 
     <table class="table table-striped table-bordered detail-view">
@@ -69,6 +74,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <th>Due Date</th>
                     </tr>
                 <?php 
+                    $totalRate = 0;
                    foreach($model->intdeliverables as $deliverable){
                         echo '<tr>';
                         echo '<td>'.$deliverable->extdeliverables->code . ' - ' .$deliverable->extdeliverables->description.'</td>';
@@ -78,7 +84,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         echo '<td>'.number_format($deliverable->rate).'</td>';
                         echo '<td>'.date('d-M-Y', strtotime($deliverable->duedate)) .'</td>';  
                         echo '</tr>';
+                        $totalRate += $deliverable->rate;
                     }
+                    echo '<tr><td colspan=4 style="text-align:center"><b>Total</b></td><td colspan=2>'.number_format($totalRate).'</td></tr>';
                 ?>
                 </table>
             </td></tr>

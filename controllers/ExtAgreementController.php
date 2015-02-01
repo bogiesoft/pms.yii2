@@ -105,6 +105,7 @@ class ExtAgreementController extends Controller
         $model = new ExtAgreement();
         $model->projectid = $projectid;
         $this->validateProject($projectid);
+        $this->validateCancelProject($projectid);
         $model->setscenario('insert');
 
         //initial user change & date
@@ -251,6 +252,7 @@ class ExtAgreementController extends Controller
         }
 
         $this->validateProject($projectid);
+        $this->validateCancelProject($projectid);
 
         //initial user change & date
         $model->userup = Yii::$app->user->identity->username;
@@ -433,6 +435,7 @@ class ExtAgreementController extends Controller
         $projectid = $model->projectid;
 
         $this->validateProject($projectid);
+        $this->validateCancelProject($projectid);
 
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction(); 
@@ -485,6 +488,13 @@ class ExtAgreementController extends Controller
         if ($model_project !== null) {
             return $model_project;
         } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    public function validateCancelProject($projectid){
+        $project = \app\models\Project::findOne($projectid);
+        if (strpos(strtolower($project->status->name), 'cancel') !== false){
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
