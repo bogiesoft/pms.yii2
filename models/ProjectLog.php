@@ -10,13 +10,10 @@ use Yii;
  * @property integer $projectlogid
  * @property integer $projectid
  * @property string $date
+ * @property string $status
  * @property string $remark
  * @property string $datein
  * @property string $userin
- * @property string $dateup
- * @property string $userup
- *
- * @property PsProject $project
  */
 class ProjectLog extends \yii\db\ActiveRecord
 {
@@ -34,11 +31,12 @@ class ProjectLog extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['projectid', 'date', 'remark'], 'required'],
+            [['projectid', 'date', 'status', 'remark'], 'required'],
             [['projectid'], 'integer'],
-            [['date', 'datein', 'dateup'], 'safe'],
-            [['remark'], 'string', 'max' => 250],
-            [['userin', 'userup'], 'string', 'max' => 50]
+            [['date', 'datein'], 'safe'],
+            [['status'], 'string', 'max' => 100],
+            [['remark'], 'string', 'max' => 500],
+            [['userin'], 'string', 'max' => 50]
         ];
     }
 
@@ -51,27 +49,10 @@ class ProjectLog extends \yii\db\ActiveRecord
             'projectlogid' => 'Projectlogid',
             'projectid' => 'Projectid',
             'date' => 'Date',
+            'status' => 'Status',
             'remark' => 'Remark',
             'datein' => 'Datein',
             'userin' => 'Userin',
-            'dateup' => 'Dateup',
-            'userup' => 'Userup',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProject()
-    {
-        return $this->hasOne(Project::className(), ['projectid' => 'projectid']);
-    }
-
-    /**
-     * @return [project code] - [project name]
-     */
-    public function getProjectDescr()
-    {
-        return $this->project->code . ' - ' . $this->project->name;
     }
 }

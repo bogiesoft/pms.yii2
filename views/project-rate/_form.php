@@ -16,7 +16,7 @@ use kartik\money\MaskMoney;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'role')->textInput(['maxlength' => 50]) ?>
+    <?= $form->field($model, 'role')->textInput(['maxlength' => 50, 'placeholder' => 'Enter role..']) ?>
 
     <?php 
         $data = [];
@@ -24,7 +24,7 @@ use kartik\money\MaskMoney;
 
         echo $form->field($model, 'mindunitid')->widget(Select2::classname(), [
             'data' =>$data,
-            'options' => ['placeholder' => 'Select a rate unit ...'],
+            'options' => ['placeholder' => 'Select a rate unit..'],
             'pluginOptions' => [
                 'allowClear' => true
             ],
@@ -38,11 +38,14 @@ use kartik\money\MaskMoney;
                 'thousands' => ',',
                 'precision' => 2,
                 'allowZero' => true,
-            ]
+            ],
+            'options'=>[
+                'maxlength' => 20,
+            ],
         ]);
     ?>
 
-    <?= $form->field($model, 'description')->textArea(['maxlength' => 250, 'style'=>'height:120px']) ?>
+    <?= $form->field($model, 'description')->textArea(['maxlength' => 250, 'style'=>'height:120px', 'placeholder' => 'Enter project rate description..']) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

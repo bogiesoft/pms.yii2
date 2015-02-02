@@ -10,6 +10,25 @@ $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Projects', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<style>
+.inside td{
+    border-top:none !important;
+    border-left:none !important;
+}
+.inside th{
+    border-top:none !important;
+    border-left:none !important;
+}
+.inside th:last-child{
+    border-right:none !important;
+}
+.inside td:last-child{
+    border-right:none !important;
+}
+.inside tr:last-child td{
+    border-bottom:none !important;
+}
+</style>
 <div class="project-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
@@ -55,19 +74,32 @@ $this->params['breadcrumbs'][] = $this->title;
         <tr><th><?= $model->getAttributeLabel('description') ?></th>  <td><?= $model->description ?></td></tr>
         <tr><th>Product Type</th>  <td><?= $model->producttype->code.' - '.$model->producttype->name ?></td></tr>
         <tr><th>Status</th>  <td><?= $model->status->name ?></td></tr>
+        <tr><th>Project PICs</th><td style="padding: 0px;">
+            <table class="table table-bordered table-striped inside" style="border: none;margin-bottom:0px">
+                    <tr>
+                        <th>PIC Name</th>
+                    </tr>
+                <?php 
+                    foreach($model->projectpic as $pic){
+                        echo '<tr>';
+                        echo '<td>'.$pic->user->name.'</td>';
+                        echo '</tr>';
+                    }
+                ?>
+                </table>
+            </td></tr>
         <tr><th>Project File</th>  <td>
 
-        <a download href=""></a>
-        <?php
-            echo Html::a('<i class="fa fa-download"></i> Download Project Files', ['download-project', 'id' => $model->projectid], [
-                'data' => [
-                    'method' => 'post',
-                ],
-            ]);
-        ?>
+            <a download href=""></a>
+            <?php
+                echo Html::a('<i class="fa fa-download"></i> Download Project Files', ['download-project', 'id' => $model->projectid], [
+                    'data' => [
+                        'method' => 'post',
+                    ],
+                ]);
+            ?>
 
-        </td></tr>
-
+            </td></tr>    
         </tbody>
     </table>
 

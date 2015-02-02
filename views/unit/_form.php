@@ -15,9 +15,9 @@ use kartik\select2\Select2;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'code')->textInput(['maxlength' => 5]) ?>
+    <?= $form->field($model, 'code')->textInput(['maxlength' => 5, 'placeholder'=>'Enter unit code..']) ?>
 
-    <?= $form->field($model, 'Name')->textInput(['maxlength' => 50]) ?>
+    <?= $form->field($model, 'Name')->textInput(['maxlength' => 50, 'placeholder'=>'Enter unit name..']) ?>
 
     <?php 
         $data = [];
@@ -26,7 +26,7 @@ use kartik\select2\Select2;
 
         echo $form->field($model, 'BankId')->widget(Select2::classname(), [
             'data' =>$data,
-            'options' => ['placeholder' => 'Select a bank ...'],
+            'options' => ['placeholder' => 'Select a bank..'],
             'pluginOptions' => [
                 'allowClear' => true
             ],
@@ -34,7 +34,7 @@ use kartik\select2\Select2;
 
     ?>
 
-    <?= $form->field($model, 'BankAcc')->textInput(['maxlength' => 15]) ?>
+    <?= $form->field($model, 'BankAcc')->textInput(['maxlength' => 15, 'placeholder'=>'Enter account number..']) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -32,9 +32,12 @@ use kartik\date\DatePicker;
     ?>
 
     <?php 
+        $user = \app\models\User::find()->where(['userid' => Yii::$app->user->identity->userid])->one();
         $data = [];
-        $sql = "select unitid, concat(code,' - ',Name) as unit_descr from ps_unit order by name";        
-        $data += ArrayHelper::map(Unit::findBySql($sql)->asArray()->all(), 'unitid', 'unit_descr');        
+        $data += ArrayHelper::map(Unit::find()
+            ->where(['in', 'unitid', $user->accessUnit])
+            ->select(['unitid', "concat(code,' - ',Name) as unit_descr"])
+            ->asArray()->all(), 'unitid', 'unit_descr');        
 
         echo $form->field($model, 'unitid')->widget(Select2::classname(), [
             'data' => $data,

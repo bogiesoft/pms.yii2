@@ -22,14 +22,14 @@ use kartik\select2\Select2;
 
         echo $form->field($model, 'facultyid')->widget(Select2::classname(), [
             'data' =>$data,
-            'options' => ['placeholder' => 'Select a faculty ...'],
+            'options' => ['placeholder' => 'Select a faculty..'],
             'pluginOptions' => [
                 'allowClear' => true
             ],
         ]);
     ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => 50]) ?>
+    <?= $form->field($model, 'name')->textInput(['maxlength' => 50, 'placeholder'=>'Enter department name..']) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -37,10 +37,11 @@ class ProjectRate extends \yii\db\ActiveRecord
     {
         return [
             [['role', 'mindunitid', 'rate'], 'required'],
-            [['mindunitid', 'rate'], 'integer'],
+            [['mindunitid'], 'integer'],
             [['datein', 'dateup'], 'safe'],
             [['role', 'userin', 'userup'], 'string', 'max' => 50],
             [['description'], 'string', 'max' => 250],
+            [['rate'], 'string', 'max' => 20],
             [['role', 'mindunitid'], 'unique', 'targetAttribute' => ['role', 'mindunitid'], 'message' => 'The combination of Role and Mindunitid has already been taken.']
         ];
     }

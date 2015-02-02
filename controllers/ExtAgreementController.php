@@ -146,6 +146,11 @@ class ExtAgreementController extends Controller
                     }
                     if (isset($extDev["duedate"]) && $extDev["duedate"] != ""){
                         $modelExtDev->duedate = $extDev["duedate"];   
+                        $duedate = date('Y-m-d', strtotime($modelExtDev->duedate));
+                        if (!(($duedate >= $model->startdate) && ($duedate <= $model->enddate))){
+                            $flag = false;
+                            $modelExtDev->addError('duedate', 'Due date must be between agreement period.');
+                        }
                     }
                     $model_extdeliverables[] = $modelExtDev;
                 }
@@ -299,6 +304,11 @@ class ExtAgreementController extends Controller
                     }
                     if (isset($extDev["duedate"]) && $extDev["duedate"] != ""){
                         $modelExtDev->duedate = $extDev["duedate"];   
+                        $duedate = date('Y-m-d', strtotime($modelExtDev->duedate));
+                        if (!(($duedate >= $model->startdate) && ($duedate <= $model->enddate))){
+                            $flag = false;
+                            $modelExtDev->addError('duedate', 'Due date must be between agreement period.');
+                        }
                     }
                     $model_extdeliverables[] = $modelExtDev;
                 }

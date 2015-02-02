@@ -12,9 +12,9 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'code')->textInput(['maxlength' => 5]) ?>
+    <?= $form->field($model, 'code')->textInput(['maxlength' => 5, 'placeholder'=>'Enter bank code..']) ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => 50]) ?>
+    <?= $form->field($model, 'name')->textInput(['maxlength' => 50, 'placeholder'=>'Enter bank name..']) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

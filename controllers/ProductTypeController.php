@@ -82,7 +82,7 @@ class ProductTypeController extends Controller
         $model = new ProductType();
 
         //initial user change & date
-        $model->userin = 'sun';
+        $model->userin = Yii::$app->user->identity->username;
         $model->datein = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -105,7 +105,7 @@ class ProductTypeController extends Controller
         $model = $this->findModel($id);
 
         //initial user change & date
-        $model->userup = 'sun';
+        $model->userup = Yii::$app->user->identity->username;
         $model->dateup = new \yii\db\Expression('NOW()');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

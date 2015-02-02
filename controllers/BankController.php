@@ -82,7 +82,7 @@ class BankController extends Controller
         $model = new Bank();
 
         //initial user change & date
-        $model->userin = Yii::$app->user->identity->userid;
+        $model->userin = Yii::$app->user->identity->username;
         $model->datein = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -105,7 +105,7 @@ class BankController extends Controller
         $model = $this->findModel($id);
 
         //initial user change & date
-        $model->userup = Yii::$app->user->identity->userid;
+        $model->userup = Yii::$app->user->identity->username;
         $model->dateup = new \yii\db\Expression('NOW()');
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

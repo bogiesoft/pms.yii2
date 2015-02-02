@@ -152,6 +152,11 @@ class IntAgreementController extends Controller
                     }
                     if (isset($deliverable["duedate"]) && $deliverable["duedate"] != ""){
                         $model_deliverable->duedate = $deliverable["duedate"];   
+                        $duedate = date('Y-m-d', strtotime($model_deliverable->duedate));
+                        if (!(($duedate >= $model->startdate) && ($duedate <= $model->enddate))){
+                            $flag = false;
+                            $model_deliverable->addError('duedate', 'Due date must be between agreement period.');
+                        }
                     }
                     $model_intdeliverables[] = $model_deliverable;
                 }
@@ -300,6 +305,11 @@ class IntAgreementController extends Controller
                     }
                     if (isset($deliverable["duedate"]) && $deliverable["duedate"] != ""){
                         $model_deliverable->duedate = $deliverable["duedate"];   
+                        $duedate = date('Y-m-d', strtotime($model_deliverable->duedate));
+                        if (!(($duedate >= $model->startdate) && ($duedate <= $model->enddate))){
+                            $flag = false;
+                            $model_deliverable->addError('duedate', 'Due date must be between agreement period.');
+                        }
                     }
                     $model_intdeliverables[] = $model_deliverable;
                 }
