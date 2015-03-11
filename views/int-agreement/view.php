@@ -53,16 +53,38 @@ $this->params['breadcrumbs'][] = $this->title;
     <table class="table table-striped table-bordered detail-view">
         <tbody>
         
-        <tr><th><?= $model->getAttributeLabel('extagreement') ?></th>  
-            <td><?= $model->extagreement->agreementno . ' - ' . $model->extagreement->description ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('consultant') ?></th> <td><?= $model->consultant->name ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('department') ?></th> <td><?= $model->department->name ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('description') ?></th>  <td><?= $model->description ?></td></tr>
-        <tr><th>Start Date</th> <td><?= date('d-M-Y', strtotime($model->startdate)) ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('enddate') ?></th> <td><?= date('d-M-Y', strtotime($model->enddate)) ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('signdate') ?></th> <td><?= date('d-M-Y', strtotime($model->signdate)) ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('filename') ?></th> <td><a download href="<?= \Yii::$app->request->BaseUrl ?>/uploads/<?= $model->filename ?>"><?= $model->filename ?></a></td></tr>
-
+        <tr>
+            <th><?= $model->getAttributeLabel('extagreement') ?></th>  
+            <td><?= $model->extagreement->agreementno . ' - ' . $model->extagreement->description ?></td>
+        </tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('consultant') ?></th> 
+            <td><?= $model->consultant->name ?></td>
+        </tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('department') ?></th> 
+            <td><?= $model->department->name ?></td>
+        </tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('description') ?></th>  
+            <td><?= $model->description ?></td>
+        </tr>
+        <tr>
+            <th>Start Date</th> 
+            <td><?= date('d-M-Y', strtotime($model->startdate)) ?></td>
+        </tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('enddate') ?></th> 
+            <td><?= date('d-M-Y', strtotime($model->enddate)) ?></td>
+        </tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('signdate') ?></th> 
+            <td><?= date('d-M-Y', strtotime($model->signdate)) ?></td>
+        </tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('filename') ?></th> 
+            <td><a download href="<?= \Yii::$app->request->BaseUrl ?>/uploads/<?= $model->filename ?>"><?= $model->filename ?></a></td>
+        </tr>
         <tr><th>Deliverables</th><td style="padding: 0px;">
                 <table class="table table-bordered table-striped inside" style="border: none;margin-bottom:0px">
                     <tr>
@@ -75,7 +97,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </tr>
                 <?php 
                     $totalRate = 0;
-                   foreach($model->intdeliverables as $deliverable){
+                    foreach($model->intdeliverables as $deliverable){
                         echo '<tr>';
                         echo '<td>'.$deliverable->extdeliverables->code . ' - ' .$deliverable->extdeliverables->description.'</td>';
                         echo '<td>'.$deliverable->consultantposition->name.'</td>';
@@ -86,11 +108,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         echo '</tr>';
                         $totalRate += $deliverable->rate;
                     }
-                    echo '<tr><td colspan=4 style="text-align:center"><b>Total</b></td><td colspan=2>'.number_format($totalRate).'</td></tr>';
+                    echo '<tr><td colspan=4 style="text-align:center"><b>Total</b></td><td colspan=2>'.
+                        number_format($totalRate).'</td></tr>';
                 ?>
                 </table>
             </td></tr>
-
 
         </tbody>
     </table>

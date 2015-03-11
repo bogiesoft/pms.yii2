@@ -83,6 +83,8 @@ class MenuController extends Controller
 
         //initial default value active
         $model->active = '1';
+        $model->userin = Yii::$app->user->identity->username;
+        $model->datein = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
             if ($model->parentid == "" || $model->parentid == 0){
@@ -112,6 +114,8 @@ class MenuController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->userup = Yii::$app->user->identity->username;
+        $model->dateup = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
             if ($model->parentid == "" || $model->parentid == 0){

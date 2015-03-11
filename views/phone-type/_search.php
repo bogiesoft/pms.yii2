@@ -19,14 +19,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name') ?>
 
-    <?= $form->field($model, 'datein') ?>
-
-    <?= $form->field($model, 'userin') ?>
-
-    <?= $form->field($model, 'dateup') ?>
-
-    <?php // echo $form->field($model, 'userup') ?>
-
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
         <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>

@@ -92,6 +92,9 @@ class ConsultantController extends Controller
 
         $flag = true;
 
+        $model->userin = Yii::$app->user->identity->username;
+        $model->datein = new \yii\db\Expression('NOW()');
+
         if ($model->load(Yii::$app->request->post())) {
             if (isset($_POST["ConsultantPhone"])){
                 foreach($_POST["ConsultantPhone"] as $ph){
@@ -171,6 +174,8 @@ class ConsultantController extends Controller
 
             foreach($phones as $ph){
                 $ph->consultantid = $model->consultantid;
+                $ph->userin = Yii::$app->user->identity->username;
+                $ph->datein = new \yii\db\Expression('NOW()');
                 if (!$ph->save()){
                     return $this->render('create', [
                         'model' => $model,
@@ -186,6 +191,8 @@ class ConsultantController extends Controller
 
             foreach($emails as $em){
                 $em->consultantid = $model->consultantid;
+                $em->userin = Yii::$app->user->identity->username;
+                $em->datein = new \yii\db\Expression('NOW()');
                 if (!$em->save()){
                     return $this->render('create', [
                         'model' => $model,
@@ -201,6 +208,8 @@ class ConsultantController extends Controller
 
             foreach($banks as $bk){
                 $bk->consultantid = $model->consultantid;
+                $bk->userin = Yii::$app->user->identity->username;
+                $bk->datein = new \yii\db\Expression('NOW()');
                 if (!$bk->save()){
                     return $this->render('create', [
                         'model' => $model,
@@ -247,6 +256,9 @@ class ConsultantController extends Controller
         $banks = null;
 
         $flag = true;
+
+        $model->userup = Yii::$app->user->identity->username;
+        $model->dateup = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
             $arrPhoneId = null;
@@ -359,11 +371,15 @@ class ConsultantController extends Controller
 
             foreach($phones as $ph){
                 $ph->consultantid = $model->consultantid;
+                $ph->userin = Yii::$app->user->identity->username;
+                $ph->datein = new \yii\db\Expression('NOW()');
                 
                 if (isset($ph->consultantphoneid) && $ph->consultantphoneid != null && $ph->consultantphoneid != ""){     
                     $modelPhone = ConsultantPhone::findOne($ph->consultantphoneid);   
                     $modelPhone->phonetypeid = $ph->phonetypeid;
                     $modelPhone->phone = $ph->phone;
+                    $modelPhone->userup = Yii::$app->user->identity->username;
+                    $modelPhone->dateup = new \yii\db\Expression('NOW()');
 
                     if (!$modelPhone->save()){
                         return $this->render('update', [
@@ -398,10 +414,14 @@ class ConsultantController extends Controller
 
             foreach($emails as $em){
                 $em->consultantid = $model->consultantid;
+                $em->userin = Yii::$app->user->identity->username;
+                $em->datein = new \yii\db\Expression('NOW()');
                 
                 if (isset($em->consultantemailid) && $em->consultantemailid != null && $em->consultantemailid != ""){     
                     $modelEmail = ConsultantEmail::findOne($em->consultantemailid);   
                     $modelEmail->email = $em->email;
+                    $modelEmail->userup = Yii::$app->user->identity->username;
+                    $modelEmail->dateup = new \yii\db\Expression('NOW()');
 
                     if (!$modelEmail->save()){
                         return $this->render('update', [
@@ -436,6 +456,8 @@ class ConsultantController extends Controller
 
             foreach($banks as $bk){
                 $bk->consultantid = $model->consultantid;
+                $bk->userin = Yii::$app->user->identity->username;
+                $bk->datein = new \yii\db\Expression('NOW()');
                 
                 if (isset($bk->consultantbankid) && $bk->consultantbankid != null && $bk->consultantbankid != ""){     
                     $modelBank = ConsultantBank::findOne($bk->consultantbankid);   
@@ -443,6 +465,8 @@ class ConsultantController extends Controller
                     $modelBank->branch = $bk->branch;
                     $modelBank->account = $bk->account;
                     $modelBank->active = $bk->active;
+                    $modelBank->userup = Yii::$app->user->identity->username;
+                    $modelBank->dateup = new \yii\db\Expression('NOW()');
 
                     if (!$modelBank->save()){
                         return $this->render('update', [
@@ -532,28 +556,28 @@ class ConsultantController extends Controller
     public function actionRenderPhone($index)
     {
         $model = new ConsultantPhone;
-        return $this->renderPartial('phone/_form', array(
+        return $this->renderAjax('phone/_form', [
             'model' => $model,
             'index' => $index,
-        ), false, true);
+        ]);
     }
 
     public function actionRenderEmail($index)
     {
         $model = new ConsultantEmail;
-        return $this->renderPartial('email/_form', array(
+        return $this->renderAjax('email/_form', array(
             'model' => $model,
             'index' => $index,
-        ), false, true);
+        ));
     }
 
     public function actionRenderBank($index)
     {
         $model = new ConsultantBank;
         $model->active = 1;
-        return $this->renderPartial('bank/_form', array(
+        return $this->renderAjax('bank/_form', array(
             'model' => $model,
             'index' => $index,
-        ), false, true);
+        ));
     }
 }

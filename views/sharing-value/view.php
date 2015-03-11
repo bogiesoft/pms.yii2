@@ -68,61 +68,100 @@ if ($model_finalization == null){
 ?>
     </p>
 
-
     <table class="table table-striped table-bordered detail-view">
         <tbody>
         
-        <tr><th>Unit</th>  <td><?= $model->unit->Name ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('code') ?></th> <td><?= $model->code ?></td></tr>
-        <tr><th>Project</th>  <td><?= $model->name ?></td></tr>
-        <tr><th>Customer</th>  <td><?= $model->customer->company ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('description') ?></th>  <td><?= $model->description ?></td></tr>
-        <tr><th>Product Type</th>  <td><?= $model->producttype->name ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('initiationyear') ?></th>  <td><?= $model->initiationyearformat ?></td></tr>
-        <tr><th>Status</th>  <td><?= $model->status->name ?></td></tr>
+        <tr>
+            <th>Unit</th>  
+            <td><?= $model->unit->Name ?></td>
+        </tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('code') ?></th> 
+            <td><?= $model->code ?></td>
+        </tr>
+        <tr>
+            <th>Project</th>  
+            <td><?= $model->name ?></td>
+        </tr>
+        <tr>
+            <th>Customer</th>  
+            <td><?= $model->customer->company ?></td>
+        </tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('description') ?></th>  
+            <td><?= $model->description ?></td>
+        </tr>
+        <tr>
+            <th>Product Type</th>  
+            <td><?= $model->producttype->name ?></td>
+        </tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('initiationyear') ?></th>  
+            <td><?= $model->initiationyearformat ?></td>
+        </tr>
+        <tr>
+            <th>Status</th>  
+            <td><?= $model->status->name ?></td>
+        </tr>
 
-<!-- <span class="not-set">(not set)</span> -->
-<tr><th><?= $model_finalization->getAttributeLabel('remark') ?></th>  <td><?php 
-    if ($model_finalization->remark != null){
-        echo $model_finalization->remark;
-    }else{
-        echo '<span class="not-set">(not set)</span>';
-    }
-?></td></tr>
-<tr><th><?= $model_finalization->getAttributeLabel('intsurveyscore') ?></th>  <td><?php 
-    if ($model_finalization->intsurveyscore != null){
-        echo $model_finalization->intsurveyscore;
-    }else{
-        echo '<span class="not-set">(not set)</span>';
-    }
-?></td></tr>
-<tr><th><?= $model_finalization->getAttributeLabel('extsurveyscore') ?></th>  <td><?php 
-    if ($model_finalization->extsurveyscore != null){
-        echo $model_finalization->extsurveyscore;
-    }else{
-        echo '<span class="not-set">(not set)</span>';
-    }
-?></td></tr>
-<tr><th>Finalization File</th>  <td><?php 
-    if ($model_finalization->filename != null){
-        echo '<a download href="'.\Yii::$app->request->BaseUrl.'/uploads/'.$model_finalization->filename.'">'.
-            $model_finalization->filename.'</a>';
-    }else{
-        echo '<span class="not-set">(not set)</span>';
-    }
-?></td></tr>
+        <!-- <span class="not-set">(not set)</span> -->
+        <tr>
+            <th><?= $model_finalization->getAttributeLabel('remark') ?></th>  
+            <td><?php 
+                if ($model_finalization->remark != null){
+                    echo $model_finalization->remark;
+                }else{
+                    echo '<span class="not-set">(not set)</span>';
+                }
+            ?></td>
+        </tr>
+        <tr>
+            <th><?= $model_finalization->getAttributeLabel('intsurveyscore') ?></th>  
+            <td><?php 
+                if ($model_finalization->intsurveyscore != null){
+                    echo $model_finalization->intsurveyscore;
+                }else{
+                    echo '<span class="not-set">(not set)</span>';
+                }
+            ?></td>
+        </tr>
+        <tr>
+            <th><?= $model_finalization->getAttributeLabel('extsurveyscore') ?></th>  
+            <td><?php 
+                if ($model_finalization->extsurveyscore != null){
+                    echo $model_finalization->extsurveyscore;
+                }else{
+                    echo '<span class="not-set">(not set)</span>';
+                }
+            ?></td>
+        </tr>
+        <tr>
+            <th>Finalization File</th>  
+            <td><?php 
+                if ($model_finalization->filename != null){
+                    echo '<a download href="'.\Yii::$app->request->BaseUrl.'/uploads/'.$model_finalization->filename.'">'.
+                        $model_finalization->filename.'</a>';
+                }else{
+                    echo '<span class="not-set">(not set)</span>';
+                }
+            ?></td>
+        </tr>
 
-        <tr><th>Sharing Value Unit</th>  <td style="padding: 0px;">
+        <tr>
+            <th>Sharing Value Unit</th>  
+            <td style="padding: 0px;">
             <table class="table table-bordered table-striped inside" style="border: none;margin-bottom:0px">
                     <tr>
                         <th>Unit</th>
                         <th>Value</th>
+                        <th>Cost</th>
                     </tr>
                 <?php 
                    foreach($model->sharingvalueunits as $units){
                         echo '<tr>';
                         echo '<td>'.$units->unit->code . ' - ' . $units->unit->Name.'</td>';
                         echo '<td>'.number_format($units->value).'</td>';
+                        echo '<td>'.number_format($units->cost).'</td>';
                         echo '</tr>';
                     }
                 ?>
@@ -131,17 +170,19 @@ if ($model_finalization == null){
 
         <tr><th>Sharing Value Department</th>  <td style="padding: 0px;">
             <table class="table table-bordered table-striped inside" style="border: none;margin-bottom:0px">
-                    <tr>
-                        <th>Faculty</th>
-                        <th>Department</th>
-                        <th>Value</th>
-                    </tr>
+                <tr>
+                    <th>Faculty</th>
+                    <th>Department</th>
+                    <th>Value</th>
+                    <th>Cost</th>
+                </tr>
                 <?php 
                    foreach($model->sharingvaluedepartments as $departments){
                         echo '<tr>';
                         echo '<td>'.$departments->department->faculty->code . ' - ' . $departments->department->faculty->name.'</td>';
                         echo '<td>'.$departments->department->name.'</td>';
                         echo '<td>'.number_format($departments->value).'</td>';
+                        echo '<td>'.number_format($departments->cost).'</td>';
                         echo '</tr>';
                     }
                 ?>

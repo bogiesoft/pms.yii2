@@ -87,7 +87,7 @@ class CustomerController extends Controller
         $indexPhone = 1;
 
         //initial user change & date
-        $model->userin = 'sun';
+        $model->userin = Yii::$app->user->identity->username;
         $model->datein = new \yii\db\Expression('NOW()');
 
         $flag = true;
@@ -120,15 +120,20 @@ class CustomerController extends Controller
                 if (isset($contact["job"]) && $contact["job"] != ""){
                     $contactModel->job = $contact["job"];   
                 }
+
                 $contactModel->validate();
 
                 if (isset($contact["ContactPersonPhone"])){
                     foreach($contact["ContactPersonPhone"] as $phone){
                         $contactPhone = new ContactPersonPhone();
-                        $contactPhone->phonetypeid = $phone["phonetypeid"];
-                        $contactPhone->phone = $phone["phone"];
+                        if (isset($phone["phonetypeid"]) && $phone["phonetypeid"] != ""){
+                            $contactPhone->phonetypeid = $phone["phonetypeid"];
+                        }
+                        if (isset($phone["phone"]) && $phone["phone"] != ""){
+                            $contactPhone->phone = $phone["phone"];
+                        }
+                        
                         $contactPhone->validate();
-
                         $contactModel->phones[] = $contactPhone;
                     }    
                 }else{
@@ -155,6 +160,7 @@ class CustomerController extends Controller
             $transaction = $connection->beginTransaction(); 
 
             if (!$model->save()){
+                $transaction->rollBack();
                 $model->dayofjoin = date("d-M-Y", strtotime($model->dayofjoin));
                 return $this->render('create', [
                     'model' => $model,
@@ -165,7 +171,11 @@ class CustomerController extends Controller
             }
             foreach($contacts as $contact){
                 $contact->customerid = $model->customerid;
+                $contact->userin = Yii::$app->user->identity->username;
+                $contact->datein = new \yii\db\Expression('NOW()');
+
                 if (!$contact->save()){
+                    $transaction->rollBack();
                     $model->dayofjoin = date("d-M-Y", strtotime($model->dayofjoin));
                     return $this->render('create', [
                         'model' => $model,
@@ -177,7 +187,11 @@ class CustomerController extends Controller
 
                 foreach($contact->phones as $phone){
                     $phone->contactpersonid = $contact->contactpersonid;
+                    $phone->userin = Yii::$app->user->identity->username;
+                    $phone->datein = new \yii\db\Expression('NOW()');
+
                     if (!$phone->save()){
+                        $transaction->rollBack();
                         $model->dayofjoin = date("d-M-Y", strtotime($model->dayofjoin));
                         return $this->render('create', [
                             'model' => $model,
@@ -217,7 +231,7 @@ class CustomerController extends Controller
         $indexPhone = 1;
 
         //initial user change & date
-        $model->userup = 'sun';
+        $model->userup = Yii::$app->user->identity->username;
         $model->dateup = new \yii\db\Expression('NOW()');
 
         $flag = true;
@@ -240,6 +254,7 @@ class CustomerController extends Controller
             }
 
             $arrContactId = [];
+            $arrContactPhoneId = [];
             foreach($contactPerson as $contact){
                 $contactModel = new ContactPerson();
                 if (isset($contact["name"]) && $contact["name"] != ""){
@@ -255,14 +270,27 @@ class CustomerController extends Controller
                     $contactModel->contactpersonid = $contact["contactpersonid"];   
                     $arrContactId[] = $contactModel->contactpersonid;
                 }
-                $contactModel->validate();
+                
+                if (!$contactModel->validate()){
+                    $flag = false;
+                }
 
                 if (isset($contact["ContactPersonPhone"])){
                     foreach($contact["ContactPersonPhone"] as $phone){
                         $contactPhone = new ContactPersonPhone();
-                        $contactPhone->phonetypeid = $phone["phonetypeid"];
-                        $contactPhone->phone = $phone["phone"];
-                        $contactPhone->validate();
+                        if (isset($phone["contactpersonphoneid"]) && $phone["contactpersonphoneid"] != ""){
+                            $contactPhone->contactpersonphoneid = $phone["contactpersonphoneid"];
+                            $arrContactPhoneId[] = $contactPhone->contactpersonphoneid;
+                        }
+                        if (isset($phone["phonetypeid"]) && $phone["phonetypeid"] != ""){
+                            $contactPhone->phonetypeid = $phone["phonetypeid"];
+                        }
+                        if (isset($phone["phone"]) && $phone["phone"] != ""){
+                            $contactPhone->phone = $phone["phone"];
+                        }
+                        if (!$contactPhone->validate()){
+                            $flag = false;
+                        }
 
                         $contactModel->phones[] = $contactPhone;
                     }    
@@ -275,7 +303,6 @@ class CustomerController extends Controller
                 
                 $contacts[] = $contactModel;
             }
-
             if (!$flag){
                 return $this->render('update', [
                     'model' => $model,
@@ -301,9 +328,15 @@ class CustomerController extends Controller
             $deleteContact = ContactPerson::find()->where('customerid = :1', [':1'=>$model->customerid])->all();
             foreach($deleteContact as $contact){
                 if (!in_array($contact->contactpersonid, $arrContactId)){
+                    ContactPersonPhone::deleteAll('contactpersonid = :1', [':1'=>$contact->contactpersonid]);
                     ContactPerson::deleteAll('contactpersonid = :1', [':1'=>$contact->contactpersonid]);
+                }else{
+                    foreach($contact->contactpersonphones as $phoneDelete){
+                        if (!in_array($phoneDelete->contactpersonphoneid, $arrContactPhoneId)){
+                            ContactPersonPhone::deleteAll('contactpersonphoneid = :1', [':1'=>$phoneDelete->contactpersonphoneid]);
+                        }
+                    }
                 }
-                ContactPersonPhone::deleteAll('contactpersonid = :1', [':1'=>$contact->contactpersonid]);
             }
 
             foreach($contacts as $contact){
@@ -336,15 +369,37 @@ class CustomerController extends Controller
                 }
 
                 foreach($contact->phones as $phone){
-                    $phone->contactpersonid = $contact->contactpersonid;
-                    if (!$phone->save()){
-                        $model->dayofjoin = date("d-M-Y", strtotime($model->dayofjoin));
-                        return $this->render('create', [
-                            'model' => $model,
-                            'index' => $index,
-                            'indexPhone' => $indexPhone,
-                            'contacts' => $contacts,
-                        ]);
+                    if ($phone->contactpersonphoneid != null && $phone->contactpersonphoneid != ""){
+                        $model_phone = ContactPersonPhone::findOne($phone->contactpersonphoneid);
+                        $model_phone->contactpersonid = $contact->contactpersonid;
+                        $model_phone->phonetypeid = $phone->phonetypeid;
+                        $model_phone->phone = $phone->phone;
+                        $model_phone->userup = Yii::$app->user->identity->username;
+                        $model_phone->dateup = new \yii\db\Expression('NOW()');
+                        
+                        if (!$model_phone->save()){
+                            $model->dayofjoin = date("d-M-Y", strtotime($model->dayofjoin));
+                            return $this->render('update', [
+                                'model' => $model,
+                                'index' => $index,
+                                'indexPhone' => $indexPhone,
+                                'contacts' => $contacts,
+                            ]);
+                        }   
+                    }else{
+                        $phone->contactpersonid = $contact->contactpersonid;
+                        $phone->userin = Yii::$app->user->identity->username;
+                        $phone->datein = new \yii\db\Expression('NOW()');
+
+                        if (!$phone->save()){
+                            $model->dayofjoin = date("d-M-Y", strtotime($model->dayofjoin));
+                            return $this->render('update', [
+                                'model' => $model,
+                                'index' => $index,
+                                'indexPhone' => $indexPhone,
+                                'contacts' => $contacts,
+                            ]);
+                        }   
                     }
                 }
             }
@@ -407,19 +462,19 @@ class CustomerController extends Controller
     public function actionRenderContact($index)
     {
         $model = new ContactPerson;
-        return $this->renderPartial('contact/_form', array(
+        return $this->renderAjax('contact/_form', array(
             'model' => $model,
             'index' => $index,
-        ), false, true);
+        ));
     }
 
     public function actionRenderContactPhone($index, $target)
     {
         $model = new ContactPersonPhone;
-        return $this->renderPartial('phone/_form', array(
+        return $this->renderAjax('phone/_form', array(
             'model' => $model,
             'index' => $index,
             'target' => $target,
-        ), false, true);
+        ));
     }
 }

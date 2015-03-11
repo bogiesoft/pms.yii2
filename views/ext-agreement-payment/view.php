@@ -77,7 +77,6 @@ if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
                             'autoclose'=>true,
                             'format' => 'd-M-yyyy'
                         ]
-                    
                 ],
                 'pluginEvents'=>[
                     'editableSuccess'=>"function(event, val) { location.reload(); }",
@@ -109,7 +108,6 @@ if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
                     'autoclose'=>true,
                     'format' => 'd-M-yyyy'
                 ]
-            
         ],
         'pluginEvents'=>[
             'editableSuccess'=>"function(event, val) { location.reload(); }",

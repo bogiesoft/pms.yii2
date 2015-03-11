@@ -66,7 +66,5 @@ $data = \app\models\IntAgreement::find()->where(['intagreementid'=>7])->one();
             ],
         ],
     ]); ?>
-
     
-
 </div>

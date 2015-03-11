@@ -332,7 +332,6 @@ $('.rateinput').blur(function(e){
     }
 });
 
-
 $('.duedateinput').change(function(e){
     if ($(e.currentTarget).val() == ""){
         $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");

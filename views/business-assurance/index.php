@@ -31,7 +31,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             [
                 'attribute'=>'project',
                 'value'=>'ProjectDescr',
@@ -46,7 +45,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value'=>'urlFile',
                 'format' => 'html'
             ],
-
             [
                 'class' => 'yii\grid\ActionColumn',
                 'buttons' => [

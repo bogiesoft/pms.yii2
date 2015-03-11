@@ -83,7 +83,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 </table>
             </td></tr>
 
-
         </tbody>
     </table>
 

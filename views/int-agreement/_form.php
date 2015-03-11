@@ -12,7 +12,6 @@ use kartik\datecontrol\Module;
 use kartik\datecontrol\DateControl;
 use kartik\date\DatePicker;
 
-
 use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
@@ -138,7 +137,6 @@ use kartik\select2\Select2;
 
 </div>
 
-
 <?php    
     
 $this->registerJs('
@@ -181,14 +179,12 @@ function addDeliverable(){
                             $("#int-deliverables").find("label").css("color", "");
                         }
                     });
-                    
 
                 }else{
                     alert("Required at least one internal deliverable.");
                     elm.stopImmediatePropagation();
                 }                
             });
-
         }
     });
 

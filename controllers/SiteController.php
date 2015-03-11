@@ -127,68 +127,80 @@ class SiteController extends Controller
         }
 
         $output["costingapproval"] = "";
-        foreach($model->costingapprovals as $costingapproval){
-            $output["costingapproval"] = ' (Uploaded on: '. date('d-M-Y H:i:s', strtotime($costingapproval->date)). ')';
-            break;
-        }
-
-        $output["businessassurance"] = "";
-        foreach($model->businessassurances as $businessassurance){
-            $output["businessassurance"] = ' (Uploaded on: '. date('d-M-Y H:i:s', strtotime($businessassurance->date)). ')';
-            break;
-        }
-
-        $output["extagreement"] = "";
-        foreach($model->extagreements as $extagreement){
-            $output["extagreement"] = ' (Number of agreement: '. count($model->extagreements) . ')';
-            break;
-        }
-
-        $output["intagreement"] = "";
-        $i = 0;
-        foreach($model->extagreements as $extagreement){
-            foreach($extagreement->intagreements as $intagreement){
-                $i += count($extagreement->intagreements);
+        if ($output["proposal"] != ""){
+            foreach($model->costingapprovals as $costingapproval){
+                $output["costingapproval"] = ' (Uploaded on: '. date('d-M-Y H:i:s', strtotime($costingapproval->date)). ')';
                 break;
             }   
         }
 
-        if ($i > 0){
-            $output["intagreement"] = ' (Number of agreement: '. $i . ')';
+        $output["businessassurance"] = "";
+        if ($output["proposal"] != ""){
+            foreach($model->businessassurances as $businessassurance){
+                $output["businessassurance"] = ' (Uploaded on: '. date('d-M-Y H:i:s', strtotime($businessassurance->date)). ')';
+                break;
+            }
+        }
+
+        $output["extagreement"] = "";
+        if ($output["businessassurance"] != "" && $output["costingapproval"] != ""){
+            foreach($model->extagreements as $extagreement){
+                $output["extagreement"] = ' (Number of agreement: '. count($model->extagreements) . ')';
+                break;
+            }
+        }
+
+        $output["intagreement"] = "";
+        if ($output["extagreement"] != ""){
+            $i = 0;
+            foreach($model->extagreements as $extagreement){
+                foreach($extagreement->intagreements as $intagreement){
+                    $i += count($extagreement->intagreements);
+                    break;
+                }   
+            }
+
+            if ($i > 0){
+                $output["intagreement"] = ' (Number of agreement: '. $i . ')';
+            }
         }
 
         $output["finalization"] = "";
         $output["finalization_acc"] = "";
-        $deliverable = 0;
-        $deliverable_pay = 0;
-        foreach($model->extagreements as $extagreement){
-            foreach($extagreement->extdeliverables as $extdeliverable){
-                $deliverable++;
-                if (isset($extdeliverable->extagreementpayments) && $extdeliverable->extagreementpayments->date != null && 
-                    $extdeliverable->extagreementpayments->date != ""){
-                    $deliverable_pay++;
+        if ($output["intagreement"] != ""){
+            $deliverable = 0;
+            $deliverable_pay = 0;
+            foreach($model->extagreements as $extagreement){
+                foreach($extagreement->extdeliverables as $extdeliverable){
+                    $deliverable++;
+                    if (isset($extdeliverable->extagreementpayments) && $extdeliverable->extagreementpayments->date != null && 
+                        $extdeliverable->extagreementpayments->date != ""){
+                        $deliverable_pay++;
+                    }
                 }
+            }
+
+            if ($deliverable == $deliverable_pay && $deliverable > 0){
+                $output["finalization_acc"] = "done";
+            }else if ($deliverable > 0){
+                $output["finalization"] = ' ('.$deliverable_pay. ' of '.$deliverable .' external deliverables have been paid)';
             }
         }
 
-        if ($deliverable == $deliverable_pay && $deliverable > 0){
-            $output["finalization_acc"] = "done";
-        }else if ($deliverable > 0){
-            $output["finalization"] = ' ('.$deliverable_pay. ' of '.$deliverable .' external deliverables have been paid)';
-        }
-
         $output["done"] = "";
-        if (count($model->sharingvalueunits) > 0 && count($model->sharingvaluedepartments) > 0 &&
-            isset($model->finalizationprojects) && $model->finalizationprojects->filename != null &&
-            $model->finalizationprojects->filename != "" && 
-            $model->finalizationprojects->remark != null &&
-            $model->finalizationprojects->remark != "" &&
-            $model->finalizationprojects->intsurveyscore != null &&
-            $model->finalizationprojects->intsurveyscore != "" && 
-            $model->finalizationprojects->extsurveyscore != null &&
-            $model->finalizationprojects->extsurveyscore != ""){
-            
-            $output["done"] = "done";
+        if ($output["finalization_acc"] != ""){
+            if (count($model->sharingvalueunits) > 0 && count($model->sharingvaluedepartments) > 0 &&
+                isset($model->finalizationprojects) && $model->finalizationprojects->filename != null &&
+                $model->finalizationprojects->filename != "" && 
+                $model->finalizationprojects->remark != null &&
+                $model->finalizationprojects->remark != "" &&
+                $model->finalizationprojects->intsurveyscore != null &&
+                $model->finalizationprojects->intsurveyscore != "" && 
+                $model->finalizationprojects->extsurveyscore != null &&
+                $model->finalizationprojects->extsurveyscore != ""){
+                
+                $output["done"] = "done";
+            }
         }
 
         $sql = "select * from ps_projectlog

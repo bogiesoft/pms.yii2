@@ -16,6 +16,11 @@ use yii\helpers\Html;
  * @property string $active
  * @property integer $parentid
  * @property integer $index
+ * @property string $accessid 
+ * @property string $datein 
+ * @property string $userin 
+ * @property string $dateup 
+ * @property string $userup 
  *
  * @property PsGroupaccess[] $psGroupaccesses
  * @property PsGroup[] $groups 
@@ -50,10 +55,12 @@ class Menu extends \yii\db\ActiveRecord
     {
         return [
             [['caption'], 'required'],
+            [['caption','accessid'], 'unique'],
             [['parentid', 'index'], 'integer'],
-            [['caption','accessid'], 'string', 'max' => 50],
+            [['caption', 'accessid', 'userin', 'userup'], 'string', 'max' => 50],
+            [['datein', 'dateup'], 'safe'],
             [['link', 'icon', 'description'], 'string', 'max' => 250],
-            [['active'], 'string', 'max' => 1]
+            [['active'], 'string', 'max' => 1],
         ];
     }
 
@@ -73,16 +80,20 @@ class Menu extends \yii\db\ActiveRecord
             'activeText' => 'Active',
             'varActive' => 'Active',
             'index' => 'Index',
-            'accessid' => 'Access ID'
+            'accessid' => 'Access ID',
+            'datein' => 'Datein',
+            'userin' => 'Userin',
+            'dateup' => 'Dateup',
+            'userup' => 'Userup',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsGroupaccesses()
+    public function getGroupaccesses()
     {
-        return $this->hasMany(PsGroupaccess::className(), ['menuid' => 'menuid']);
+        return $this->hasMany(GroupAccess::className(), ['menuid' => 'menuid']);
     }
 
     /** 
@@ -112,9 +123,9 @@ class Menu extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsUseraccesses()
+    public function getUseraccesses()
     {
-        return $this->hasMany(PsUseraccess::className(), ['menuid' => 'menuid']);
+        return $this->hasMany(UserAccess::className(), ['menuid' => 'menuid']);
     }
 
     public function getStructureTree($checked, $disable, $id, $name){

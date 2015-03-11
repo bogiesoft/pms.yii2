@@ -69,20 +69,44 @@ if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
 
     </p>
 
-
     <table class="table table-striped table-bordered detail-view">
         <tbody>
         
-        <tr><th>Project</th>  <td><?= $model->intagreement->extagreement->project->name ?></td></tr>
-        <tr><th>Consultant</th>  <td><?= $model->intagreement->consultant->name ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('description') ?></th>  <td><?= $model->description ?></td></tr>
-        <tr><th>Consultant Position</th>  <td><?= $model->consultantposition->name ?></td></tr>
-        <tr><th>Rate Unit</th>  <td><?= $model->rateUnitDescr ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('frequency') ?></th>  <td><?= $model->frequency ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('rateNumberFormat') ?></th>  <td><?= $model->rateNumberFormat ?></td></tr>
-        <tr><th>Due Date</th>  <td><?= $model->duedateformat ?></td></tr>
-<tr><th><?= $model->getAttributeLabel('deliverdate') ?></th>  
-    <td>
+        <tr>
+            <th>Project</th>  
+            <td><?= $model->intagreement->extagreement->project->name ?></td>
+        </tr>
+        <tr>
+            <th>Consultant</th>  
+            <td><?= $model->intagreement->consultant->name ?></td>
+        </tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('description') ?></th>  
+            <td><?= $model->description ?></td>
+        </tr>
+        <tr>
+            <th>Consultant Position</th>  
+            <td><?= $model->consultantposition->name ?></td>
+        </tr>
+        <tr>
+            <th>Rate Unit</th>  
+            <td><?= $model->rateUnitDescr ?></td>
+        </tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('frequency') ?></th>  
+            <td><?= $model->frequency ?></td>
+        </tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('rateNumberFormat') ?></th>  
+            <td><?= $model->rateNumberFormat ?></td>
+        </tr>
+        <tr>
+            <th>Due Date</th>  
+            <td><?= $model->duedateformat ?></td>
+        </tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('deliverdate') ?></th>  
+            <td>
         <?php
         if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
             echo Editable::widget([
@@ -115,8 +139,8 @@ if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
             }
         }
         ?>
-    </td>
-</tr>
+            </td>
+        </tr>
         <tr><th>Payment Date</th>  <td>
 
         <?php

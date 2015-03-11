@@ -87,6 +87,8 @@ class GroupController extends Controller
         $menus = [];
         $units = [];
         $model->active = 1;
+        $model->userin = Yii::$app->user->identity->username;
+        $model->datein = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
             if (isset($_POST["Group"]["UserGroup"])){
@@ -192,6 +194,8 @@ class GroupController extends Controller
         $users = [];
         $menus = [];
         $units = [];
+        $model->userup = Yii::$app->user->identity->username;
+        $model->dateup = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
 

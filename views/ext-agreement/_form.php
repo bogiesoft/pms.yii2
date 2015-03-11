@@ -44,7 +44,6 @@ use kartik\date\DatePicker;
     <?= $form->field($model, 'description')->textArea(['maxlength' => 250, 'style' => 'height:120px']) ?>
 
     <?php
-
         echo $form->field($model, 'startdate')->widget(DateRangePicker::classname(),
         [
             'convertFormat'=>true,
@@ -59,7 +58,6 @@ use kartik\date\DatePicker;
     ?>
 
     <?php
-
         echo $form->field($model, 'signdate')->widget(DatePicker::classname(),
         [
             'options' => ['placeholder' => 'Enter sign date ...'],
@@ -143,8 +141,6 @@ function addDeliverable(){
                             $("#ext-deliverables").find("label").css("color", "");
                         }
                     });
-                    
-
                 }else{
                     alert("Required at least one external deliverable.");
                     elm.stopImmediatePropagation();
@@ -244,7 +240,6 @@ $(".btnDeleteDeliverable").click(function (elm){
             }
         });
         
-
     }else{
         alert("Required at least one external deliverable.");
         elm.stopImmediatePropagation();

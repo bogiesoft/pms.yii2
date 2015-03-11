@@ -23,7 +23,7 @@ use yii\widgets\ActiveForm;
 		echo '<div class="col-sm-10">';
 		echo Html::activeTextInput($model, '[' . $index . ']name', [
 			'maxlength' => 150, 
-			'placeholder'=>'Name',
+			'placeholder'=>'Enter contact person name..',
 			'class'=>'form-control nameinput',
 		]);
 		echo Html::error($model, 'name', ['class'=>'help-block']);
@@ -43,7 +43,7 @@ use yii\widgets\ActiveForm;
 		echo '<div class="col-sm-10">';
 		echo Html::activeTextInput($model, '[' . $index . ']email', [
 			'maxlength' => 150, 
-			'placeholder'=>'Email',
+			'placeholder'=>'Enter contact person email address..',
 			'class'=>'form-control emailinput',
 		]);
 
@@ -64,7 +64,7 @@ use yii\widgets\ActiveForm;
 		echo '<div class="col-sm-10">';
 		echo Html::activeTextInput($model, '[' . $index . ']job', [
 			'maxlength' => 150, 
-			'placeholder'=>'Job',
+			'placeholder'=>'Enter contact person job or position..',
 			'class'=>'form-control jobinput',
 		]);
 		echo Html::error($model, 'job', ['class'=>'help-block']);
@@ -98,5 +98,41 @@ use yii\widgets\ActiveForm;
 		</div>
 	</div>
 
-
 </div>
+<script>
+$(".nameinput").blur(function(e){
+    if ($(e.currentTarget).val() == ""){
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("Name cannot be blank.");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
+    }else{
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
+    }
+});
+
+$(".emailinput").blur(function(e){
+    if ($(e.currentTarget).val() == ""){
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("Email cannot be blank.");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
+    }else{
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
+    }
+});
+
+$(".jobinput").blur(function(e){
+    if ($(e.currentTarget).val() == ""){
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("Job cannot be blank.");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
+    }else{
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
+    }
+});
+</script>

@@ -20,7 +20,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            
             [
                 'attribute'=>'unit',
                 'value'=> function($data){ return $data['project']['unit']['code'].' - '. $data['project']['unit']['Name']; },
@@ -52,7 +51,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'agreementno',
                 'value' => function($data) { return $data['agreementno']. ' - '. $data['description']; },
             ],
-            
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view}',

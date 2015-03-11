@@ -29,10 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'dayofjoin',
             'phone',
             'fax',
-            //'address',
-            'city',
-            //'state',
-            //'countryid',            
+            'city',          
             [
                 'attribute'=>'varPartnertype',
                 'value'=>'partnertype.name'

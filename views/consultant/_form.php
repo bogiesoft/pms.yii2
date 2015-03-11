@@ -38,35 +38,35 @@ use yii\helpers\ArrayHelper;
                 'class' => 'col-sm-2 control-label'
             ],
             'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-        ])->textInput(['maxlength' => 8]) ?>
+        ])->textInput(['maxlength' => 8, 'placeholder'=>'Enter lecturer id..']) ?>
 
     <?= $form->field($model, 'employeeid',[
                 'labelOptions' => [
                 'class' => 'col-sm-2 control-label'
             ],
             'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-        ])->textInput(['maxlength' => 15]) ?>
+        ])->textInput(['maxlength' => 15, 'placeholder'=>'Enter employee id..']) ?>
 
     <?= $form->field($model, 'name',[
                 'labelOptions' => [
                 'class' => 'col-sm-2 control-label'
             ],
             'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-        ])->textInput(['maxlength' => 150]) ?>
+        ])->textInput(['maxlength' => 150, 'placeholder'=>'Enter consultant name..']) ?>
 
     <?= $form->field($model, 'residentid',[
                 'labelOptions' => [
                 'class' => 'col-sm-2 control-label'
             ],
             'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-        ])->textInput(['maxlength' => 50]) ?>
+        ])->textInput(['maxlength' => 50, 'placeholder'=>'Enter consultant resident id..']) ?>
     
     <?= $form->field($model, 'npwp',[
                 'labelOptions' => [
                 'class' => 'col-sm-2 control-label'
             ],
             'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-        ])->textInput(['maxlength' => 20]) ?>
+        ])->textInput(['maxlength' => 20, 'placeholder'=>'Enter consultant npwp..']) ?>
     
     <?php
 
@@ -81,7 +81,7 @@ use yii\helpers\ArrayHelper;
             'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
         ])->widget(Select2::classname(), [
             'data' => $data,
-            'options' => ['placeholder' => 'Select a category ...'],
+            'options' => ['placeholder' => 'Select consultant category..'],
             'pluginOptions' => [
                 'allowClear' => true
             ],
@@ -174,8 +174,6 @@ function addPhone(){
         async: false,
         success:function(response){
             $("#phone").append(response);
-            $("#phone .select2").select2();
-            $("#phone .select2").removeClass("select2");
             $("#phone .crow").last().animate({
                 opacity : 1, 
                 left: "+50", 
@@ -211,18 +209,6 @@ function addPhone(){
                 $(".btnAddPhone").unbind( "click" );
                 elm.stopImmediatePropagation();
                 addPhone();
-            });
-
-            $(".phoneinput").blur(function(e){
-                if ($(e.currentTarget).val() == ""){
-                    $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
-                    $(e.currentTarget).closest(".form-group").find(".help-block").text("Phone cannot be blank.");
-                    $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
-                }else{
-                    $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
-                    $(e.currentTarget).closest(".form-group").find(".help-block").text("");
-                    $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
-                }
             });
         }
     });
@@ -260,21 +246,6 @@ $(".btnAddPhone").click(function (elm){
     elm.stopImmediatePropagation();
     addPhone();
 });
-
-$(".phoneinput").blur(function(e){
-    if ($(e.currentTarget).val() == ""){
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("Phone cannot be blank.");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
-    }else{
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
-    }
-});
-
-$("#phone .select2").select2();
-$("#phone .select2").removeClass("select2");
 
 function addEmail(){
     var _url = "' . yii\helpers\Url::toRoute('consultant/render-email') . '?index="+_indexEmail;
@@ -317,18 +288,6 @@ function addEmail(){
                 elm.stopImmediatePropagation();
                 addEmail();
             });
-
-            $(".emailinput").blur(function(e){
-                if ($(e.currentTarget).val() == ""){
-                    $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
-                    $(e.currentTarget).closest(".form-group").find(".help-block").text("Email cannot be blank.");
-                    $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
-                }else{
-                    $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
-                    $(e.currentTarget).closest(".form-group").find(".help-block").text("");
-                    $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
-                }
-            });
         }
     });
 
@@ -364,18 +323,6 @@ $(".btnAddEmail").click(function (elm){
     addEmail();
 });
 
-$(".emailinput").blur(function(e){
-    if ($(e.currentTarget).val() == ""){
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("Email cannot be blank.");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
-    }else{
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
-    }
-});
-
 function addBank(){
     var _url = "' . yii\helpers\Url::toRoute('consultant/render-bank') . '?index="+_indexBank;
     $.ajax({
@@ -383,8 +330,6 @@ function addBank(){
         async: false,
         success:function(response){
             $("#bank").append(response);
-            $("#bank .select2").select2();
-            $("#bank .select2").removeClass("select2");
             $("#bank .crow").last().animate({
                 opacity : 1, 
                 left: "+50", 
@@ -419,38 +364,11 @@ function addBank(){
                 elm.stopImmediatePropagation();
                 addBank();
             });
-
-            $(".branchinput").blur(function(e){
-                if ($(e.currentTarget).val() == ""){
-                    $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
-                    $(e.currentTarget).closest(".form-group").find(".help-block").text("Branch cannot be blank.");
-                    $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
-                }else{
-                    $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
-                    $(e.currentTarget).closest(".form-group").find(".help-block").text("");
-                    $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
-                }
-            });
-
-            $(".accountinput").blur(function(e){
-                if ($(e.currentTarget).val() == ""){
-                    $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
-                    $(e.currentTarget).closest(".form-group").find(".help-block").text("Account cannot be blank.");
-                    $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
-                }else{
-                    $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
-                    $(e.currentTarget).closest(".form-group").find(".help-block").text("");
-                    $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
-                }
-            });
         }
     });
 
     _indexBank++;
 }
-
-$("#bank .select2").select2();
-$("#bank .select2").removeClass("select2");
 
 $(".btnDeleteBank").click(function (elm){ 
     if ($(".consultant-bank-form").length >1){
@@ -481,30 +399,6 @@ $(".btnAddBank").click(function (elm){
     addBank();
 });
 
-$(".branchinput").blur(function(e){
-    if ($(e.currentTarget).val() == ""){
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("Branch cannot be blank.");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
-    }else{
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
-    }
-});
-
-$(".accountinput").blur(function(e){
-    if ($(e.currentTarget).val() == ""){
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("Account cannot be blank.");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
-    }else{
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
-    }
-});
-
 if ($("#phone").find(".consultant-phone-form").length == 0){
     addPhone();
 }
@@ -515,63 +409,5 @@ if ($("#bank").find(".consultant-bank-form").length == 0){
     addBank();
 }
 
-$("#w0").submit(function(e){
-    var flag = true;
-    $("#phone .phoneinput").each(function( e ) {
-        if ($(this).val() == ""){
-            $(this).closest(".form-group").attr("class", "form-group required has-error");
-            $(this).closest(".form-group").find(".help-block").text("Phone cannot be blank.");
-            $(this).closest(".divphone").find("label").css("color", "#a94442");
-            flag = false;
-        }else{
-            $(this).closest(".form-group").attr("class", "form-group required has-success");
-            $(this).closest(".form-group").find(".help-block").text("");
-            $(this).closest(".divphone").find("label").css("color", "#3c763d");
-        }
-    });
-
-    $("#email .emailinput").each(function( e ) {
-        if ($(this).val() == ""){
-            $(this).closest(".form-group").attr("class", "form-group required has-error");
-            $(this).closest(".form-group").find(".help-block").text("Email cannot be blank.");
-            $(this).closest(".divphone").find("label").css("color", "#a94442");
-            flag = false;
-        }else{
-            $(this).closest(".form-group").attr("class", "form-group required has-success");
-            $(this).closest(".form-group").find(".help-block").text("");
-            $(this).closest(".divphone").find("label").css("color", "#3c763d");
-        }
-    });
-
-    $("#bank .branchinput").each(function( e ) {
-        if ($(this).val() == ""){
-            $(this).closest(".form-group").attr("class", "form-group required has-error");
-            $(this).closest(".form-group").find(".help-block").text("Branch cannot be blank.");
-            $(this).closest(".divphone").find("label").css("color", "#a94442");
-            flag = false;
-        }else{
-            $(this).closest(".form-group").attr("class", "form-group required has-success");
-            $(this).closest(".form-group").find(".help-block").text("");
-            $(this).closest(".divphone").find("label").css("color", "#3c763d");
-        }
-    });
-
-    $("#bank .accountinput").each(function( e ) {
-        if ($(this).val() == ""){
-            $(this).closest(".form-group").attr("class", "form-group required has-error");
-            $(this).closest(".form-group").find(".help-block").text("Account cannot be blank.");
-            $(this).closest(".divphone").find("label").css("color", "#a94442");
-            flag = false;
-        }else{
-            $(this).closest(".form-group").attr("class", "form-group required has-success");
-            $(this).closest(".form-group").find(".help-block").text("");
-            $(this).closest(".divphone").find("label").css("color", "#3c763d");
-        }
-    });
-
-    return flag;
-});
-
-
-', \yii\web\View::POS_END);
+');
 ?>

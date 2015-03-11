@@ -109,6 +109,9 @@ class SharingValueController extends Controller
                     if (isset($sharing_unit["value"]) && $sharing_unit["value"] != ""){
                         $model_unit->value = $sharing_unit["value"];   
                     }
+                    if (isset($sharing_unit["cost"]) && $sharing_unit["cost"] != ""){
+                        $model_unit->cost = $sharing_unit["cost"];   
+                    }
                     $units[] = $model_unit;
                     if (in_array($model_unit->unitid, $arrDuplicate)){
                         $model_unit->addError('unitid', 'Duplicate unit on sharing value unit');
@@ -136,6 +139,9 @@ class SharingValueController extends Controller
                     }
                     if (isset($sharing_department["value"]) && $sharing_department["value"] != ""){
                         $model_department->value = $sharing_department["value"];   
+                    }
+                    if (isset($sharing_department["cost"]) && $sharing_department["cost"] != ""){
+                        $model_department->cost = $sharing_department["cost"];   
                     }
                     $departments[] = $model_department;
 
@@ -323,6 +329,9 @@ class SharingValueController extends Controller
                     if (isset($sharing_unit["value"]) && $sharing_unit["value"] != ""){
                         $model_unit->value = $sharing_unit["value"];   
                     }
+                    if (isset($sharing_unit["cost"]) && $sharing_unit["cost"] != ""){
+                        $model_unit->cost = $sharing_unit["cost"];   
+                    }
                     $units[] = $model_unit;
 
                     if (in_array($model_unit->unitid, $arrDuplicate)){
@@ -355,6 +364,9 @@ class SharingValueController extends Controller
                     }
                     if (isset($sharing_department["value"]) && $sharing_department["value"] != ""){
                         $model_department->value = $sharing_department["value"];   
+                    }
+                    if (isset($sharing_department["cost"]) && $sharing_department["cost"] != ""){
+                        $model_department->cost = $sharing_department["cost"];   
                     }
                     $departments[] = $model_department;
 
@@ -430,6 +442,7 @@ class SharingValueController extends Controller
                     $model_unit = SharingValueUnit::findOne($unit_model->sharingvalueunitid);
                     $model_unit->projectid = $model->projectid;
                     $model_unit->value = $unit_model->value;
+                    $model_unit->cost = $unit_model->cost;
                     $model_unit->unitid = $unit_model->unitid;
                     $model_unit->userup = Yii::$app->user->identity->username;
                     $model_unit->dateup = new \yii\db\Expression('NOW()');
@@ -471,6 +484,7 @@ class SharingValueController extends Controller
                     $model_department = SharingValueDepartment::findOne($department_model->sharingvaluedepartmentid);
                     $model_department->projectid = $model->projectid;
                     $model_department->value = $department_model->value;
+                    $model_department->cost = $department_model->cost;
                     $model_department->departmentid = $department_model->departmentid;
 
                     $model_department->userup = Yii::$app->user->identity->username;

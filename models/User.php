@@ -18,12 +18,18 @@ use yii\web\IdentityInterface;
  * @property string $phone
  * @property string $password
  * @property string $active
+ * @property string $datein 
+ * @property string $userin 
+ * @property string $dateup 
+ * @property string $userup 
  *
  * @property PsGroupuser[] $psGroupusers
  * @property PsGroup[] $groups 
  * @property PsProjectpic[] $psProjectpics
- * @property PsProject[] $projects 
+ * @property PsProject[] $projects
  * @property PsUseraccess[] $psUseraccesses
+ * @property PsUseraccessdata[] $psUseraccessdatas 
+ * @property PsUnit[] $units 
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
@@ -53,10 +59,12 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             [['username', 'name', 'email', 'phone', 'password', 'varPassword', 'active'], 'required'],
+            [['datein', 'dateup'], 'safe'],
             [['username'], 'string', 'max' => 25],
             [['name', 'email', 'password'], 'string', 'max' => 150],
             [['phone'], 'string', 'max' => 15],
             [['active'], 'string', 'max' => 1],
+            [['userin', 'userup'], 'string', 'max' => 50], 
             [['username'], 'unique'],
             [['email'], 'unique'],
             [['phone'],'integer','message'=>'{attribute} numbers must be numeric only.'],

@@ -75,14 +75,14 @@ use kartik\tabs\TabsX;
 	                    'class' => 'col-sm-2 control-label'
 	                ],
 	                'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-	            ])->textInput(['maxlength' => 50]).
+	            ])->textInput(['maxlength' => 50, 'placeholder'=>'Enter group name..']).
 			$form->field($model, 'description', 
                 [
                         'labelOptions' => [
                         'class' => 'col-sm-2 control-label'
                     ],
                     'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-                ])->textArea(['maxlength' => 250, 'style'=>'height:120px']).
+                ])->textArea(['maxlength' => 250, 'style'=>'height:120px', 'placeholder'=>'Enter group description..']).
 			$form->field($model, 'active', 
                 [
                         'labelOptions' => [
@@ -114,8 +114,6 @@ use kartik\tabs\TabsX;
     ]);
 
 ?>
-
-
 
     <div class="form-group" style="margin-left: 0px; margin-top: 10px; ">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

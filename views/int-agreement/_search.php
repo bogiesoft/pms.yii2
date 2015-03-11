@@ -25,19 +25,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'description') ?>
 
-    <?php // echo $form->field($model, 'startdate') ?>
+    <?php echo $form->field($model, 'startdate') ?>
 
-    <?php // echo $form->field($model, 'enddate') ?>
+    <?php echo $form->field($model, 'enddate') ?>
 
-    <?php // echo $form->field($model, 'filename') ?>
-
-    <?php // echo $form->field($model, 'datein') ?>
-
-    <?php // echo $form->field($model, 'userin') ?>
-
-    <?php // echo $form->field($model, 'dateup') ?>
-
-    <?php // echo $form->field($model, 'userup') ?>
+    <?php echo $form->field($model, 'filename') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

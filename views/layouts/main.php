@@ -63,8 +63,6 @@ AppAsset::register($this);
         </div>
     </div>
 
-
-
     <footer class="footer">
         <div class="container">
             <p class="pull-left">&copy; Binus Creates <?= date('Y') ?></p>

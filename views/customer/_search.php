@@ -25,27 +25,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'phone') ?>
 
-    <?php // echo $form->field($model, 'fax') ?>
+    <?php echo $form->field($model, 'fax') ?>
 
-    <?php // echo $form->field($model, 'address') ?>
+    <?php echo $form->field($model, 'city') ?>
 
-    <?php // echo $form->field($model, 'city') ?>
-
-    <?php // echo $form->field($model, 'state') ?>
-
-    <?php // echo $form->field($model, 'countryid') ?>
-
-    <?php // echo $form->field($model, 'partnertypeid') ?>
-
-    <?php // echo $form->field($model, 'webpage') ?>
-
-    <?php // echo $form->field($model, 'datein') ?>
-
-    <?php // echo $form->field($model, 'userin') ?>
-
-    <?php // echo $form->field($model, 'dateup') ?>
-
-    <?php // echo $form->field($model, 'userup') ?>
+    <?php echo $form->field($model, 'partnertypeid') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

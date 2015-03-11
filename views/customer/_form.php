@@ -41,7 +41,7 @@ use kartik\tabs\TabsX;
                 'class' => 'col-sm-2 control-label'
             ],
             'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-        ])->textInput(['maxlength' => 50]);
+        ])->textInput(['maxlength' => 50, 'placeholder'=>'Enter customer name..']);
     
     echo $form->field($model, 'dayofjoin',[
                 'labelOptions' => [
@@ -49,7 +49,7 @@ use kartik\tabs\TabsX;
             ],
             'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
         ])->widget(DatePicker::classname(), [
-                        'options' => ['placeholder' => 'Enter join date ...'],
+                        'options' => ['placeholder' => 'Enter customer join date..'],
             'pluginOptions' => [
                 'autoclose'=>true,
                 'format' => 'd-M-yyyy'
@@ -61,42 +61,42 @@ use kartik\tabs\TabsX;
                 'class' => 'col-sm-2 control-label'
             ],
             'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-        ])->textInput(['maxlength' => 20]);
+        ])->textInput(['maxlength' => 20, 'placeholder'=>'Enter customer NPWP..']);
 
     echo $form->field($model, 'phone',[
                 'labelOptions' => [
                 'class' => 'col-sm-2 control-label'
             ],
             'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-        ])->textInput(['maxlength' => 15]);
+        ])->textInput(['maxlength' => 15, 'placeholder'=>'Enter customer phone number..']);
 
     echo $form->field($model, 'fax',[
                 'labelOptions' => [
                 'class' => 'col-sm-2 control-label'
             ],
             'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-        ])->textInput(['maxlength' => 15]);
+        ])->textInput(['maxlength' => 15, 'placeholder'=>'Enter customer fax number..']);
 
     echo $form->field($model, 'address',[
                 'labelOptions' => [
                 'class' => 'col-sm-2 control-label'
             ],
             'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-        ])->textArea(['maxlength' => 150,'style'=>'height:120px']);
+        ])->textArea(['maxlength' => 150,'style'=>'height:120px', 'placeholder'=>'Enter customer address..']);
 
     echo $form->field($model, 'city',[
                 'labelOptions' => [
                 'class' => 'col-sm-2 control-label'
             ],
             'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-        ])->textInput(['maxlength' => 50]);
+        ])->textInput(['maxlength' => 50, 'placeholder'=>'Enter the city where the customer is located..']);
 
     echo $form->field($model, 'state',[
                 'labelOptions' => [
                 'class' => 'col-sm-2 control-label'
             ],
             'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-        ])->textInput(['maxlength' => 50]);
+        ])->textInput(['maxlength' => 50, 'placeholder'=>'Enter the state where the customer is located..']);
 
     $data = [];
     $sql = 'select countryid, concat(iso3, " - ", name) as descr from ps_country order by name';
@@ -109,7 +109,7 @@ use kartik\tabs\TabsX;
                 'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
             ])->widget(Select2::classname(), [
             'data' => $data,
-            'options' => ['placeholder' => 'Select a country ...'],
+            'options' => ['placeholder' => 'Select the country where the customer is located...'],
             'pluginOptions' => [
                 'allowClear' => true
             ],
@@ -125,7 +125,7 @@ use kartik\tabs\TabsX;
                 'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
             ])->widget(Select2::classname(), [
             'data' => $data,
-            'options' => ['placeholder' => 'Select a partner type ...'],
+            'options' => ['placeholder' => 'Select customer partner type..'],
             'pluginOptions' => [
                 'allowClear' => true
             ],
@@ -136,7 +136,7 @@ use kartik\tabs\TabsX;
                 'class' => 'col-sm-2 control-label'
             ],
             'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-        ])->textInput(['maxlength' => 150]);
+        ])->textInput(['maxlength' => 150, 'placeholder'=>'Enter webpage URL..']);
 
 echo '</div></div>';
     echo '<div class="divcontact panel panel-default"><div class="panel-heading">
@@ -152,11 +152,9 @@ echo '</div></div>';
                     $index++;
                 }
             }
-
     echo '</div></div>';
 
 ?>
-
 
     <div class="form-group" style="margin-top:15px; margin-left:0px">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
@@ -213,42 +211,6 @@ function addContact(){
                 elm.stopImmediatePropagation();
                 addContact();
             });
-
-            $(".nameinput").blur(function(e){
-                if ($(e.currentTarget).val() == ""){
-                    $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
-                    $(e.currentTarget).closest(".form-group").find(".help-block").text("Name cannot be blank.");
-                    $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
-                }else{
-                    $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
-                    $(e.currentTarget).closest(".form-group").find(".help-block").text("");
-                    $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
-                }
-            });
-
-            $(".emailinput").blur(function(e){
-                if ($(e.currentTarget).val() == ""){
-                    $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
-                    $(e.currentTarget).closest(".form-group").find(".help-block").text("Email cannot be blank.");
-                    $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
-                }else{
-                    $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
-                    $(e.currentTarget).closest(".form-group").find(".help-block").text("");
-                    $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
-                }
-            });
-
-            $(".jobinput").blur(function(e){
-                if ($(e.currentTarget).val() == ""){
-                    $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
-                    $(e.currentTarget).closest(".form-group").find(".help-block").text("Job cannot be blank.");
-                    $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
-                }else{
-                    $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
-                    $(e.currentTarget).closest(".form-group").find(".help-block").text("");
-                    $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
-                }
-            });
         }
     });
 
@@ -265,8 +227,6 @@ function addPhone($id){
         async: false,
         success:function(response){
             $(".ContactPerson-"+$id).append(response);
-            $(".ContactPerson-"+$id+" .select2").select2();
-            $(".ContactPerson-"+$id+" .select2").removeClass("select2");
             $(".ContactPerson-"+$id + " .crow").last().animate({
                 opacity : 1, 
                 left: "+50", 
@@ -301,18 +261,6 @@ function addPhone($id){
                 $( ".btnAddPhone").unbind( "click" );
                 elm.stopImmediatePropagation();
                 addPhone($(elm.currentTarget).attr("data-target"));
-            });
-
-            $(".phoneinput").blur(function(e){
-                if ($(e.currentTarget).val() == ""){
-                    $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
-                    $(e.currentTarget).closest(".form-group").find(".help-block").text("Phone cannot be blank.");
-                    $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
-                }else{
-                    $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
-                    $(e.currentTarget).closest(".form-group").find(".help-block").text("");
-                    $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
-                }
             });
         }
     });
@@ -377,55 +325,20 @@ $("#w0").submit(function(e){
         }
     });
 
+    $("#contact select.phonetypeddl").each(function(e){
+        if ($(this).val() == ""){
+            $(this).closest(".form-group").attr("class", "form-group required has-error");
+            $(this).closest(".form-group").find(".help-block").text("Phone type cannot be blank.");
+            $(this).closest(".divphone").find("label").css("color", "#a94442");
+            flag = false;
+        }else{
+            $(this).closest(".form-group").attr("class", "form-group required has-success");
+            $(this).closest(".form-group").find(".help-block").text("");
+            $(this).closest(".divphone").find("label").css("color", "#3c763d");
+        }
+    });
+
     return flag;
-});
-
-$(".nameinput").blur(function(e){
-    if ($(e.currentTarget).val() == ""){
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("Name cannot be blank.");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
-    }else{
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
-    }
-});
-
-$(".emailinput").blur(function(e){
-    if ($(e.currentTarget).val() == ""){
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("Email cannot be blank.");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
-    }else{
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
-    }
-});
-
-$(".jobinput").blur(function(e){
-    if ($(e.currentTarget).val() == ""){
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("Job cannot be blank.");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
-    }else{
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
-    }
-});
-
-$(".phoneinput").blur(function(e){
-    if ($(e.currentTarget).val() == ""){
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("Phone cannot be blank.");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
-    }else{
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
-        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
-        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
-    }
 });
 
 $(".btnAdd").click(function (elm){
@@ -489,8 +402,5 @@ $(".btnAddPhone").click(function (elm){
     addPhone($(elm.currentTarget).attr("data-target"));
 });
 
-$(".select2").select2();
-$(".select2").removeClass("select2");
-
-', \yii\web\View::POS_END);
+');
 ?>

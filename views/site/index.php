@@ -364,7 +364,7 @@ function loadDeliverableProcess(){
                             var text = '<div class="widget-deliverable-div"><i title="Click to view detail" class="fa fa-location-arrow view-deliverable"></i> <a href="'+deliverentry.action+'">'
                                 +entry.project
                         +' # ' +deliverentry.process
-                        +' <span class="badge '+(deliverentry.timespan.indexOf("-")>-1?'blue':'red')+'">'+deliverentry.timespan+ '</span></a>'
+                        +' <span class="badge '+(deliverentry.timespan.indexOf("-")>-1?'blue':'red')+'">'+deliverentry.timespan.replace("+", "").replace("-", "")+ '</span></a>'
                         +'<div style="margin-left:20px; font-size:13px; color:rgb(121, 121, 121)" class="panel-deliverable-detail">'
                         +'<div><div class="col-md-2"><i class="fa fa-caret-right"></i> Duedate</div> <div class="col-md-10">'+deliverentry.deadline+'</div>'
                         +'<div><div class="col-md-2"><i class="fa fa-caret-right"></i> Description</div> <div class="col-md-10">'+deliverentry.descr+'</div></div>'

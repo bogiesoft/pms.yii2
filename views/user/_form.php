@@ -77,7 +77,7 @@ use kartik\checkbox\CheckboxX;
                         ],
                         'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
                     ]
-                )->textInput(['maxlength' => 25, !$model->isNewRecord ? 'disabled' : ''=>'']).
+                )->textInput(['maxlength' => 25, !$model->isNewRecord ? 'disabled' : ''=>'', 'placeholder'=>'Enter username..']).
                 
                 $form->field($model, 'name', 
                     [
@@ -85,7 +85,7 @@ use kartik\checkbox\CheckboxX;
                             'class' => 'col-sm-2 control-label'
                         ],
                         'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-                    ])->textInput(['maxlength' => 150]).
+                    ])->textInput(['maxlength' => 150, 'placeholder'=>'Enter name..']).
 
                 $form->field($model, 'email', 
                     [
@@ -93,7 +93,7 @@ use kartik\checkbox\CheckboxX;
                             'class' => 'col-sm-2 control-label'
                         ],
                         'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-                    ])->textInput(['maxlength' => 150]).
+                    ])->textInput(['maxlength' => 150, 'placeholder'=>'Enter user email..']).
 
                 $form->field($model, 'phone', 
                     [
@@ -101,7 +101,7 @@ use kartik\checkbox\CheckboxX;
                             'class' => 'col-sm-2 control-label'
                         ],
                         'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-                    ])->textInput(['maxlength' => 15]).
+                    ])->textInput(['maxlength' => 15, 'placeholder'=>'Enter user phone..']).
 
                 $form->field($model, 'password', 
                     [
@@ -109,7 +109,7 @@ use kartik\checkbox\CheckboxX;
                             'class' => 'col-sm-2 control-label'
                         ],
                         'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-                    ])->passwordInput(['maxlength' => 150]).
+                    ])->passwordInput(['maxlength' => 150, 'placeholder'=>'Enter user password..']).
 
                 $form->field($model, 'varPassword', 
                     [
@@ -117,7 +117,7 @@ use kartik\checkbox\CheckboxX;
                             'class' => 'col-sm-2 control-label'
                         ],
                         'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
-                    ])->passwordInput(['maxlength' => 150]).
+                    ])->passwordInput(['maxlength' => 150, 'placeholder'=>'Enter confirmation password..']).
 
                 $form->field($model, 'active', 
                     [

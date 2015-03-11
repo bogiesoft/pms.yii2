@@ -147,7 +147,6 @@ function addSharingUnit(){
                             $("#sharing-unit").find("label").css("color", "");
                         }
                     });
-                    
 
                 }else{
                     alert("Required at least one unit.");
@@ -198,7 +197,6 @@ function addSharingDepartment(){
                         }
                     });
                     
-
                 }else{
                     alert("Required at least one department.");
                     elm.stopImmediatePropagation();
@@ -243,7 +241,6 @@ $(".btnDeleteSharingUnit").click(function (elm){
             }
         });
         
-
     }else{
         alert("Required at least one unit.");
         elm.stopImmediatePropagation();
@@ -274,13 +271,11 @@ $(".btnDeleteSharingDepartment").click(function (elm){
             }
         });
         
-
     }else{
         alert("Required at least one department.");
         elm.stopImmediatePropagation();
     }                
 });
-
 
 ')
 

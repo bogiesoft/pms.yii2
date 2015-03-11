@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\ConsultantPhone */
@@ -29,9 +31,15 @@ use yii\widgets\ActiveForm;
         $model->phonetypeid = $mobile->phonetypeid;   
     }
     echo Html::activeHiddenInput($model, '[' . $index . ']consultantphoneid');
-    echo Html::activeDropDownList($model, '[' . $index . ']phonetypeid', $data, [
-        'style'=>'width:100%;min-width:250px;',
-        'class'=>'phonetypeddl form-control select2',
+    echo Select2::widget([
+        'model'=>$model,
+        'attribute'=> '['.$index.']phonetypeid',
+        'data'=>$data,
+        'options' => [
+            'placeholder' => 'Select phone type..', 
+            'class'=>'phonetypeddl form-control', 
+            'style' => 'width:100%;min-width:250px;'
+        ],
     ]);
     echo Html::error($model, 'phonetypeid', ['class'=>'help-block']);
 
@@ -50,6 +58,7 @@ use yii\widgets\ActiveForm;
             'maxlength' => 25, 
             'class'=>'form-control phoneinput',
             'style'=>'min-width:300px;',
+            'placeholder'=>'Enter phone number..'
         ]);
         echo Html::error($model, 'phone', ['class'=>'help-block']);
     ?>
@@ -60,3 +69,29 @@ use yii\widgets\ActiveForm;
     </div>
 
 </div><!-- consultant-phone-_form -->
+<script>
+    $(".phoneinput").blur(function(e){
+        if ($(e.currentTarget).val() == ""){
+            $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
+            $(e.currentTarget).closest(".form-group").find(".help-block").text("Phone cannot be blank.");
+            $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
+        }else{
+            $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
+            $(e.currentTarget).closest(".form-group").find(".help-block").text("");
+            $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
+        }
+    });
+
+    $('.phonetypeddl').change(function(e){
+        if ($(e.currentTarget).val() == ""){
+            $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
+            $(e.currentTarget).closest(".form-group").find(".help-block").text("Phone type cannot be blank.");
+            $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
+        }else{
+            $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
+            $(e.currentTarget).closest(".form-group").find(".help-block").text("");
+            $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
+        }
+    });
+
+</script>

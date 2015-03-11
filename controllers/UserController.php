@@ -90,6 +90,8 @@ class UserController extends Controller
 
         //initial default value active
         $model->active = '1';
+        $model->userin = Yii::$app->user->identity->username;
+        $model->datein = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
             //check password & confirm password, return error when not same
@@ -213,6 +215,8 @@ class UserController extends Controller
         $menus = [];
         $units = [];
         $acc = true;
+        $model->userup = Yii::$app->user->identity->username;
+        $model->dateup = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
             //check password & confirm password, return error when not same

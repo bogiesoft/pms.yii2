@@ -11,10 +11,17 @@ use Yii;
  * @property string $name
  * @property string $description
  * @property string $active
+ * @property string $datein 
+ * @property string $userin 
+ * @property string $dateup 
+ * @property string $userup 
  *
  * @property PsGroupaccess[] $psGroupaccesses
+ * @property PsMenu[] $menus 
  * @property PsGroupaccessdata[] $psGroupaccessdatas
+ * @property PsUnit[] $units 
  * @property PsGroupuser[] $psGroupusers
+ * @property PsUser[] $users 
  */
 class Group extends \yii\db\ActiveRecord
 {
@@ -43,7 +50,8 @@ class Group extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
-            [['name'], 'string', 'max' => 50],
+            [['datein', 'dateup'], 'safe'],
+            [['name', 'userin', 'userup'], 'string', 'max' => 50],
             [['description'], 'string', 'max' => 250],
             [['active'], 'string', 'max' => 1]
         ];
@@ -60,6 +68,10 @@ class Group extends \yii\db\ActiveRecord
             'description' => 'Description',
             'active' => 'Active',
             'varActive' => 'Active',
+            'datein' => 'Datein',
+            'userin' => 'Userin',
+            'dateup' => 'Dateup',
+            'userup' => 'Userup',
         ];
     }
 

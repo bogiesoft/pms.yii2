@@ -24,6 +24,7 @@ use yii\widgets\ActiveForm;
             'maxlength' => 150, 
             'class'=>'form-control emailinput',
             'style'=>'min-width:400px;',
+            'placeholder'=>'Enter email address..'
         ]);
         echo Html::error($model, 'email', ['class'=>'help-block']);
     ?>
@@ -35,3 +36,16 @@ use yii\widgets\ActiveForm;
     </div>
 
 </div><!-- consultant-email-_form -->
+<script>
+$(".emailinput").blur(function(e){
+    if ($(e.currentTarget).val() == ""){
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("Email cannot be blank.");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
+    }else{
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
+    }
+});
+</script>

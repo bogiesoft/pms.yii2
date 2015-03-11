@@ -25,21 +25,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'customerid') ?>
 
-    <?php // echo $form->field($model, 'description') ?>
+    <?php echo $form->field($model, 'description') ?>
 
-    <?php // echo $form->field($model, 'producttypeid') ?>
+    <?php echo $form->field($model, 'producttypeid') ?>
 
-    <?php // echo $form->field($model, 'initiationyear') ?>
+    <?php echo $form->field($model, 'initiationyear') ?>
 
-    <?php // echo $form->field($model, 'statusid') ?>
-
-    <?php // echo $form->field($model, 'datein') ?>
-
-    <?php // echo $form->field($model, 'userin') ?>
-
-    <?php // echo $form->field($model, 'dateup') ?>
-
-    <?php // echo $form->field($model, 'userup') ?>
+    <?php echo $form->field($model, 'statusid') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

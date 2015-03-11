@@ -11,6 +11,7 @@ use Yii;
  * @property integer $projectid
  * @property integer $departmentid
  * @property integer $value
+ * @property integer $cost
  * @property string $datein
  * @property string $userin
  * @property string $dateup
@@ -36,7 +37,7 @@ class SharingValueDepartment extends \yii\db\ActiveRecord
     {
         return [
             [['projectid', 'departmentid', 'value'], 'required'],
-            [['projectid', 'departmentid', 'value'], 'integer'],
+            [['projectid', 'departmentid', 'value', 'cost'], 'integer'],
             [['datein', 'dateup'], 'safe'],
             [['userin', 'userup'], 'string', 'max' => 50]
         ];
@@ -52,6 +53,7 @@ class SharingValueDepartment extends \yii\db\ActiveRecord
             'projectid' => 'Projectid',
             'departmentid' => 'Department',
             'value' => 'Value',
+            'cost' => 'Cost',
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',

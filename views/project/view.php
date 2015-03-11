@@ -66,15 +66,32 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <table class="table table-striped table-bordered detail-view">
         <tbody>
-        <tr><th><?= $model->getAttributeLabel('unit') ?></th> <td><?= $model->unit->code.' - '.$model->unit->Name ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('initiationyear') ?></th><td><?= date('d-M-Y', strtotime($model->initiationyear)) ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('code') ?></th> <td><?= $model->code ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('name') ?></th>  <td><?= $model->name ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('customer') ?></th>  <td><?= $model->customer->company ?></td></tr>
-        <tr><th><?= $model->getAttributeLabel('description') ?></th>  <td><?= $model->description ?></td></tr>
-        <tr><th>Product Type</th>  <td><?= $model->producttype->code.' - '.$model->producttype->name ?></td></tr>
-        <tr><th>Status</th>  <td><?= $model->status->name ?></td></tr>
-        <tr><th>Project PICs</th><td style="padding: 0px;">
+        <tr>
+            <th><?= $model->getAttributeLabel('unit') ?></th> 
+            <td><?= $model->unit->code.' - '.$model->unit->Name ?></td></tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('initiationyear') ?></th>
+            <td><?= date('d-M-Y', strtotime($model->initiationyear)) ?></td></tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('code') ?></th> 
+            <td><?= $model->code ?></td></tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('name') ?></th>  
+            <td><?= $model->name ?></td></tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('customer') ?></th>  
+            <td><?= $model->customer->company ?></td></tr>
+        <tr>
+            <th><?= $model->getAttributeLabel('description') ?></th>  
+            <td><?= $model->description ?></td></tr>
+        <tr>
+            <th>Product Type</th>  
+            <td><?= $model->producttype->code.' - '.$model->producttype->name ?></td></tr>
+        <tr>
+            <th>Status</th>  
+            <td><?= $model->status->name ?></td></tr>
+        <tr>
+            <th>Project PICs</th><td style="padding: 0px;">
             <table class="table table-bordered table-striped inside" style="border: none;margin-bottom:0px">
                     <tr>
                         <th>PIC Name</th>

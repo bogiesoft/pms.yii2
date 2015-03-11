@@ -14,12 +14,12 @@ use app\models\Unit;
 /* @var $form ActiveForm */
 ?>
 <style>
-.col-md-2, .col-md-4{
+.col-md-2, .col-md-3, .col-md-4{
     padding-right:5px;
     padding-left:0px;
 }
 @media screen and (max-width: 1024px){
-    .col-md-2, .col-md-4{
+    .col-md-2, .col-md-3, .col-md-4{
         width:100%;
         width:100%;
     }
@@ -71,9 +71,9 @@ use app\models\Unit;
 
     <?php
         if ($model->hasErrors('value')){
-            echo '<div class="form-group required has-error col-md-4">';
+            echo '<div class="form-group required has-error col-md-3">';
         }else{
-            echo '<div class="form-group col-md-4">';
+            echo '<div class="form-group col-md-3">';
         }
     ?>
     <?php
@@ -81,7 +81,7 @@ use app\models\Unit;
             'model'=>$model,
             'attribute'=> '['.$index.']value',
             'options'=>[
-                'maxlength' => 16,
+                'maxlength' => 20,
                 'title'=>'Enter sharing value..',
                 'style'=>'width:100%;',
                 'class'=>'form-control unitvalueinput',
@@ -96,6 +96,35 @@ use app\models\Unit;
             ]
         ]);
         echo Html::error($model, 'value', ['class'=>'help-block']);
+    ?>    
+    </div>
+    <?php
+        if ($model->hasErrors('cost')){
+            echo '<div class="form-group required has-error col-md-3">';
+        }else{
+            echo '<div class="form-group col-md-3">';
+        }
+    ?>
+    <?php
+        echo MaskMoney::widget([
+            'model'=>$model,
+            'attribute'=> '['.$index.']cost',
+            'options'=>[
+                'maxlength' => 20,
+                'title'=>'Enter cost..',
+                'style'=>'width:100%;',
+                'class'=>'form-control unitcostinput',
+            ],
+            'pluginOptions' => [
+                'prefix' => '',
+                'suffix' => '',
+                'allowNegative' => false,
+                'thousands' => ',',
+                'precision' => 2,
+                'allowZero' => true,
+            ]
+        ]);
+        echo Html::error($model, 'cost', ['class'=>'help-block']);
     ?>    
     </div>
         
@@ -120,11 +149,23 @@ $('.unitddl').change(function(e){
 
 $('.unitvalueinput').change(function(e){
     if ($(e.currentTarget).val() == ""){
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error col-md-4");
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error col-md-3");
         $(e.currentTarget).closest(".form-group").find(".help-block").text("Sharing value cannot be blank.");
         $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
     }else{
-        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success col-md-4");
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success col-md-3");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
+    }
+});
+
+$('.unitcostinput').change(function(e){
+    if ($(e.currentTarget).val() == ""){
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-error col-md-3");
+        $(e.currentTarget).closest(".form-group").find(".help-block").text("Cost cannot be blank.");
+        $(e.currentTarget).closest(".divphone").find("label").css("color", "#a94442");
+    }else{
+        $(e.currentTarget).closest(".form-group").attr("class", "form-group required has-success col-md-3");
         $(e.currentTarget).closest(".form-group").find(".help-block").text("");
         $(e.currentTarget).closest(".divphone").find("label").css("color", "#3c763d");
     }
