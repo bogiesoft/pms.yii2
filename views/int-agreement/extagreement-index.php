@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'agreementno',
-                'value' => function($data) { return $data['agreementno']. ' - '. $data['description']; },
+                'value' => function($data) { return $data['agreementno']; },
             ],
             [
                 'class' => 'yii\grid\ActionColumn',

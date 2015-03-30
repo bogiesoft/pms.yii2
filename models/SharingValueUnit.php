@@ -37,7 +37,8 @@ class SharingValueUnit extends \yii\db\ActiveRecord
     {
         return [
             [['projectid', 'unitid', 'value'], 'required'],
-            [['projectid', 'unitid', 'value', 'cost'], 'integer'],
+            [['projectid', 'unitid'], 'integer'],
+            [['value', 'cost'], 'number'],
             [['datein', 'dateup'], 'safe'],
             [['userin', 'userup'], 'string', 'max' => 50]
         ];
@@ -49,7 +50,7 @@ class SharingValueUnit extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'sharingvalueunitid' => 'Sharingvalueunitid',
+            'sharingvalueunitid' => 'Sharing Value Unit',
             'projectid' => 'Project',
             'unitid' => 'Unit',
             'value' => 'Value',

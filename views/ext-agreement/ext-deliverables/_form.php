@@ -55,7 +55,7 @@ use kartik\money\MaskMoney;
             'class'=>'form-control codeinput',
             'style'=>'width:100%;',
         ]);
-        echo Html::error($model, 'code', ['class'=>'help-block']);
+        echo Html::error($model, '['.$index.']code', ['class'=>'help-block']);
     ?>    
     </div>
 
@@ -72,7 +72,7 @@ use kartik\money\MaskMoney;
             'class'=>'form-control descriptioninput',
             'style'=>'width:100%;',
         ]);
-        echo Html::error($model, 'description', ['class'=>'help-block']);
+        echo Html::error($model, '['.$index.']description', ['class'=>'help-block']);
     ?>    
     </div>
 
@@ -89,7 +89,7 @@ use kartik\money\MaskMoney;
             'model'=>$model,
             'attribute'=> '['.$index.']rate',
             'options'=>[
-                'maxlength' => 16,
+                'maxlength' => 21,
                 'title'=>'Enter investment..',
                 'style'=>'width:100%;',
                 'class'=>'form-control rateinput'
@@ -103,7 +103,7 @@ use kartik\money\MaskMoney;
                 'allowZero' => true,
             ]
         ]);
-        echo Html::error($model, 'rate', ['class'=>'help-block']);
+        echo Html::error($model, '['.$index.']rate', ['class'=>'help-block']);
     ?>    
     </div>
 
@@ -124,7 +124,7 @@ use kartik\money\MaskMoney;
                 'format'=>'d.M.yyyy',
             ]
         ]);
-        echo Html::error($model, 'duedate', ['class'=>'help-block']);
+        echo Html::error($model, '['.$index.']duedate', ['class'=>'help-block']);
     ?>    
     </div>
     

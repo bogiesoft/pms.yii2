@@ -80,7 +80,7 @@ use app\models\Department;
             'model'=>$model,
             'attribute'=> '['.$index.']value',
             'options'=>[
-                'maxlength' => 20,
+                'maxlength' => 21,
                 'title'=>'Enter sharing value..',
                 'style'=>'width:100%;',
                 'class'=>'form-control departmentvalueinput',

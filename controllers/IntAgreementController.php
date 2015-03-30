@@ -229,7 +229,7 @@ class IntAgreementController extends Controller
 
             $transaction->commit();
 
-            return $this->redirect(['view', 'id' => $model->intagreementid, 'extagreementid'=>$model->intagreementid]);
+            return $this->redirect(['view', 'id' => $model->intagreementid, 'extagreementid'=>$model->extagreementid]);
              
         } else{
             return $this->render('create', [
@@ -413,7 +413,7 @@ class IntAgreementController extends Controller
 
             $transaction->commit();
 
-            return $this->redirect(['view', 'id' => $model->intagreementid, 'extagreementid'=>$model->intagreementid]);
+            return $this->redirect(['view', 'id' => $model->intagreementid, 'extagreementid'=>$model->extagreementid]);
 
         } else {
             $model->startdate = date('d.M.Y', strtotime($model->startdate)) . ' - ' . date('d.M.Y', strtotime($model->enddate));

@@ -81,10 +81,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     'delete' => function($url, $model, $key){                    
                         $extagreement = \app\models\ExtAgreement::findOne(Yii::$app->request->get('extagreementid'));
                         if (!(strpos(strtolower($extagreement->project->status->name), 'cancel') !== false)){
-                            return Html::a('<span class="glyphicon glyphicon-trash"></span>', \yii\helpers\Url::toRoute(['int-agreement/delete','extagreementid'=>$model->extagreementid, 'id'=>$model->intagreementid],false), [
-                                'title' => Yii::t('yii', 'Delete'),
-                                'data-pjax' => '0',
-                            ]);
+                            return Html::a('<span class="glyphicon glyphicon-trash"></span>', 
+                                ['delete', 'id' => $model->intagreementid, 'extagreementid' => $model->extagreementid], 
+                                [
+                                    'data' => [
+                                        'confirm' => 'Are you sure you want to delete this item?',
+                                        'method' => 'post',
+                                    ],
+                                ]);  
                         }
                     },
                 ]

@@ -39,7 +39,8 @@ class ExtDeliverables extends \yii\db\ActiveRecord
     {
         return [
             [['extagreementid', 'code', 'description', 'rate', 'duedate'], 'required'],
-            [['extagreementid', 'rate'], 'integer'],
+            [['extagreementid'], 'integer'],
+            [['rate'], 'number'],
             [['duedate', 'deliverdate', 'datein', 'dateup'], 'safe'],
             [['code'], 'string', 'max' => 5],
             [['description'], 'string', 'max' => 250],

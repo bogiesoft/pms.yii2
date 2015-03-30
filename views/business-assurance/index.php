@@ -66,10 +66,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     'delete' => function($url, $model, $key){                    
                         $project = \app\models\Project::findOne(Yii::$app->request->get('projectid'));
                         if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
-                            return Html::a('<span class="glyphicon glyphicon-trash"></span>', \yii\helpers\Url::toRoute(['business-assurance/delete','projectid'=>$model->projectid, 'id'=>$model->businessassuranceid],false), [
-                                'title' => Yii::t('yii', 'Delete'),
-                                'data-pjax' => '0',
-                            ]);
+                            return Html::a('<span class="glyphicon glyphicon-trash"></span>', 
+                                ['delete', 'id' => $model->businessassuranceid, 'projectid' => $model->projectid], 
+                                [
+                                    'data' => [
+                                        'confirm' => 'Are you sure you want to delete this item?',
+                                        'method' => 'post',
+                                    ],
+                                ]);   
                         }
                     },
                 ]

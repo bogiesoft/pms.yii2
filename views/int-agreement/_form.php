@@ -324,6 +324,16 @@ console.log(1);
     return flag;
 });
 
+$(document).ready(function(){
+    $(document).find(".ext-deliverables-form").each(function( index ) {
+        var freq = $(this).find(".frequencyinput").val();
+        var rateid = $(this).find("select.rateddl").val();
+        $(this).find(".rateinput[id*=\'disp\']").val(CalculateRate(freq, rateid));
+        $(this).find(".rateinput[id*=\'disp\']").focus().blur();
+    });
+});
+
+
 ')
 
 ?>

@@ -5,6 +5,9 @@ use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use app\models\Project;
 use kartik\select2\Select2;
+use kartik\datecontrol\Module;
+use kartik\datecontrol\DateControl;
+use kartik\date\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Proposal */
@@ -26,6 +29,16 @@ use kartik\select2\Select2;
             'pluginOptions' => [
                 'allowClear' => true
             ],
+        ]);
+    ?>
+
+    <?php
+        echo $form->field($model, 'date')->widget(DatePicker::classname(), [
+            'options' => ['placeholder' => 'Enter proposal date ...'],
+            'pluginOptions' => [
+                'autoclose'=>true,
+                'format' => 'd-M-yyyy'
+            ]
         ]);
     ?>
 

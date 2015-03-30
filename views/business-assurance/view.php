@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\BusinessAssurance */
 
-$this->title = 'Business Assurance@'.date('d.M.Y H:i:s', strtotime($model->date));
+$this->title = 'Business Assurance@'.date('d.M.Y', strtotime($model->date));
 $this->params['breadcrumbs'][] = ['label' => 'Business Assurance: Select Project', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => 'Business Assurances', 'url' => ['index', 'projectid'=>Yii::$app->request->get('projectid')]];
 $this->params['breadcrumbs'][] = $this->title;

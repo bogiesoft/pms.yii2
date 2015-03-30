@@ -43,7 +43,7 @@ class Proposal extends \yii\db\ActiveRecord
             [['remark'], 'string', 'max' => 250],
             [['filename'], 'string', 'max' => 150],
             [['file'],'safe'],
-            [['file'], 'file', 'skipOnEmpty' => false],
+            [['file'], 'file', 'skipOnEmpty' => false, 'on' => 'insert'],
             //[['file'], 'file', 'extensions' => 'doc, docx', 'mimeTypes' => 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',],
             [['userin', 'userup'], 'string', 'max' => 50]
         ];
@@ -84,7 +84,7 @@ class Proposal extends \yii\db\ActiveRecord
     }
 
     public function getDateFormat(){
-        return date('d-M-Y H:i:s', strtotime($this->date));
+        return date('d-M-Y', strtotime($this->date));
     }
 
     public function getUrlFile(){

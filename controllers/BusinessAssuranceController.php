@@ -99,6 +99,7 @@ class BusinessAssuranceController extends Controller
     public function actionCreate($projectid = 0)
     {
         $model = new BusinessAssurance();
+        $model->setscenario('insert');
         $model->projectid = $projectid;
         $this->validateProject($projectid);
         $this->validateCancelProject($projectid);
@@ -112,7 +113,8 @@ class BusinessAssuranceController extends Controller
             
             date_default_timezone_set('Asia/Jakarta');
 
-            $model->date =  new \yii\db\Expression('NOW()');            
+            $model->date = date("Y-m-d", strtotime($model->date));
+
             $model->filename = str_replace('/', '.', $model->project->code).'_'.date('d.M.Y').'_'.date('His').'_'.'BusinessAssurance'. '.' . $file1->extension;
             $model->filename = strtoupper($model->filename);
             $model->file = $file1;
@@ -127,6 +129,7 @@ class BusinessAssuranceController extends Controller
                 return $this->redirect(['view', 'id' => $model->businessassuranceid, 'projectid'=>$projectid]);
             }
             else {
+                $model->date = date("d-M-Y", strtotime($model->date));
                 return $this->render('create', [
                     'model' => $model,
                 ]);
@@ -167,15 +170,22 @@ class BusinessAssuranceController extends Controller
         $model->dateup = new \yii\db\Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post())) {
+            date_default_timezone_set('Asia/Jakarta');
+            $flag = true;
 
             $file1 = UploadedFile::getInstance($model, 'file');
-            
-            date_default_timezone_set('Asia/Jakarta');
+            if ($file1 == null && $model->filename == ""){
+                $model->addError('file', 'Please upload a file.');
+                $flag = false;
+            }
 
-            $model->date =  new \yii\db\Expression('NOW()');
-            $model->filename = str_replace('/', '.', $model->project->code).'_'.date('d.M.Y').'_'.date('His').'_'.'BusinessAssurance'. '.' . $file1->extension;
-            $model->filename = strtoupper($model->filename);
-            $model->file = $file1;
+            if ($file1 != null){
+                $model->filename = str_replace('/', '.', $model->project->code).'_'.date('d.M.Y').'_'.date('His').'_'.'BusinessAssurance'. '.' . $file1->extension;
+                $model->filename = strtoupper($model->filename);
+                $model->file = $file1;
+            }
+
+            $model->date = date("Y-m-d", strtotime($model->date));
             
             if ($model->validate() && $model->save()) {                
                 
@@ -183,15 +193,19 @@ class BusinessAssuranceController extends Controller
                 $model_project = Project::findOne($projectid);                
                 $model_project->setProjectStatus();
 
-                $model->file->saveAs('uploads/' . $model->filename); 
+                if ($file1 != null){
+                    $model->file->saveAs('uploads/' . $model->filename); 
+                }
                 return $this->redirect(['view', 'id' => $model->businessassuranceid, 'projectid'=>$projectid]);
             }
             else{
+                $model->date = date("d-M-Y", strtotime($model->date));
                 return $this->render('update', [
                     'model' => $model,
                 ]);    
             }
         } else {
+            $model->date = date("d-M-Y", strtotime($model->date));
             return $this->render('update', [
                 'model' => $model,
             ]);

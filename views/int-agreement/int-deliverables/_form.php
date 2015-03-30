@@ -361,4 +361,5 @@ function CalculateRate(freq, rateid){
 
     return rate.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
 }
+
 </script>

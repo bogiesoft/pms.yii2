@@ -41,7 +41,7 @@ class BusinessAssurance extends \yii\db\ActiveRecord
             [['date', 'datein', 'dateup'], 'safe'],
             [['remark'], 'string', 'max' => 250],
             [['file'],'safe'],
-            [['file'], 'file', 'skipOnEmpty' => false],
+            [['file'], 'file', 'skipOnEmpty' => false, 'on' => 'insert'],
             //[['file'], 'file', 'extensions' => 'doc, docx', 'mimeTypes' => 'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document',],
             [['filename'], 'string', 'max' => 150],
             [['userin', 'userup'], 'string', 'max' => 50]
@@ -87,6 +87,6 @@ class BusinessAssurance extends \yii\db\ActiveRecord
     }
 
     public function getDateFormat(){
-        return date('d-M-Y H:i:s', strtotime($this->date));
+        return date('d-M-Y', strtotime($this->date));
     }
 }

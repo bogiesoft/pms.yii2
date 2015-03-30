@@ -8,7 +8,7 @@ use yii\helpers\Html;
 $this->title = 'Update Proposal';
 $this->params['breadcrumbs'][] = ['label' => 'Proposal: Select Project', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => 'Proposals', 'url' => ['index?projectid='.Yii::$app->request->get('projectid')]];
-$this->params['breadcrumbs'][] = ['label' => 'Proposal@'.date('d.M.Y H:i:s', strtotime($model->date)), 'url' => ['view', 'id' => $model->proposalid, 'projectid' => Yii::$app->request->get('projectid')]];
+$this->params['breadcrumbs'][] = ['label' => 'Proposal@'.date('d.M.Y', strtotime($model->date)), 'url' => ['view', 'id' => $model->proposalid, 'projectid' => Yii::$app->request->get('projectid')]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="proposal-update">

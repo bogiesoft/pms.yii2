@@ -37,7 +37,8 @@ class SharingValueDepartment extends \yii\db\ActiveRecord
     {
         return [
             [['projectid', 'departmentid', 'value'], 'required'],
-            [['projectid', 'departmentid', 'value', 'cost'], 'integer'],
+            [['projectid', 'departmentid'], 'integer'],
+            [['value', 'cost'], 'number'],
             [['datein', 'dateup'], 'safe'],
             [['userin', 'userup'], 'string', 'max' => 50]
         ];

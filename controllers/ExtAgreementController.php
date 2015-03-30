@@ -114,7 +114,6 @@ class ExtAgreementController extends Controller
         $model_extdeliverables = null;
 
         if ($model->load(Yii::$app->request->post())) {
-
             $flag = true;
 
             $file1 = UploadedFile::getInstance($model, 'file');
@@ -142,7 +141,7 @@ class ExtAgreementController extends Controller
                         $modelExtDev->description = $extDev["description"];   
                     }
                     if (isset($extDev["rate"]) && $extDev["rate"] != ""){
-                        $modelExtDev->rate = str_replace('.', '', $extDev["rate"]);
+                        $modelExtDev->rate = $extDev["rate"];
                     }
                     if (isset($extDev["duedate"]) && $extDev["duedate"] != ""){
                         $modelExtDev->duedate = $extDev["duedate"];   
@@ -300,7 +299,6 @@ class ExtAgreementController extends Controller
                     }
                     if (isset($extDev["rate"]) && $extDev["rate"] != ""){
                         $modelExtDev->rate = $extDev["rate"];   
-                        $modelExtDev->rate = str_replace('.','',$modelExtDev->rate);
                     }
                     if (isset($extDev["duedate"]) && $extDev["duedate"] != ""){
                         $modelExtDev->duedate = $extDev["duedate"];   
@@ -439,7 +437,7 @@ class ExtAgreementController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public function actionDelete($id, $projectid)
     {
         $model = $this->findModel($id, $projectid);
         $projectid = $model->projectid;

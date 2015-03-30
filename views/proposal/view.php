@@ -5,7 +5,7 @@ use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Proposal */
-$this->title = 'Proposal@'.date('d.M.Y H:i:s', strtotime($model->date));
+$this->title = 'Proposal@'.date('d.M.Y', strtotime($model->date));
 $this->params['breadcrumbs'][] = ['label' => 'Proposal: Select Project', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => 'Proposals', 'url' => ['index?projectid='.Yii::$app->request->get('projectid')]];
 $this->params['breadcrumbs'][] = $this->title;
@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
         if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
             echo Html::a('Update', ['update', 'id' => $model->proposalid, 'projectid'=>Yii::$app->request->get('projectid')], ['class' => 'btn btn-primary']);
 
-            echo Html::a('Delete', ['delete', 'id' => $model->proposalid, 'projectid' => $model->project->projectid], [
+            echo ' ' . Html::a('Delete', ['delete', 'id' => $model->proposalid, 'projectid' => $model->project->projectid], [
                 'class' => 'btn btn-danger',
                 'data' => [
                     'confirm' => 'Are you sure you want to delete this item?',
