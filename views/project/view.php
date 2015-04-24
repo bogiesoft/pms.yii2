@@ -45,13 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <?php
         if (!(strpos(strtolower($model->status->name), 'cancel') !== false)){
-            echo Html::a('Cancel Project', ['cancel-project', 'id' => $model->projectid], [
-            'class' => 'btn btn-danger',
-                'data' => [
-                    'confirm' => 'Are you sure you want to cancel this project?',
-                    'method' => 'post',
-                ],
-            ]);
+            echo Html::a('Cancel Project', ['cancel-project', 'id' => $model->projectid], ['class' => 'btn btn-danger']);
         }else{
             echo Html::a('Undo Cancel Project', ['undo-cancel-project', 'id' => $model->projectid], [
             'class' => 'btn btn-danger',

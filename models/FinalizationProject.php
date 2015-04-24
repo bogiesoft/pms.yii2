@@ -13,6 +13,8 @@ use Yii;
  * @property string $remark
  * @property string $intsurveyscore
  * @property string $extsurveyscore
+ * @property string $postingdate 
+ * @property string $link
  * @property string $datein
  * @property string $userin
  * @property string $dateup
@@ -39,8 +41,8 @@ class FinalizationProject extends \yii\db\ActiveRecord
         return [
             [['projectid'], 'required'],
             [['projectid'], 'integer'],
-            [['datein', 'dateup'], 'safe'],
-            [['filename'], 'string', 'max' => 250],
+            [['postingdate', 'datein', 'dateup'], 'safe'],
+            [['filename', 'link'], 'string', 'max' => 250],
             [['remark'], 'string', 'max' => 500],
             [['intsurveyscore', 'extsurveyscore'], 'string', 'max' => 16],
             [['userin', 'userup'], 'string', 'max' => 50],
@@ -60,6 +62,8 @@ class FinalizationProject extends \yii\db\ActiveRecord
             'remark' => 'Lessons Learned',
             'intsurveyscore' => 'Internal Survey Score',
             'extsurveyscore' => 'External Survey Score',
+            'postingdate' => 'Posting Date',
+            'link' => 'Link',
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',

@@ -294,19 +294,28 @@ class ProjectController extends Controller
     {
         $model = $this->findModel($id);
 
-        $status = \app\models\Status::find()->where("name like '%cancel%'")->one();
-        $model->userup = Yii::$app->user->identity->username;
-        $model->dateup = new \yii\db\Expression('NOW()');
-        $model->statusid = isset($status->statusid) ? $status->statusid : 0;
-        $model->save();
+        if ($model->load(Yii::$app->request->post())) {
+            
+            $status = \app\models\Status::find()->where("name like '%cancel%'")->one();
+            $model->userup = Yii::$app->user->identity->username;
+            $model->dateup = new \yii\db\Expression('NOW()');
+            $model->statusid = isset($status->statusid) ? $status->statusid : 0;
+            $model->save();
 
-        return $this->redirect(['index']);
+            return $this->redirect(['index']);
+
+        }else{
+            return $this->render('cancel-project', [
+                'model' => $model
+            ]);   
+        }
     }
 
     public function actionUndoCancelProject($id)
     {
         $model = $this->findModel($id);
 
+        $model->cancelremark = null;
         $model->setProjectStatus();
 
         return $this->redirect(['index']);

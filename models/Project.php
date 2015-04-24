@@ -20,6 +20,7 @@ use Yii;
  * @property string $userin
  * @property string $dateup
  * @property string $userup
+ * @property string $cancelremark 
  *
  * @property PsBusinessassurance[] $psBusinessassurances
  * @property PsCostingapproval[] $psCostingapprovals
@@ -52,7 +53,7 @@ class Project extends \yii\db\ActiveRecord
             [['datein', 'dateup', 'initiationyear'], 'safe'], 
             [['code'], 'string', 'max' => 8],
             [['name', 'userin', 'userup'], 'string', 'max' => 50],
-            [['description'], 'string', 'max' => 250],
+            [['description', 'cancelremark'], 'string', 'max' => 250],
             [['code'], 'unique']
         ];
     }
@@ -76,6 +77,7 @@ class Project extends \yii\db\ActiveRecord
             'userin' => 'Userin',
             'dateup' => 'Dateup',
             'userup' => 'Userup',
+            'cancelremark' => 'Remarks', 
         ];
     }
 

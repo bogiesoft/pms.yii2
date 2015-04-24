@@ -136,6 +136,26 @@ if ($model_finalization == null){
             ?></td>
         </tr>
         <tr>
+            <th><?= $model_finalization->getAttributeLabel('postingdate') ?></th>  
+            <td><?php 
+                if ($model_finalization->postingdate != null){
+                    echo date('d-M-Y', strtotime($model_finalization->postingdate));
+                }else{
+                    echo '<span class="not-set">(not set)</span>';
+                }
+            ?></td>
+        </tr>
+        <tr>
+            <th><?= $model_finalization->getAttributeLabel('link') ?></th>  
+            <td><?php 
+                if ($model_finalization->link != null){
+                    echo $model_finalization->link;
+                }else{
+                    echo '<span class="not-set">(not set)</span>';
+                }
+            ?></td>
+        </tr>
+        <tr>
             <th>Finalization File</th>  
             <td><?php 
                 if ($model_finalization->filename != null){

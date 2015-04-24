@@ -44,6 +44,15 @@ if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
             ],
         ]);
     }
+        echo ' ' . Html::a('<i class="fa fa-pencil"></i> Update Payment', ['update-payment', 
+                'id' => $model->extdeliverableid, 
+                'projectid'=>Yii::$app->request->get('projectid')
+            ], 
+            [
+                'class' => 'btn btn-primary',
+            ]
+        );
+    
 }
 ?>
     </p>
@@ -92,32 +101,11 @@ if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
         ?>
     </td>
 </tr>
-        <tr><th>Payment Date</th>  <td>
-<?php
-    
-    $editable = Editable::begin([
-        'model'=>$model_payment, 
-        'attribute' => 'date',
-        'type'=>'primary',
-        'displayValue' => $model->paymentdateformat,
-        'size'=>'md',
-        'inputType' => Editable::INPUT_DATE,
-        'options'=>[
-            'options' => ['placeholder' => 'Enter payment date..'],
-            'pluginOptions' => [
-                    'autoclose'=>true,
-                    'format' => 'd-M-yyyy'
-                ]
-        ],
-        'pluginEvents'=>[
-            'editableSuccess'=>"function(event, val) { location.reload(); }",
-        ]
-    ]);   
-
-    $form = $editable->getForm();
-    $editable->afterInput = $form->field($model_payment, 'remark', ['template'=>'{input}{error}'])->textArea(['maxlength' => 250, 'placeholder'=>'Enter remark..', 'style'=>'height:80px']) . ' ';
-    Editable::end();
-?></td></tr>
+        <tr><th>Invoice Date</th><td><?= $model_payment->invoiceDateFormat ?></td></tr>
+        <tr><th>Sent Date</th><td><?= $model_payment->sentDateFormat ?></td></tr>
+        <tr><th>Invoice Deadline</th><td><?= $model_payment->invoiceDeadlineFormat ?></td></tr>
+        <tr><th>Target Date</th><td><?= $model_payment->targetDateFormat ?></td></tr>
+        <tr><th>Payment Date</th><td><?= $model_payment->paymentDateFormat ?></td></tr>
         
         </tbody>
     </table>

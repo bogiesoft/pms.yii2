@@ -178,6 +178,16 @@ class SharingValueController extends Controller
             }else{
                 $model_finalization->extsurveyscore = null;
             }
+            if (isset($_POST["FinalizationProject"]["postingdate"]) && $_POST["FinalizationProject"]["postingdate"] != ""){
+                $model_finalization->postingdate = $_POST["FinalizationProject"]["postingdate"];
+            }else{
+                $model_finalization->postingdate = null;
+            }
+            if (isset($_POST["FinalizationProject"]["link"]) && $_POST["FinalizationProject"]["link"] != ""){
+                $model_finalization->link = $_POST["FinalizationProject"]["link"];
+            }else{
+                $model_finalization->link = null;
+            }
             if (isset($_POST["FinalizationProject"]["file"]) && $_POST["FinalizationProject"]["file"] != ""){
                 $model_finalization->file = $_POST["FinalizationProject"]["file"];   
             }else{
@@ -241,8 +251,12 @@ class SharingValueController extends Controller
             }
 
             $model_finalization->projectid = $model->projectid;
+            if ($model_finalization->postingdate != null){
+                $model_finalization->postingdate = date('Y-m-d', strtotime($model_finalization->postingdate));   
+            }
 
             if (!$model_finalization->save()){
+                $model_finalization->postingdate = date('d-M-Y', strtotime($model_finalization->postingdate));   
                 $transaction->rollBack();
                                                    
                 return $this->render('update', [
@@ -271,16 +285,20 @@ class SharingValueController extends Controller
             $units[] = $model_unit;
 
             $sql = "select distinct ps_intagreement.* from ps_project
-                    left join ps_extagreement on ps_project.projectid = ps_extagreement.projectid
-                    left join ps_intagreement on ps_extagreement.extagreementid = ps_intagreement.extagreementid
+                    join ps_extagreement on ps_project.projectid = ps_extagreement.projectid
+                    join ps_intagreement on ps_extagreement.extagreementid = ps_intagreement.extagreementid
                     where ps_project.projectid = :1";
 
             $model_intagreement = \app\models\IntAgreement::findBySql($sql, [':1'=>$projectid])->all();
+            $tempArr = [];
             foreach($model_intagreement as $intagreement){
-                $model_department = new SharingValueDepartment();
-                $model_department->departmentid = $intagreement->departmentid;
-                $model_department->value = 0;
-                $departments[] = $model_department;
+                if (!in_array($intagreement->departmentid, $tempArr)){
+                    $model_department = new SharingValueDepartment();
+                    $model_department->departmentid = $intagreement->departmentid;
+                    $model_department->value = 0;
+                    $departments[] = $model_department;
+                    $tempArr[] = $intagreement->departmentid;   
+                }
             }
 
             return $this->render('create', [
@@ -402,6 +420,16 @@ class SharingValueController extends Controller
                 $model_finalization->extsurveyscore = $_POST["FinalizationProject"]["extsurveyscore"];   
             }else{
                 $model_finalization->extsurveyscore = null;
+            }
+            if (isset($_POST["FinalizationProject"]["postingdate"]) && $_POST["FinalizationProject"]["postingdate"] != ""){
+                $model_finalization->postingdate = $_POST["FinalizationProject"]["postingdate"];
+            }else{
+                $model_finalization->postingdate = null;
+            }
+            if (isset($_POST["FinalizationProject"]["link"]) && $_POST["FinalizationProject"]["link"] != ""){
+                $model_finalization->link = $_POST["FinalizationProject"]["link"];
+            }else{
+                $model_finalization->link = null;
             }
             if (isset($_POST["FinalizationProject"]["file"]) && $_POST["FinalizationProject"]["file"] != ""){
                 $model_finalization->file = $_POST["FinalizationProject"]["file"];   
@@ -528,8 +556,12 @@ class SharingValueController extends Controller
             }
 
             $model_finalization->projectid = $model->projectid;
+            if ($model_finalization->postingdate != null){
+                $model_finalization->postingdate = date('Y-m-d', strtotime($model_finalization->postingdate));   
+            }
 
             if (!$model_finalization->save()){
+                $model_finalization->postingdate = date('d-M-Y', strtotime($model_finalization->postingdate));   
                 $transaction->rollBack();
                                                    
                 return $this->render('update', [
@@ -565,6 +597,7 @@ class SharingValueController extends Controller
 
             if ($model->finalizationprojects != null){
                 $model_finalization = $model->finalizationprojects;
+                $model_finalization->postingdate = date('d-M-Y', strtotime($model_finalization->postingdate));
             }
 
             return $this->render('update', [
@@ -598,6 +631,12 @@ class SharingValueController extends Controller
         if (count($project->sharingvaluedepartments) > 0){
             SharingValueDepartment::deleteAll('projectid = :1', [':1'=>$project->projectid]);
         }
+
+        if (count($project->finalizationprojects) > 0){
+            FinalizationProject::deleteAll('projectid = :1', [':1'=>$project->projectid]);
+        }
+
+        $model->setProjectStatus();
 
         $transaction->commit();
 

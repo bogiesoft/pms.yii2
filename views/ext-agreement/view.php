@@ -60,6 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <tr><th>Start Date</th>  <td><?= date('d-M-Y', strtotime($model->startdate)) ?></td></tr>
         <tr><th><?= $model->getAttributeLabel('enddate') ?></th> <td><?= date('d-M-Y', strtotime($model->enddate)) ?></td></tr>
         <tr><th><?= $model->getAttributeLabel('signdate') ?></th> <td><?= date('d-M-Y', strtotime($model->signdate)) ?></td></tr>
+        <tr><th><?= $model->getAttributeLabel('ppn') ?></th> <td><?= $model->ppn ?>%</td></tr>
         <tr><th><?= $model->getAttributeLabel('filename') ?></th> <td><a download href="<?= \Yii::$app->request->BaseUrl ?>/uploads/<?= $model->filename ?>"><?= $model->filename ?></a></td></tr>
 
         <tr><th>Deliverables</th><td style="padding: 0px;">

@@ -63,6 +63,15 @@ if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
             ],
         ]);
     }
+
+        echo ' ' . Html::a('<i class="fa fa-pencil"></i> Update Payment', ['update-payment', 
+                'id' => $model->intdeliverableid, 
+                'projectid'=>Yii::$app->request->get('projectid')
+            ], 
+            [
+                'class' => 'btn btn-primary',
+            ]
+        );
 }
 
 ?>
@@ -141,35 +150,27 @@ if (!(strpos(strtolower($project->status->name), 'cancel') !== false)){
         ?>
             </td>
         </tr>
-        <tr><th>Payment Date</th>  <td>
+        
+        <tr><th>Payment Date</th>  
+            <td><?php 
+                if ($model_payment->date != null){
+                    echo $model_payment->date;
+                }else{
+                    echo '<span class="not-set">(not set)</span>';
+                }
+            ?></td>
+        </tr>
+        
+        <tr><th>Honor Date</th>  
+            <td><?php 
+                if ($model_payment->honordate != null){
+                    echo $model_payment->honorDateFormat;
+                }else{
+                    echo '<span class="not-set">(not set)</span>';
+                }
+            ?></td>
+        </tr>
 
-        <?php
-    
-    $editable = Editable::begin([
-        'model'=>$model_payment, 
-        'attribute' => 'date',
-        'type'=>'primary',
-        'displayValue' => $model->paymentdateformat,
-        'size'=>'md',
-        'inputType' => Editable::INPUT_DATE,
-        'options'=>[
-            'options' => ['placeholder' => 'Enter payment date..'],
-            'pluginOptions' => [
-                    'autoclose'=>true,
-                    'format' => 'd-M-yyyy'
-                ]
-            
-        ],
-        'pluginEvents'=>[
-            'editableSuccess'=>"function(event, val) { location.reload(); }",
-        ]
-    ]);   
-
-    $form = $editable->getForm();
-    $editable->afterInput = $form->field($model_payment, 'remark', ['template'=>'{input}{error}'])->textArea(['maxlength' => 250, 'placeholder'=>'Enter remark..', 'style'=>'height:80px']) . ' ';
-    Editable::end();
-?>
-</td></tr>
         
         </tbody>
     </table>

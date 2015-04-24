@@ -137,6 +137,13 @@ use kartik\tabs\TabsX;
             ],
             'template' => '{label}<div class="col-sm-10">{input}{error}{hint}</div>'
         ])->textInput(['maxlength' => 150, 'placeholder'=>'Enter webpage URL..']);
+    
+    echo $form->field($model, 'global',[
+                'labelOptions' => [
+                'class' => 'col-sm-2 control-label'
+            ],
+            'template' => '{label}<div class="col-sm-10" style="margin-top:7px">{input}{error}{hint}</div>'
+        ])->radioList(['1'=>'Yes', '0'=>'No'],['separator'=>'<span style="margin-right:20px"></span>']);
 
 echo '</div></div>';
     echo '<div class="divcontact panel panel-default"><div class="panel-heading">

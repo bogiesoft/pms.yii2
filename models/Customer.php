@@ -19,6 +19,7 @@ use Yii;
  * @property integer $countryid
  * @property integer $partnertypeid
  * @property string $webpage
+ * @property string $global 
  * @property string $datein
  * @property string $userin
  * @property string $dateup
@@ -47,13 +48,14 @@ class Customer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['company', 'dayofjoin', 'phone', 'address', 'city', 'state', 'countryid', 'partnertypeid'], 'required'],
+            [['company', 'dayofjoin', 'phone', 'address', 'city', 'state', 'countryid', 'partnertypeid', 'global'], 'required'],
             [['dayofjoin', 'datein', 'dateup'], 'safe'],
             [['countryid', 'partnertypeid'], 'integer'],
             [['company', 'city', 'state', 'userin', 'userup'], 'string', 'max' => 50],
             [['npwp'], 'string', 'max' => 20],
             [['phone', 'fax'], 'string', 'max' => 15],
-            [['address', 'webpage'], 'string', 'max' => 150]
+            [['address', 'webpage'], 'string', 'max' => 150],
+            [['global'], 'string', 'max' => 1]
         ];
     }
 
@@ -75,6 +77,7 @@ class Customer extends \yii\db\ActiveRecord
             'countryid' => 'Country',
             'partnertypeid' => 'Partner Type',
             'webpage' => 'Webpage',
+            'global' => 'Global', 
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',

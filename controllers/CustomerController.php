@@ -259,19 +259,23 @@ class CustomerController extends Controller
                 $contactModel = new ContactPerson();
                 if (isset($contact["name"]) && $contact["name"] != ""){
                     $contactModel->name = $contact["name"];   
+                }else{
+                    $flag = false;
                 }
                 if (isset($contact["email"]) && $contact["email"] != ""){
                     $contactModel->email = $contact["email"];   
+                }else{
+                    $flag = false;
                 }
                 if (isset($contact["job"]) && $contact["job"] != ""){
                     $contactModel->job = $contact["job"];   
+                }else{
+                    $flag = false;
                 }
                 if (isset($contact["contactpersonid"]) && $contact["contactpersonid"] != ""){
                     $contactModel->contactpersonid = $contact["contactpersonid"];   
                     $arrContactId[] = $contactModel->contactpersonid;
-                }
-                
-                if (!$contactModel->validate()){
+                }else{
                     $flag = false;
                 }
 
@@ -281,14 +285,17 @@ class CustomerController extends Controller
                         if (isset($phone["contactpersonphoneid"]) && $phone["contactpersonphoneid"] != ""){
                             $contactPhone->contactpersonphoneid = $phone["contactpersonphoneid"];
                             $arrContactPhoneId[] = $contactPhone->contactpersonphoneid;
+                        }else{
+                            $flag = false;
                         }
                         if (isset($phone["phonetypeid"]) && $phone["phonetypeid"] != ""){
                             $contactPhone->phonetypeid = $phone["phonetypeid"];
+                        }else{
+                            $flag = false;
                         }
                         if (isset($phone["phone"]) && $phone["phone"] != ""){
                             $contactPhone->phone = $phone["phone"];
-                        }
-                        if (!$contactPhone->validate()){
+                        }else{
                             $flag = false;
                         }
 

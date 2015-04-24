@@ -89,6 +89,7 @@ class IntAgreementPaymentController extends Controller
             $out = Json::encode(['output'=>'', 'message'=>'']);
             if (isset($_POST["IntDeliverables"]["intdeliverableid"])){
                 $id = $_POST["IntDeliverables"]["intdeliverableid"];
+                $model = $this->findModel($id, $projectid);
                 $model->userup = Yii::$app->user->identity->username;
                 $model->dateup = new \yii\db\Expression('NOW()');
 
@@ -97,6 +98,7 @@ class IntAgreementPaymentController extends Controller
                         $out = Json::encode(['output'=>'', 'message'=>'Deliverable date cannot be blank.']);   
                     }else{
                         $model->deliverdate = date('Y-m-d', strtotime($model->deliverdate));
+                        $model->rate = $model->projectrate->rate * $model->frequency;
                         if ($model->save()){
                             $output = date('d-M-Y', strtotime($model->deliverdate));
                             $out = Json::encode(['output'=>$output, 'message'=>'']);
@@ -107,40 +109,6 @@ class IntAgreementPaymentController extends Controller
                 }
             }
 
-            if (isset($_POST["IntAgreementPayment"])){
-                $remark = null;
-                $date = null;
-                if (isset($_POST["IntAgreementPayment"]["date"])){
-                    $date = $_POST["IntAgreementPayment"]["date"];
-                    $date = date('Y-m-d', strtotime($date));
-                }
-                if (isset($_POST["IntAgreementPayment"]["remark"])){
-                    $remark = $_POST["IntAgreementPayment"]["remark"];
-                }
-
-                $model_payment = IntAgreementPayment::find()->where('intdeliverableid = :1', [':1'=>$id])->one();
-                if ($model_payment == null){
-                    $model_payment = new IntAgreementPayment();
-                    $model_payment->date = $date;
-                    $model_payment->remark = $remark;
-                    $model_payment->intdeliverableid = $model->intdeliverableid;
-                    $model_payment->userin = Yii::$app->user->identity->username;
-                    $model_payment->datein = new \yii\db\Expression('NOW()');
-                }else{
-                    $model_payment->date = $date;
-                    $model_payment->remark = $remark;
-                    $model_payment->userup = Yii::$app->user->identity->username;
-                    $model_payment->dateup = new \yii\db\Expression('NOW()');
-                }
-
-                if ($model_payment->save()){
-                    $output = date('d-M-Y', strtotime($model_payment->date));
-                    $out = Json::encode(['output'=>$output, 'message'=>'']);
-                }else{
-                    $out = Json::encode(['output'=>'', 'message'=>'An error occurred while saving.']);
-                }
-
-            }
             echo $out;
         }else{
             $model_payment = $model->intagreementpayments;
@@ -225,6 +193,38 @@ class IntAgreementPaymentController extends Controller
         $project = \app\models\Project::findOne($projectid);
         if (strpos(strtolower($project->status->name), 'cancel') !== false){
             throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    public function actionUpdatePayment($id, $projectid){
+        $this->validateProject($projectid);
+        $model_payment = \app\models\IntAgreementPayment::find()->where(['intdeliverableid'=>$id])->one();
+
+        if ($model_payment == null){
+            $model_payment = new IntAgreementPayment();
+        }
+
+        if ($model_payment->load(Yii::$app->request->post())) { 
+            if ($model_payment->honordate != null){
+                $model_payment->honordate = date('Y-m-d', strtotime($model_payment->honordate));
+            }
+            if ($model_payment->date != null){
+                $model_payment->date = date('Y-m-d', strtotime($model_payment->date));
+            }
+            $model_payment->intdeliverableid = $id;
+            $model_payment->save();
+
+            return $this->redirect(['view', 'id' => $id, 'projectid'=>$projectid]);
+        } else {
+            if ($model_payment->honordate != null){
+                $model_payment->honordate = date('d-M-Y', strtotime($model_payment->honordate));
+            }
+            if ($model_payment->date != null){
+                $model_payment->date = date('d-M-Y', strtotime($model_payment->date));
+            }
+            return $this->render('update-payment', [
+                'model_payment' => $model_payment,
+            ]);
         }
     }
 }

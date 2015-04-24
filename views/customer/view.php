@@ -58,6 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <tr><th><?= $model->getAttributeLabel('countryid') ?></th><td><?= $model->country->name ?></td></tr>
             <tr><th><?= $model->getAttributeLabel('partnertypeid') ?></th><td><?= $model->partnertype->name ?></td></tr>
             <tr><th><?= $model->getAttributeLabel('webpage') ?></th><td><?= $model->webpage ?></td></tr>
+            <tr><th><?= $model->getAttributeLabel('global') ?></th><td><?= $model->global == 1 ? 'Yes' : 'No'?></td></tr>
             <tr><th>Contact  Person</th><td style='padding: 0px;'><?= $model->getContactPersonWithPhone() ?></td></tr>
         </tbody>
     </table>

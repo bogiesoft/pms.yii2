@@ -15,6 +15,7 @@ use Yii;
  * @property string $enddate
  * @property string $signdate
  * @property string $filename
+ * @property integer $ppn
  * @property string $datein
  * @property string $userin
  * @property string $dateup
@@ -42,7 +43,7 @@ class ExtAgreement extends \yii\db\ActiveRecord
     {
         return [
             [['projectid', 'agreementno', 'startdate', 'enddate', 'filename', 'signdate'], 'required'],
-            [['projectid'], 'integer'],
+            [['projectid', 'ppn'], 'integer'],
             [['startdate', 'enddate', 'datein', 'dateup', 'signdate'], 'safe'],
             [['agreementno', 'userin', 'userup'], 'string', 'max' => 50],
             [['description', 'filename'], 'string', 'max' => 250],
@@ -68,6 +69,7 @@ class ExtAgreement extends \yii\db\ActiveRecord
             'enddate' => 'End Date',
             'signdate' => 'Sign Date',
             'filename' => 'Filename',
+            'ppn' => 'PPN (%)', 
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',

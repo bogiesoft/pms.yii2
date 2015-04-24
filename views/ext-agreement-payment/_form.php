@@ -16,25 +16,55 @@ use yii\helpers\ArrayHelper;
 <div class="ext-agreement-payment-form">
 
     <?php $form = ActiveForm::begin(); ?>
+    
+    <?php
+         echo $form->field($model, 'invoicedate')->widget(DatePicker::classname(), 
+         [
+            'options' => ['placeholder' => 'Enter invoice date..'],
+            'pluginOptions' => [
+                'autoclose'=>true,
+                'format' => 'd-M-yyyy'
+            ]
+        ]);
+    ?>
 
     <?php
-        $data = [];
-        $sql = "select extdeliverableid, concat(code, ' - ', description) as descr from ps_extdeliverables where extdeliverableid = :1";
-        $data += ArrayHelper::map(app\models\ExtDeliverables::findBySql($sql, [':1'=>Yii::$app->request->get('id')])->orderBy('name')->asArray()->all(), 'extdeliverableid', 'descr'); 
-
-        echo $form->field($model, 'extdeliverableid')->widget(Select2::classname(), [
-            'data' => $data,
-            'options' => ['placeholder' => 'Select a external deliverable..'],
+         echo $form->field($model, 'sentdate')->widget(DatePicker::classname(), 
+         [
+            'options' => ['placeholder' => 'Enter sent date..'],
             'pluginOptions' => [
-                'allowClear' => true
-            ],
+                'autoclose'=>true,
+                'format' => 'd-M-yyyy'
+            ]
+        ]);
+    ?>
+
+    <?php
+         echo $form->field($model, 'invoicedeadline')->widget(DatePicker::classname(), 
+         [
+            'options' => ['placeholder' => 'Enter invoice deadline..'],
+            'pluginOptions' => [
+                'autoclose'=>true,
+                'format' => 'd-M-yyyy'
+            ]
+        ]);
+    ?>
+
+    <?php
+         echo $form->field($model, 'targetdate')->widget(DatePicker::classname(), 
+         [
+            'options' => ['placeholder' => 'Enter target date..'],
+            'pluginOptions' => [
+                'autoclose'=>true,
+                'format' => 'd-M-yyyy'
+            ]
         ]);
     ?>
 
     <?php
          echo $form->field($model, 'date')->widget(DatePicker::classname(), 
          [
-            'options' => ['placeholder' => 'Enter date..'],
+            'options' => ['placeholder' => 'Enter payment date..'],
             'pluginOptions' => [
                 'autoclose'=>true,
                 'format' => 'd-M-yyyy'

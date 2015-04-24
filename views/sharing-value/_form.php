@@ -6,6 +6,9 @@ use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use app\models\SharingValueUnit;
 use app\models\SharingValueDepartment;
+use kartik\datecontrol\Module;
+use kartik\datecontrol\DateControl;
+use kartik\date\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\SharingValueDepartment */
@@ -93,6 +96,19 @@ use app\models\SharingValueDepartment;
 
     <?=
         $form->field($model_finalization, 'extsurveyscore')->textInput(['maxlength' => 16]);
+    ?>
+    
+    <?=
+        $form->field($model_finalization, 'postingdate')->widget(DatePicker::classname(), [
+            'pluginOptions' => [
+                'autoclose'=>true,
+                'format' => 'd-M-yyyy'
+            ]
+        ]);
+    ?>
+
+    <?=
+        $form->field($model_finalization, 'link')->textArea(['maxlength' => 250,'style'=>'height:120px']);
     ?>
 
 

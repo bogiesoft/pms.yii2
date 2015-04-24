@@ -10,7 +10,7 @@ use kartik\daterange\DateRangePicker;
 use kartik\datecontrol\Module;
 use kartik\datecontrol\DateControl;
 use kartik\date\DatePicker;
-
+use kartik\money\MaskMoney;
 /* @var $this yii\web\View */
 /* @var $model app\models\ExtAgreement */
 /* @var $form yii\widgets\ActiveForm */
@@ -66,6 +66,20 @@ use kartik\date\DatePicker;
                 'format' => 'd.M.yyyy'
             ]       
 
+        ]);
+    ?>
+
+    <?php
+        echo $form->field($model, 'ppn')->widget(MaskMoney::classname(), [
+            'pluginOptions' => [
+                'suffix' => '',
+                'allowNegative' => false,
+                'precision' => 2,
+                'allowZero' => true,
+            ],
+            'options'=>[
+                'maxlength' => 5,
+            ],
         ]);
     ?>
 

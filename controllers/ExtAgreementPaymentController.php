@@ -109,41 +109,6 @@ class ExtAgreementPaymentController extends Controller
                 }
             }
 
-            if (isset($_POST["ExtAgreementPayment"])){
-                $remark = null;
-                $date = null;
-                if (isset($_POST["ExtAgreementPayment"]["date"])){
-                    $date = $_POST["ExtAgreementPayment"]["date"];
-                    $date = date('Y-m-d', strtotime($date));
-                }
-                if (isset($_POST["ExtAgreementPayment"]["remark"])){
-                    $remark = $_POST["ExtAgreementPayment"]["remark"];
-                }
-
-                $model_payment = ExtAgreementPayment::find()->where('extdeliverableid = :1', [':1'=>$id])->one();
-                if ($model_payment == null){
-                    $model_payment = new IntAgreementPayment();
-                    $model_payment->date = $date;
-                    $model_payment->remark = $remark;
-                    $model_payment->intdeliverableid = $model->extdeliverableid;
-                    $model_payment->userin = Yii::$app->user->identity->username;
-                    $model_payment->datein = new \yii\db\Expression('NOW()');
-                }else{
-                    $model_payment->date = $date;
-                    $model_payment->remark = $remark;
-                    $model_payment->userup = Yii::$app->user->identity->username;
-                    $model_payment->dateup = new \yii\db\Expression('NOW()');
-                }
-
-                if ($model_payment->save()){
-                    $output = date('d-M-Y', strtotime($model_payment->date));
-                    $out = Json::encode(['output'=>$output, 'message'=>'']);
-                }else{
-                    $out = Json::encode(['output'=>'', 'message'=>'An error occurred while saving.']);
-                }
-
-            }
-
             echo $out;
         }else{
             $model_payment = $model->extagreementpayments;
@@ -232,6 +197,56 @@ class ExtAgreementPaymentController extends Controller
         $project = \app\models\Project::findOne($projectid);
         if (strpos(strtolower($project->status->name), 'cancel') !== false){
             throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    public function actionUpdatePayment($id, $projectid){
+        $this->validateProject($projectid);
+        $model_payment = \app\models\ExtAgreementPayment::find()->where(['extdeliverableid'=>$id])->one();
+
+        if ($model_payment == null){
+            $model_payment = new ExtAgreementPayment();
+        }
+
+        if ($model_payment->load(Yii::$app->request->post())) { 
+            if ($model_payment->invoicedate != null){
+                $model_payment->invoicedate = date('Y-m-d', strtotime($model_payment->invoicedate));
+            }
+            if ($model_payment->sentdate != null){
+                $model_payment->sentdate = date('Y-m-d', strtotime($model_payment->sentdate));
+            }
+            if ($model_payment->invoicedeadline != null){
+                $model_payment->invoicedeadline = date('Y-m-d', strtotime($model_payment->invoicedeadline));
+            }
+            if ($model_payment->targetdate != null){
+                $model_payment->targetdate = date('Y-m-d', strtotime($model_payment->targetdate));
+            }
+            if ($model_payment->date != null){
+                $model_payment->date = date('Y-m-d', strtotime($model_payment->date));
+            }
+            $model_payment->extdeliverableid = $id;
+            $model_payment->save();
+
+            return $this->redirect(['view', 'id' => $id, 'projectid'=>$projectid]);
+        } else {
+            if ($model_payment->invoicedate != null){
+                $model_payment->invoicedate = date('d-M-Y', strtotime($model_payment->invoicedate));
+            }
+            if ($model_payment->sentdate != null){
+                $model_payment->sentdate = date('d-M-Y', strtotime($model_payment->sentdate));
+            }
+            if ($model_payment->invoicedeadline != null){
+                $model_payment->invoicedeadline = date('d-M-Y', strtotime($model_payment->invoicedeadline));
+            }
+            if ($model_payment->targetdate != null){
+                $model_payment->targetdate = date('d-M-Y', strtotime($model_payment->targetdate));
+            }
+            if ($model_payment->date != null){
+                $model_payment->date = date('d-M-Y', strtotime($model_payment->date));
+            }
+            return $this->render('update-payment', [
+                'model_payment' => $model_payment,
+            ]);
         }
     }
 }
