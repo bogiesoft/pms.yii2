@@ -15,6 +15,7 @@ use Yii;
  * @property string $extsurveyscore
  * @property string $postingdate 
  * @property string $link
+ * @property string $customerpic 
  * @property string $datein
  * @property string $userin
  * @property string $dateup
@@ -47,6 +48,7 @@ class FinalizationProject extends \yii\db\ActiveRecord
             [['intsurveyscore', 'extsurveyscore'], 'string', 'max' => 16],
             [['userin', 'userup'], 'string', 'max' => 50],
             [['file'],'safe'],
+            [['customerpic'], 'string', 'max' => 150],
         ];
     }
 
@@ -64,6 +66,7 @@ class FinalizationProject extends \yii\db\ActiveRecord
             'extsurveyscore' => 'External Survey Score',
             'postingdate' => 'Posting Date',
             'link' => 'Link',
+            'customerpic' => 'Customer PIC', 
             'datein' => 'Datein',
             'userin' => 'Userin',
             'dateup' => 'Dateup',

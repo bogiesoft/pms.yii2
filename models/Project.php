@@ -25,6 +25,8 @@ use Yii;
  * @property PsBusinessassurance[] $psBusinessassurances
  * @property PsCostingapproval[] $psCostingapprovals
  * @property PsExtagreement[] $psExtagreements
+ * @property PsFinalizationproject[] $psFinalizationprojects 
+ * @property PsIntsurvey[] $psIntsurveys 
  * @property PsUnit $unit
  * @property PsCustomer $customer
  * @property PsStatus $status
@@ -151,6 +153,14 @@ class Project extends \yii\db\ActiveRecord
     public function getProposal()
     {
         return $this->hasMany(Proposal::className(), ['projectid' => 'projectid'])->orderBy('date desc');
+    }
+
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getIntsurveys()
+    {
+        return $this->hasMany(IntSurvey::className(), ['projectid' => 'projectid']);
     }
 
     /**

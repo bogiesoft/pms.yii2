@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Project;
+use app\models\IntSurvey;
 use app\models\FinalizationProject;
 use app\models\ProjectSearch;
 use app\models\SharingValueUnit;
@@ -90,6 +91,7 @@ class SharingValueController extends Controller
         $this->validateCancelProject($projectid);
 
         $model_finalization = new FinalizationProject();
+        $intsurveys = null;
         $units = null;
         $departments = null;
 
@@ -159,6 +161,34 @@ class SharingValueController extends Controller
                 $flag = false;
             }
 
+            $arrDuplicate = [];
+
+            if (isset($_POST["IntSurvey"])){
+                foreach($_POST["IntSurvey"] as $int_survey){
+
+                    $model_intsurvey = new IntSurvey();
+                    
+                    if (isset($int_survey["consultantid"]) && $int_survey["consultantid"] != ""){
+                        $model_intsurvey->consultantid = $int_survey["consultantid"];   
+                        if (in_array($model_intsurvey->consultantid, $arrDuplicate)){
+                            $model_intsurvey->addError('consultantid', 'Duplicate consultant on internal survey');
+                            $flag = false;
+                        }else{
+                            $arrDuplicate[] = $model_intsurvey->consultantid;
+                        }
+                    }
+                    if (isset($int_survey["score"]) && $int_survey["score"] != ""){
+                        $model_intsurvey->score = $int_survey["score"];   
+                    }
+                    $intsurveys[] = $model_intsurvey;
+                }
+            }else{
+                $model_intsurvey = new IntSurvey();
+                $model_intsurvey->validate();
+                $intsurveys[] = $model_intsurvey;
+                $flag = false;
+            }
+
         if (isset($_POST["FinalizationProject"])){
             if (isset($_POST["FinalizationProject"]["finalizationprojectid"]) && $_POST["FinalizationProject"]["finalizationprojectid"] != ""){
                 $model_finalization = FinalizationProject::findOne($_POST["FinalizationProject"]["finalizationprojectid"]);
@@ -188,6 +218,11 @@ class SharingValueController extends Controller
             }else{
                 $model_finalization->link = null;
             }
+             if (isset($_POST["FinalizationProject"]["customerpic"]) && $_POST["FinalizationProject"]["customerpic"] != ""){
+                $model_finalization->customerpic = $_POST["FinalizationProject"]["customerpic"];
+            }else{
+                $model_finalization->customerpic = null;
+            }
             if (isset($_POST["FinalizationProject"]["file"]) && $_POST["FinalizationProject"]["file"] != ""){
                 $model_finalization->file = $_POST["FinalizationProject"]["file"];   
             }else{
@@ -200,6 +235,7 @@ class SharingValueController extends Controller
                     'model' => $model,
                     'units' => $units,
                     'departments' => $departments,
+                    'intsurveys' => $intsurveys,
                     'model_finalization' => $model_finalization,
                 ]);
             }
@@ -219,6 +255,7 @@ class SharingValueController extends Controller
                         'model' => $model,
                         'units' => $units,
                         'departments' => $departments,
+                        'intsurveys' => $intsurveys,
                         'model_finalization' => $model_finalization,
                     ]);
                 }
@@ -236,8 +273,29 @@ class SharingValueController extends Controller
                         'model' => $model,
                         'units' => $units,
                         'departments' => $departments,
+                        'intsurveys' => $intsurveys,
                         'model_finalization' => $model_finalization,
                     ]);
+                }
+            }
+
+            foreach($intsurveys as $intsurvey_model){
+                if ($intsurvey_model->consultantid != null || $intsurvey_model->score != null){
+                    $intsurvey_model->projectid = $model->projectid;
+                    $intsurvey_model->userin = Yii::$app->user->identity->username;
+                    $intsurvey_model->datein = new \yii\db\Expression('NOW()');
+
+                    if (!$intsurvey_model->save()){
+                        $transaction->rollBack();
+                                   
+                        return $this->render('create', [
+                            'model' => $model,
+                            'units' => $units,
+                            'departments' => $departments,
+                            'intsurveys' => $intsurveys,
+                            'model_finalization' => $model_finalization,
+                        ]);
+                    }
                 }
             }
             
@@ -263,6 +321,7 @@ class SharingValueController extends Controller
                     'model' => $model,
                     'units' => $units,
                     'departments' => $departments,
+                    'intsurveys' => $intsurveys,
                     'model_finalization' => $model_finalization,
                 ]);
             }
@@ -305,6 +364,7 @@ class SharingValueController extends Controller
                 'model' => $model,
                 'units' => $units,
                 'departments' => $departments,
+                'intsurveys' => $intsurveys,
                 'model_finalization' => $model_finalization,
             ]);
         }
@@ -325,11 +385,13 @@ class SharingValueController extends Controller
         $model_finalization = new FinalizationProject();
         $units = null;
         $departments = null;
+        $intsurveys = null;
 
         if ($model->load(Yii::$app->request->post())) {
             $flag = true;
-            $arrUnitId = null;
-            $arrDepartmentId = null;
+            $arrUnitId = [];
+            $arrDepartmentId = [];
+            $arrIntSurveyId = [];
 
             $arrDuplicate = [];
 
@@ -402,6 +464,41 @@ class SharingValueController extends Controller
                 $flag = false;
             }
 
+            $arrDuplicate = [];
+
+            if (isset($_POST["IntSurvey"])){
+                foreach($_POST["IntSurvey"] as $int_survey){
+
+                    $model_intsurvey = new IntSurvey();
+                    
+                    if (isset($int_survey["intsurveryid"]) && $int_survey["intsurveryid"] != ""){
+                        $model_intsurvey->intsurveryid = $int_survey["intsurveryid"];   
+                        $arrIntSurveyId[] = $model_intsurvey->intsurveryid;
+                    }
+                    if (isset($int_survey["consultantid"]) && $int_survey["consultantid"] != ""){
+                        $model_intsurvey->consultantid = $int_survey["consultantid"];   
+                        if (in_array($model_intsurvey->consultantid, $arrDuplicate)){
+                            $model_intsurvey->addError('consultantid', 'Duplicate consultant on internal survey');
+                            $flag = false;
+                        }else{
+                            $arrDuplicate[] = $model_intsurvey->consultantid;
+                        }
+                    }else{
+                        $model_intsurvey->addError('consultantid', 'Consultant cannot be blank.');
+                        $flag = false;
+                    }
+                    if (isset($int_survey["score"]) && $int_survey["score"] != ""){
+                        $model_intsurvey->score = $int_survey["score"];   
+                    }
+                    $intsurveys[] = $model_intsurvey;
+                }
+            }else{
+                $model_intsurvey = new IntSurvey();
+                $model_intsurvey->validate();
+                $intsurveys[] = $model_intsurvey;
+                $flag = false;
+            }
+
         if (isset($_POST["FinalizationProject"])){
             if (isset($_POST["FinalizationProject"]["finalizationprojectid"]) && $_POST["FinalizationProject"]["finalizationprojectid"] != ""){
                 $model_finalization = FinalizationProject::findOne($_POST["FinalizationProject"]["finalizationprojectid"]);
@@ -431,6 +528,11 @@ class SharingValueController extends Controller
             }else{
                 $model_finalization->link = null;
             }
+            if (isset($_POST["FinalizationProject"]["customerpic"]) && $_POST["FinalizationProject"]["customerpic"] != ""){
+                $model_finalization->customerpic = $_POST["FinalizationProject"]["customerpic"];
+            }else{
+                $model_finalization->customerpic = null;
+            }
             if (isset($_POST["FinalizationProject"]["file"]) && $_POST["FinalizationProject"]["file"] != ""){
                 $model_finalization->file = $_POST["FinalizationProject"]["file"];   
             }else{
@@ -443,6 +545,7 @@ class SharingValueController extends Controller
                     'model' => $model,
                     'units' => $units,
                     'departments' => $departments,
+                    'intsurveys' => $intsurveys,
                     'model_finalization' => $model_finalization,
                 ]);
             }
@@ -461,6 +564,13 @@ class SharingValueController extends Controller
             foreach($deleteDepartment as $department){
                 if (!in_array($department->sharingvaluedepartmentid, $arrDepartmentId)){
                     SharingValueDepartment::deleteAll('sharingvaluedepartmentid = :1', [':1'=>$department->sharingvaluedepartmentid]);
+                }
+            }
+
+            $deleteIntSurvey = IntSurvey::find()->where('projectid = :1', [':1'=>$model->projectid])->all();
+            foreach($deleteIntSurvey as $intsurvey){
+                if (!in_array($intsurvey->intsurveryid, $arrIntSurveyId)){
+                    IntSurvey::deleteAll('intsurveryid = :1', [':1'=>$intsurvey->intsurveryid]);
                 }
             }
 
@@ -484,13 +594,14 @@ class SharingValueController extends Controller
                             'model' => $model,
                             'units' => $units,
                             'departments' => $departments,
+                            'intsurveys' => $intsurveys,
                             'model_finalization' => $model_finalization,
                         ]);
                     }
                 }else {
                     $unit_model->projectid = $model->projectid;
-                    $unit_model->userup = Yii::$app->user->identity->username;
-                    $unit_model->dateup = new \yii\db\Expression('NOW()');
+                    $unit_model->userin = Yii::$app->user->identity->username;
+                    $unit_model->datein = new \yii\db\Expression('NOW()');
 
                     if (!$unit_model->save()){
                         $transaction->rollBack();
@@ -499,6 +610,7 @@ class SharingValueController extends Controller
                             'model' => $model,
                             'units' => $units,
                             'departments' => $departments,
+                            'intsurveys' => $intsurveys,
                             'model_finalization' => $model_finalization,
                         ]);
                     }
@@ -525,13 +637,14 @@ class SharingValueController extends Controller
                             'model' => $model,
                             'units' => $units,
                             'departments' => $departments,
+                            'intsurveys' => $intsurveys,
                             'model_finalization' => $model_finalization,
                         ]);
                     }
                 }else {
                     $department_model->projectid = $model->projectid;
-                    $department_model->userup = Yii::$app->user->identity->username;
-                    $department_model->dateup = new \yii\db\Expression('NOW()');
+                    $department_model->userin = Yii::$app->user->identity->username;
+                    $department_model->datein = new \yii\db\Expression('NOW()');
 
                     if (!$department_model->save()){
                         $transaction->rollBack();
@@ -540,8 +653,53 @@ class SharingValueController extends Controller
                             'model' => $model,
                             'units' => $units,
                             'departments' => $departments,
+                            'intsurveys' => $intsurveys,
                             'model_finalization' => $model_finalization,
                         ]);
+                    }
+                }
+            }
+
+            foreach($intsurveys as $intsurvey_model){
+                if (isset($intsurvey_model->intsurveryid) && $intsurvey_model->intsurveryid != null && 
+                    $intsurvey_model->intsurveryid != "")
+                {         
+                    $model_intsurvey = IntSurvey::findOne($intsurvey_model->intsurveryid);
+                    $model_intsurvey->projectid = $model->projectid;
+                    $model_intsurvey->score = $intsurvey_model->score;
+                    $model_intsurvey->consultantid = $intsurvey_model->consultantid;
+
+                    $model_intsurvey->userup = Yii::$app->user->identity->username;
+                    $model_intsurvey->dateup = new \yii\db\Expression('NOW()');
+                    
+                    if (!$model_intsurvey->save()){
+                        $transaction->rollBack();
+                                                           
+                        return $this->render('update', [
+                            'model' => $model,
+                            'units' => $units,
+                            'departments' => $departments,
+                            'intsurveys' => $intsurveys,
+                            'model_finalization' => $model_finalization,
+                        ]);
+                    }
+                }else {
+                    if ($intsurvey_model->consultantid != null || $intsurvey_model->score != null){
+                        $intsurvey_model->projectid = $model->projectid;
+                        $intsurvey_model->userin = Yii::$app->user->identity->username;
+                        $intsurvey_model->datein = new \yii\db\Expression('NOW()');
+
+                        if (!$intsurvey_model->save()){
+                            $transaction->rollBack();
+                                       
+                            return $this->render('update', [
+                                'model' => $model,
+                                'units' => $units,
+                                'departments' => $departments,
+                                'intsurveys' => $intsurveys,
+                                'model_finalization' => $model_finalization,
+                            ]);
+                        }
                     }
                 }
             }
@@ -568,6 +726,7 @@ class SharingValueController extends Controller
                     'model' => $model,
                     'units' => $units,
                     'departments' => $departments,
+                    'intsurveys' => $intsurveys,
                     'model_finalization' => $model_finalization,
                 ]);
             }
@@ -595,15 +754,24 @@ class SharingValueController extends Controller
                 }
             }
 
+            if (isset($model->intsurveys)){
+                foreach($model->intsurveys as $intsurvey){
+                    $intsurveys[] = $intsurvey;
+                }
+            }
+
             if ($model->finalizationprojects != null){
                 $model_finalization = $model->finalizationprojects;
-                $model_finalization->postingdate = date('d-M-Y', strtotime($model_finalization->postingdate));
+                if ($model_finalization->postingdate != null){
+                    $model_finalization->postingdate = date('d-M-Y', strtotime($model_finalization->postingdate));   
+                }
             }
 
             return $this->render('update', [
                 'model' => $model,
                 'units' => $units,
                 'departments' => $departments,
+                'intsurveys' => $intsurveys,
                 'model_finalization' => $model_finalization,
             ]);
         }
@@ -636,7 +804,11 @@ class SharingValueController extends Controller
             FinalizationProject::deleteAll('projectid = :1', [':1'=>$project->projectid]);
         }
 
-        $model->setProjectStatus();
+        if (count($project->intsurveys) > 0){
+            IntSurvey::deleteAll('projectid = :1', [':1'=>$project->projectid]);
+        }
+
+        $project->setProjectStatus();
 
         $transaction->commit();
 
@@ -676,6 +848,16 @@ class SharingValueController extends Controller
                 'index'=>$index,                
             ]);
     }
+
+    public function actionRenderIntSurvey($index, $projectid){
+        $model = new IntSurvey();
+
+        return $this->renderAjax('int-survey/_form', [
+                'model'=>$model,
+                'index'=>$index,
+            ]);
+    }
+
 
     public function validateCancelProject($projectid){
         $project = \app\models\Project::findOne($projectid);

@@ -13,12 +13,17 @@ use kartik\date\DatePicker;
 /* @var $this yii\web\View */
 /* @var $model app\models\SharingValueDepartment */
 /* @var $form yii\widgets\ActiveForm */
+
+$projectid = Yii::$app->request->get('projectid');
 ?>
 
 <style>
 .tag{
     font-size:11px;
     vertical-align:middle;
+}
+.btnAddSharingDepartment, .btnDeleteSharingDepartment, .btnAddSharingUnit, .btnDeleteSharingUnit, .btnAddIntScore, .btnDeleteIntScore {
+    height:34px
 }
 </style>
 <div class="sharing-value-department-form">
@@ -89,11 +94,29 @@ use kartik\date\DatePicker;
     <?= 
         $form->field($model_finalization, 'remark')->textArea(['maxlength' => 500,'style'=>'height:120px']);
     ?>
-
+    
+    <div style="clear:both">
+        <label class="control-label">Internal Survey</label>
+        <div id="int-survey">
+            <?php
+                $index2 = 1;
+                if (isset($intsurveys)){
+                    foreach($intsurveys as $model_intsurvey){
+                        echo $this->render('int-survey/_form', [
+                            'model'=>$model_intsurvey,
+                            'index'=>$index2,
+                        ]);
+                        $index2++;
+                    }   
+                }
+            ?>
+        </div>
+    </div>
+    <div style="clear:both">
     <?=
-        $form->field($model_finalization, 'intsurveyscore')->textInput(['maxlength' => 16]);
+        $form->field($model_finalization, 'customerpic')->textArea(['maxlength' => 150,'style'=>'height:80px']);
     ?>
-
+    </div>
     <?=
         $form->field($model_finalization, 'extsurveyscore')->textInput(['maxlength' => 16]);
     ?>
@@ -125,6 +148,8 @@ use kartik\date\DatePicker;
 $this->registerJs('
 var _index = ' . $index . ';
 var _index1 = ' . $index1 . ';
+var _index2 = ' . $index2 . ';
+var _projectid = ' . $projectid . ';
 
 function addSharingUnit(){
     var _url = "' . yii\helpers\Url::toRoute('sharing-value/render-sharing-unit') . '?index="+_index;
@@ -224,8 +249,61 @@ function addSharingDepartment(){
     _index1++;
 }
 
+function addIntSurvey(){
+    var _url = "' . yii\helpers\Url::toRoute('sharing-value/render-int-survey') . '?index="+_index2+"&projectid="+_projectid;
+    $.ajax({
+        url: _url,
+        async: false,
+        dataType: "html",
+        success:function(response){
+            $("#int-survey").append(response);
+            $("#int-survey .crow").last().animate({
+                opacity : 1, 
+                left: "+50", 
+                height: "toggle"
+            });
+
+            $(".btnAddIntScore").click(function (elm){
+                $(".btnAddIntSurvey").unbind( "click" );
+                elm.stopImmediatePropagation();
+                addIntSurvey();
+            });
+
+            $(".btnDeleteIntScore").click(function (elm){ 
+                if ($(".int-survey-form").length >1){
+                    element=$(elm.currentTarget).closest(".int-survey-form");
+                    /* animate div */
+                    $(element).animate(
+                    {
+                        opacity: 0.25,
+                        left: "+=50",
+                        height: "toggle"
+                    }, 400,
+                    function() {
+                        /* remove div */
+                        $(element).remove();
+                        if ($("#int-survey").find("div.has-error").length < 1){
+                            $("#int-survey").find("label").css("color", "");
+                        }
+                    });
+
+                }else{
+                    alert("Required at least one consultant.");
+                    elm.stopImmediatePropagation();
+                }                
+            });
+        }
+    });
+
+    _index2++;
+}
+
 if ($("#sharing-unit").find(".sharing-unit-form").length == 0){
     addSharingUnit();
+}
+
+if ($("#int-survey").find(".int-survey-form").length == 0){
+    addIntSurvey();
 }
 
 if ($("#sharing-department").find(".sharing-department-form").length == 0){
@@ -289,6 +367,36 @@ $(".btnDeleteSharingDepartment").click(function (elm){
         
     }else{
         alert("Required at least one department.");
+        elm.stopImmediatePropagation();
+    }                
+});
+
+$(".btnAddIntScore").click(function (elm){
+    $(".btnAddIntScore").unbind( "click" );
+    elm.stopImmediatePropagation();
+    addIntSurvey();
+});
+
+$(".btnDeleteIntScore").click(function (elm){ 
+    if ($(".int-survey-form").length >1){
+        element=$(elm.currentTarget).closest(".int-survey-form");
+        /* animate div */
+        $(element).animate(
+        {
+            opacity: 0.25,
+            left: "+=50",
+            height: "toggle"
+        }, 400,
+        function() {
+            /* remove div */
+            $(element).remove();
+            if ($("#int-survey").find("div.has-error").length < 1){
+                $("#int-survey").find("label").css("color", "");
+            }
+        });
+        
+    }else{
+        alert("Required at least one consultant.");
         elm.stopImmediatePropagation();
     }                
 });

@@ -19,6 +19,7 @@ $this->params['breadcrumbs'][] = 'Create';
         'model' => $model,
         'units' => $units,
       	'departments' => $departments,
+      	'intsurveys' => $intsurveys,
       	'model_finalization' => $model_finalization,
     ]) ?>
 

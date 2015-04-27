@@ -116,14 +116,23 @@ if ($model_finalization == null){
             ?></td>
         </tr>
         <tr>
-            <th><?= $model_finalization->getAttributeLabel('intsurveyscore') ?></th>  
-            <td><?php 
-                if ($model_finalization->intsurveyscore != null){
-                    echo $model_finalization->intsurveyscore;
-                }else{
-                    echo '<span class="not-set">(not set)</span>';
-                }
-            ?></td>
+            <th>Internal Survey Score</th>  
+                <?php 
+                    if ($model->intsurveys != null){
+                        echo '<td style="padding: 0px;">';
+                        echo '<table class="table table-bordered table-striped inside" style="border: none;margin-bottom:0px">';
+                        echo '<tr><th>Consultant</th><th>Score</th></tr>';
+                        foreach($model->intsurveys as $intsurvey){
+                            echo '<tr>';
+                            echo '<td>'.$intsurvey->consultant->name.'</td>';
+                            echo '<td>'.$intsurvey->score.'</td>';
+                            echo '</tr>';
+                        }
+                        echo '</table></td>';
+                    }else{
+                        echo '<td><span class="not-set">(not set)</span></td>';
+                    }
+                ?>
         </tr>
         <tr>
             <th><?= $model_finalization->getAttributeLabel('extsurveyscore') ?></th>  
