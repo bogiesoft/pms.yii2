@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\db\Query;
 
 /**
  * MindUnitController implements the CRUD actions for MindUnit model.
@@ -108,7 +109,26 @@ class MindUnitController extends Controller
         $model->userup = Yii::$app->user->identity->username;
         $model->dateup = new \yii\db\Expression('NOW()');
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $connection = \Yii::$app->db;
+            $model_mindunit = $connection->createCommand('
+                select distinct c.mindunitid
+                from ps_intdeliverables a
+                join ps_projectrate b on a.rateid = b.rateid
+                join ps_mindunit c on b.mindunitid = c.mindunitid
+            ');
+            $id = $model_mindunit->queryAll();
+
+            foreach($id as $exist){
+                if ($model->mindunitid == $exist["mindunitid"]){
+                    $model->addError('name', 'Unable to update rate unit, already been used.');
+                    return $this->render('update', [
+                        'model' => $model,
+                    ]);
+                }
+            }
+
+            $model->save();
             return $this->redirect(['view', 'id' => $model->mindunitid]);
         } else {
             return $this->render('update', [

@@ -60,7 +60,7 @@ class MindUnit extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPsProjectrates()
+    public function getProjectrates()
     {
         return $this->hasMany(Projectrate::className(), ['mindunitid' => 'mindunitid']);
     }
