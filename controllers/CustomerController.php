@@ -275,8 +275,6 @@ class CustomerController extends Controller
                 if (isset($contact["contactpersonid"]) && $contact["contactpersonid"] != ""){
                     $contactModel->contactpersonid = $contact["contactpersonid"];   
                     $arrContactId[] = $contactModel->contactpersonid;
-                }else{
-                    $flag = false;
                 }
 
                 if (isset($contact["ContactPersonPhone"])){
@@ -285,8 +283,6 @@ class CustomerController extends Controller
                         if (isset($phone["contactpersonphoneid"]) && $phone["contactpersonphoneid"] != ""){
                             $contactPhone->contactpersonphoneid = $phone["contactpersonphoneid"];
                             $arrContactPhoneId[] = $contactPhone->contactpersonphoneid;
-                        }else{
-                            $flag = false;
                         }
                         if (isset($phone["phonetypeid"]) && $phone["phonetypeid"] != ""){
                             $contactPhone->phonetypeid = $phone["phonetypeid"];
@@ -310,6 +306,7 @@ class CustomerController extends Controller
                 
                 $contacts[] = $contactModel;
             }
+
             if (!$flag){
                 return $this->render('update', [
                     'model' => $model,
@@ -445,7 +442,12 @@ class CustomerController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        foreach($model->contactpeople as $contact){
+            ContactPersonPhone::deleteAll('contactpersonid = :1', [':1'=>$contact->contactpersonid]);
+            ContactPerson::deleteAll('contactpersonid = :1', [':1'=>$contact->contactpersonid]);
+        }
+        $model->delete();
 
         return $this->redirect(['index']);
     }
