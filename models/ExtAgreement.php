@@ -43,7 +43,8 @@ class ExtAgreement extends \yii\db\ActiveRecord
     {
         return [
             [['projectid', 'agreementno', 'startdate', 'enddate', 'filename', 'signdate'], 'required'],
-            [['projectid', 'ppn'], 'integer'],
+            [['projectid'], 'integer'],
+            [['ppn'], 'number'],
             [['startdate', 'enddate', 'datein', 'dateup', 'signdate'], 'safe'],
             [['agreementno', 'userin', 'userup'], 'string', 'max' => 50],
             [['description', 'filename'], 'string', 'max' => 250],

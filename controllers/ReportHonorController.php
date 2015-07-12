@@ -17,7 +17,15 @@ class ReportHonorController extends \yii\web\Controller
     	}
 
     	if ($date != null){
-    		
+    		$strDate = explode(' - ',$date);
+
+            if (isset($strDate[0])){
+                $startDate = date("Y-m-d", strtotime($strDate[0]));   
+            }
+            if (isset($strDate[1])){
+                $endDate = date("Y-m-d", strtotime($strDate[1]));   
+            }
+
     		$connection = \Yii::$app->db;
 
 			$model = $connection->createCommand("select 
@@ -46,12 +54,14 @@ class ReportHonorController extends \yii\web\Controller
 					join ps_intdeliverables e on c.intagreementid = e.intagreementid
 					join ps_intagreementpayment f on e.intdeliverableid = f.intdeliverableid
 					left join ps_term_tbl g on f.date between g.startdate and g.enddate
-					where date_format(f.date, '%b-%Y') = :1");
+					where f.date between STR_TO_DATE(:1, '%Y-%m-%d') and STR_TO_DATE(:2, '%Y-%m-%d')
+					");
+					//where date_format(f.date, '%b-%Y') = :1");
 			
-			$model->bindValue(':1', $date);
+			$model->bindValue(':1', $startDate);
+			$model->bindValue(':2', $endDate);
 
 			$data = $model->queryAll();
-
 
 		    return $this->render('index', [
 	            'data' => $data,
@@ -73,6 +83,16 @@ class ReportHonorController extends \yii\web\Controller
     	}
 
     	if ($date != null){
+
+    		$strDate = explode(' - ',$date);
+
+            if (isset($strDate[0])){
+                $startDate = date("Y-m-d", strtotime($strDate[0]));   
+            }
+            if (isset($strDate[1])){
+                $endDate = date("Y-m-d", strtotime($strDate[1]));   
+            }
+
     		$connection = \Yii::$app->db;
 
 			$model = $connection->createCommand("select 
@@ -101,9 +121,14 @@ class ReportHonorController extends \yii\web\Controller
 				join ps_intdeliverables e on c.intagreementid = e.intagreementid
 				join ps_intagreementpayment f on e.intdeliverableid = f.intdeliverableid
 				left join ps_term_tbl g on f.date between g.startdate and g.enddate
-				where date_format(f.date, '%b-%Y') = :1");
+				where f.date between STR_TO_DATE(:1, '%Y-%m-%d') and STR_TO_DATE(:2, '%Y-%m-%d')
+				");
+				//where date_format(f.date, '%b-%Y') = :1");
 			
-			$model->bindValue(':1', $date);
+			//$model->bindValue(':1', $date);
+			$model->bindValue(':1', $startDate);
+			$model->bindValue(':2', $endDate);
+
 			$data = $model->queryAll();
 
 			# Constants for dbf field types
@@ -175,6 +200,15 @@ class ReportHonorController extends \yii\web\Controller
     	}
 
     	if ($date != null){
+			$strDate = explode(' - ',$date);
+
+            if (isset($strDate[0])){
+                $startDate = date("Y-m-d", strtotime($strDate[0]));   
+            }
+            if (isset($strDate[1])){
+                $endDate = date("Y-m-d", strtotime($strDate[1]));   
+            }
+
     		$connection = \Yii::$app->db;
 
 			$model = $connection->createCommand("select 
@@ -203,9 +237,13 @@ class ReportHonorController extends \yii\web\Controller
 				join ps_intdeliverables e on c.intagreementid = e.intagreementid
 				join ps_intagreementpayment f on e.intdeliverableid = f.intdeliverableid
 				left join ps_term_tbl g on f.date between g.startdate and g.enddate
-				where date_format(f.date, '%b-%Y') = :1");
+				where f.date between STR_TO_DATE(:1, '%Y-%m-%d') and STR_TO_DATE(:2, '%Y-%m-%d')
+				");
+				//where date_format(f.date, '%b-%Y') = :1");
 			
-			$model->bindValue(':1', $date);
+			//$model->bindValue(':1', $date);
+			$model->bindValue(':1', $startDate);
+			$model->bindValue(':2', $endDate);
 			
 			$data = $model->queryAll();
 			$content = "<table border='1'>";

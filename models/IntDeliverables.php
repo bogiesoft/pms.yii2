@@ -45,7 +45,8 @@ class IntDeliverables extends \yii\db\ActiveRecord
     {
         return [
             [['intagreementid', 'extdeliverableid', 'positionid', 'frequency', 'rateid', 'rate', 'description', 'duedate'], 'required'],
-            [['intagreementid', 'extdeliverableid', 'positionid', 'frequency', 'rateid', 'rate'], 'integer'],
+            [['intagreementid', 'extdeliverableid', 'positionid', 'rateid'], 'integer'],
+            [['rate', 'frequency'], 'number'],
             [['datein', 'dateup', 'duedate', 'deliverdate'], 'safe'],
             [['description'], 'string', 'max' => 250],
             [['userin', 'userup'], 'string', 'max' => 50],

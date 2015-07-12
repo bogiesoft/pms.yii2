@@ -13,7 +13,6 @@ class ProjectDetailReportController extends \yii\web\Controller
     	}
 
         if ($date != null){
-    		
     		$connection = \Yii::$app->db;
 
     		$year = date('Y', strtotime($date));
@@ -242,6 +241,8 @@ class ProjectDetailReportController extends \yii\web\Controller
 
 			$model->bindValue(':1', $year);
 			$model->bindValue(':2', ($year - 1));
+			//$model->bindValue(':1', $startDate);
+			//$model->bindValue(':2', $endDate);
 			$data = $model->queryAll();
 
 
@@ -315,7 +316,7 @@ class ProjectDetailReportController extends \yii\web\Controller
 					join ps_extagreement f on a.projectid = f.projectid
 					join ps_extdeliverables m on f.extagreementid = m.extagreementid and m.duedate
 					left join ps_extagreementpayment n on m.extdeliverableid = n.extdeliverableid
-					where n.extdeliverableid is null and date_format(m.duedate , '%Y') = 2014
+					where n.extdeliverableid is null and date_format(m.duedate , '%Y') = :2
 					group by a.projectid
 				) o on a.projectid = o.projectid
 				left join (
@@ -324,7 +325,7 @@ class ProjectDetailReportController extends \yii\web\Controller
 					join ps_extagreement f on a.projectid = f.projectid
 					join ps_extdeliverables m on f.extagreementid = m.extagreementid and m.duedate
 					left join ps_extagreementpayment n on m.extdeliverableid = n.extdeliverableid
-					where n.extdeliverableid is null and date_format(m.duedate , '%Y') = 2015
+					where n.extdeliverableid is null and date_format(m.duedate , '%Y') = :1
 					group by a.projectid
 				) p on a.projectid = p.projectid
 				left join (
@@ -333,7 +334,7 @@ class ProjectDetailReportController extends \yii\web\Controller
 					join ps_extagreement f on a.projectid = f.projectid
 					join ps_extdeliverables m on f.extagreementid = m.extagreementid and m.duedate
 					left join ps_extagreementpayment n on m.extdeliverableid = n.extdeliverableid
-					where n.extdeliverableid is not null and date_format(m.duedate , '%Y') = 2014
+					where n.extdeliverableid is not null and date_format(m.duedate , '%Y') = :2
 					group by a.projectid
 				) q on a.projectid = q.projectid
 				left join (
@@ -342,7 +343,7 @@ class ProjectDetailReportController extends \yii\web\Controller
 					join ps_extagreement f on a.projectid = f.projectid
 					join ps_extdeliverables m on f.extagreementid = m.extagreementid and m.duedate
 					left join ps_extagreementpayment n on m.extdeliverableid = n.extdeliverableid
-					where n.extdeliverableid is not null and date_format(m.duedate , '%Y') = 2015
+					where n.extdeliverableid is not null and date_format(m.duedate , '%Y') = :1
 					group by a.projectid
 				) r on a.projectid = r.projectid
 				left join (
@@ -351,7 +352,7 @@ class ProjectDetailReportController extends \yii\web\Controller
 					join ps_extagreement f on a.projectid = f.projectid
 					join ps_extdeliverables m on f.extagreementid = m.extagreementid and m.duedate
 					left join ps_extagreementpayment n on m.extdeliverableid = n.extdeliverableid
-					where n.extdeliverableid is not null and date_format(n.date, '%Y') = 2015
+					where n.extdeliverableid is not null and date_format(n.date, '%Y') = :1
 					group by a.projectid
 				) s on a.projectid = s.projectid
 				left join (
@@ -371,7 +372,7 @@ class ProjectDetailReportController extends \yii\web\Controller
 					join ps_extagreement f on a.projectid = f.projectid
 					join ps_extdeliverables m on f.extagreementid = m.extagreementid and m.duedate
 					left join ps_extagreementpayment n on m.extdeliverableid = n.extdeliverableid
-					where n.extdeliverableid is not null and date_format(n.date, '%Y') = 2015 and
+					where n.extdeliverableid is not null and date_format(n.date, '%Y') = :1 and
 						date_format(n.date, '%m') = '01'
 					group by a.projectid
 				) jan on a.projectid = jan.projectid
@@ -381,7 +382,7 @@ class ProjectDetailReportController extends \yii\web\Controller
 					join ps_extagreement f on a.projectid = f.projectid
 					join ps_extdeliverables m on f.extagreementid = m.extagreementid and m.duedate
 					left join ps_extagreementpayment n on m.extdeliverableid = n.extdeliverableid
-					where n.extdeliverableid is not null and date_format(n.date, '%Y') = 2015 and
+					where n.extdeliverableid is not null and date_format(n.date, '%Y') = :1 and
 						date_format(n.date, '%m') = '02'
 					group by a.projectid
 				) feb on a.projectid = feb.projectid
@@ -391,7 +392,7 @@ class ProjectDetailReportController extends \yii\web\Controller
 					join ps_extagreement f on a.projectid = f.projectid
 					join ps_extdeliverables m on f.extagreementid = m.extagreementid and m.duedate
 					left join ps_extagreementpayment n on m.extdeliverableid = n.extdeliverableid
-					where n.extdeliverableid is not null and date_format(n.date, '%Y') = 2015 and
+					where n.extdeliverableid is not null and date_format(n.date, '%Y') = :1 and
 						date_format(n.date, '%m') = '03'
 					group by a.projectid
 				) mar on a.projectid = mar.projectid
@@ -401,7 +402,7 @@ class ProjectDetailReportController extends \yii\web\Controller
 					join ps_extagreement f on a.projectid = f.projectid
 					join ps_extdeliverables m on f.extagreementid = m.extagreementid and m.duedate
 					left join ps_extagreementpayment n on m.extdeliverableid = n.extdeliverableid
-					where n.extdeliverableid is not null and date_format(n.date, '%Y') = 2015 and
+					where n.extdeliverableid is not null and date_format(n.date, '%Y') = :1 and
 						date_format(n.date, '%m') = '04'
 					group by a.projectid
 				) apr on a.projectid = apr.projectid
@@ -411,7 +412,7 @@ class ProjectDetailReportController extends \yii\web\Controller
 					join ps_extagreement f on a.projectid = f.projectid
 					join ps_extdeliverables m on f.extagreementid = m.extagreementid and m.duedate
 					left join ps_extagreementpayment n on m.extdeliverableid = n.extdeliverableid
-					where n.extdeliverableid is not null and date_format(n.date, '%Y') = 2015 and
+					where n.extdeliverableid is not null and date_format(n.date, '%Y') = :1 and
 						date_format(n.date, '%m') = '05'
 					group by a.projectid
 				) may on a.projectid = may.projectid
@@ -421,7 +422,7 @@ class ProjectDetailReportController extends \yii\web\Controller
 					join ps_extagreement f on a.projectid = f.projectid
 					join ps_extdeliverables m on f.extagreementid = m.extagreementid and m.duedate
 					left join ps_extagreementpayment n on m.extdeliverableid = n.extdeliverableid
-					where n.extdeliverableid is not null and date_format(n.date, '%Y') = 2015 and
+					where n.extdeliverableid is not null and date_format(n.date, '%Y') = :1 and
 						date_format(n.date, '%m') = '06'
 					group by a.projectid
 				) jun on a.projectid = jun.projectid
@@ -431,7 +432,7 @@ class ProjectDetailReportController extends \yii\web\Controller
 					join ps_extagreement f on a.projectid = f.projectid
 					join ps_extdeliverables m on f.extagreementid = m.extagreementid and m.duedate
 					left join ps_extagreementpayment n on m.extdeliverableid = n.extdeliverableid
-					where n.extdeliverableid is not null and date_format(n.date, '%Y') = 2015 and
+					where n.extdeliverableid is not null and date_format(n.date, '%Y') = :1 and
 						date_format(n.date, '%m') = '07'
 					group by a.projectid
 				) jul on a.projectid = jul.projectid
@@ -441,7 +442,7 @@ class ProjectDetailReportController extends \yii\web\Controller
 					join ps_extagreement f on a.projectid = f.projectid
 					join ps_extdeliverables m on f.extagreementid = m.extagreementid and m.duedate
 					left join ps_extagreementpayment n on m.extdeliverableid = n.extdeliverableid
-					where n.extdeliverableid is not null and date_format(n.date, '%Y') = 2015 and
+					where n.extdeliverableid is not null and date_format(n.date, '%Y') = :1 and
 						date_format(n.date, '%m') = '08'
 					group by a.projectid
 				) aug on a.projectid = aug.projectid
@@ -451,7 +452,7 @@ class ProjectDetailReportController extends \yii\web\Controller
 					join ps_extagreement f on a.projectid = f.projectid
 					join ps_extdeliverables m on f.extagreementid = m.extagreementid and m.duedate
 					left join ps_extagreementpayment n on m.extdeliverableid = n.extdeliverableid
-					where n.extdeliverableid is not null and date_format(n.date, '%Y') = 2015 and
+					where n.extdeliverableid is not null and date_format(n.date, '%Y') = :1 and
 						date_format(n.date, '%m') = '09'
 					group by a.projectid
 				) sep on a.projectid = sep.projectid
@@ -461,7 +462,7 @@ class ProjectDetailReportController extends \yii\web\Controller
 					join ps_extagreement f on a.projectid = f.projectid
 					join ps_extdeliverables m on f.extagreementid = m.extagreementid and m.duedate
 					left join ps_extagreementpayment n on m.extdeliverableid = n.extdeliverableid
-					where n.extdeliverableid is not null and date_format(n.date, '%Y') = 2015 and
+					where n.extdeliverableid is not null and date_format(n.date, '%Y') = :1 and
 						date_format(n.date, '%m') = '10'
 					group by a.projectid
 				) oct on a.projectid = oct.projectid
@@ -471,7 +472,7 @@ class ProjectDetailReportController extends \yii\web\Controller
 					join ps_extagreement f on a.projectid = f.projectid
 					join ps_extdeliverables m on f.extagreementid = m.extagreementid and m.duedate
 					left join ps_extagreementpayment n on m.extdeliverableid = n.extdeliverableid
-					where n.extdeliverableid is not null and date_format(n.date, '%Y') = 2015 and
+					where n.extdeliverableid is not null and date_format(n.date, '%Y') = :1 and
 						date_format(n.date, '%m') = '11'
 					group by a.projectid
 				) nov on a.projectid = nov.projectid
@@ -481,15 +482,19 @@ class ProjectDetailReportController extends \yii\web\Controller
 					join ps_extagreement f on a.projectid = f.projectid
 					join ps_extdeliverables m on f.extagreementid = m.extagreementid and m.duedate
 					left join ps_extagreementpayment n on m.extdeliverableid = n.extdeliverableid
-					where n.extdeliverableid is not null and date_format(n.date, '%Y') = 2015 and
+					where n.extdeliverableid is not null and date_format(n.date, '%Y') = :1 and
 						date_format(n.date, '%m') = '12'
 					group by a.projectid
 				) decm on a.projectid = decm.projectid
-				where a.projectid = '11'
 				group by a.code, b.name, c.company, a.name, d.name, i.name, h.name, j.name, a.description, 
 					k.name, l.name
-				;");
+				");
 			
+			$model->bindValue(':1', $year);
+			$model->bindValue(':2', ($year - 1));
+			//$model->bindValue(':1', $startDate);
+			//$model->bindValue(':2', $endDate);
+
 			$data = $model->queryAll();
 
 			$content = "<table border='1'>";

@@ -4,6 +4,7 @@ use yii\grid\GridView;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 
+use kartik\daterange\DateRangePicker;
 use kartik\datecontrol\Module;
 use kartik\datecontrol\DateControl;
 use kartik\date\DatePicker;
@@ -15,18 +16,20 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="form-group">
 <?php 
 echo '<label class="control-label">Date</label>';
-echo DatePicker::widget([
+echo DateRangePicker::widget([
     'name' => 'date',
     'id' => 'dpDate',
-    'type' => DatePicker::TYPE_COMPONENT_APPEND,
     'value' => $date,
-    'pluginOptions' => [
-        'autoclose'=>true,
-        'format' => 'M-yyyy',
-        'minViewMode' => 'true',
-    ]
+    'convertFormat'=>true,
+    'useWithAddon'=>true,
+    'hideInput'=>1, 
+    'pluginOptions'=>[
+        'format'=>'d.M.Y',
+        'separator'=>' - '
+    ],        
 ]);
 ?>
+
 <div class="help-block"></div>
 <button type="submit" class="btn btn-success">Load Report</button>
 <?php 

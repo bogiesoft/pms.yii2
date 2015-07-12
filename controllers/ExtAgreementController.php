@@ -116,6 +116,10 @@ class ExtAgreementController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $flag = true;
 
+            if($model->ppn == null){
+                $model->ppn = 0;
+            }
+
             $file1 = UploadedFile::getInstance($model, 'file');
             if ($file1 == null){
                 $flag = false;
@@ -267,6 +271,10 @@ class ExtAgreementController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $arrDeliverableId = null;
             $flag = true;
+
+            if($model->ppn == null){
+                $model->ppn = 0;
+            }
 
             $file1 = UploadedFile::getInstance($model, 'file');
 
